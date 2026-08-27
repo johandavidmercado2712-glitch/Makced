@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 118, "column": 0}, "map": {"version":3,"sources":["file:///home/jason/Codigo/Makced/apps/login/proxy.ts"],"sourcesContent":["import { proxy } from '@makced/db/proxy';\n\nexport { proxy };\n\nexport const config = {\n  matcher: [\n    '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',\n  ],\n};\n"],"names":["config","matcher"],"mappings":";;;;AAAA;;;AAIO,MAAMA,SAAS;IACpBC,SAAS;QACP;KACD;AACH"}},
-    {"offset": {"line": 134, "column": 0}, "map": {"version":3,"sources":["file:///home/jason/Codigo/Makced/packages/db/src/proxy.ts"],"sourcesContent":["import { NextResponse } from 'next/server';\nimport type { NextRequest } from 'next/server';\nimport { updateSession } from '@insforge/sdk/ssr/middleware';\n\nexport async function proxy(request: NextRequest) {\n  const response = NextResponse.next({ request });\n\n  await updateSession({\n    requestCookies: request.cookies,\n    responseCookies: response.cookies,\n  });\n\n  return response;\n}\n"],"names":["proxy","request","response","next","requestCookies","cookies","responseCookies"],"mappings":";;;;AAAA;AAEA;;;AAEO,eAAeA,MAAMC,OAAoB;IAC9C,MAAMC,WAAW,8IAAY,CAACC,IAAI,CAAC;QAAEF;IAAQ;IAE7C,MAAM,IAAA,gLAAa,EAAC;QAClBG,gBAAgBH,QAAQI,OAAO;QAC/BC,iBAAiBJ,SAASG,OAAO;IACnC;IAEA,OAAOH;AACT"}}]
-}

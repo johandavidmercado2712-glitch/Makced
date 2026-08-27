@@ -1,3 +1,0 @@
-module.exports=[67892,a=>{"use strict";var b=a.i(7997);a.s(["default",0,function({children:a}){return(0,b.jsx)("html",{lang:"es",children:(0,b.jsx)("body",{className:"min-h-full flex flex-col",children:a})})},"metadata",0,{title:"MakcedDashboard - Panel",description:"Panel de administracion de Makced"}])},68686,function(a){a.n(a.i(67892))}];
-
-//# sourceMappingURL=apps_dashboard_app_layout_tsx_0sq6tdn._.js.map
