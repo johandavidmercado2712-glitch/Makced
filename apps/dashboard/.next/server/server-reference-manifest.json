@@ -1,0 +1,50 @@
+{
+  "node": {
+    "00dd9b7123e07cd1da4cae34bf71f011e8f3f197c4": {
+      "workers": {
+        "app/page": {
+          "moduleId": 81993,
+          "async": false,
+          "codeHash": null
+        }
+      },
+      "filename": "apps/dashboard/app/page.tsx",
+      "exportedName": "$$RSC_SERVER_ACTION_0"
+    },
+    "00d266fdab6cbdaa9fd42f9e4ac0ebe99af8915452": {
+      "workers": {
+        "app/page": {
+          "moduleId": 81993,
+          "async": false,
+          "codeHash": null
+        }
+      },
+      "filename": "packages/db/src/actions.ts",
+      "exportedName": "signOut"
+    },
+    "4010ea4ae99116f3ac8b820fce0000c1a14e44750f": {
+      "workers": {
+        "app/page": {
+          "moduleId": 81993,
+          "async": false,
+          "codeHash": null
+        }
+      },
+      "filename": "packages/db/src/actions.ts",
+      "exportedName": "signIn"
+    },
+    "408fbfb2f346deb17343fb82a598408fe201a69ca8": {
+      "workers": {
+        "app/page": {
+          "moduleId": 81993,
+          "async": false,
+          "codeHash": null
+        }
+      },
+      "filename": "packages/db/src/actions.ts",
+      "exportedName": "signUp"
+    }
+  },
+  "edge": {},
+  "encryptionKey": "/xvs8H5LwyTxsUF51lSBvWma5AjFJOiKPXjbBYZSoCQ="
+}

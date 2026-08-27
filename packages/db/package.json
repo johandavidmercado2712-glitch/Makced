@@ -1,0 +1,33 @@
+{
+  "name": "@makced/db",
+  "version": "0.1.0",
+  "private": true,
+  "exports": {
+    "./client": {
+      "types": "./src/client.ts",
+      "default": "./src/client.ts"
+    },
+    "./actions": {
+      "types": "./src/actions.ts",
+      "default": "./src/actions.ts"
+    },
+    "./proxy": {
+      "types": "./src/proxy.ts",
+      "default": "./src/proxy.ts"
+    },
+    "./refresh": {
+      "types": "./src/refresh.ts",
+      "default": "./src/refresh.ts"
+    },
+    "./server": {
+      "types": "./src/server.ts",
+      "default": "./src/server.ts"
+    }
+  },
+  "peerDependencies": {
+    "@insforge/sdk": ">=1",
+    "next": ">=16",
+    "react": ">=19",
+    "react-dom": ">=19"
+  }
+}

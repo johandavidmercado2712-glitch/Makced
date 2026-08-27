@@ -1,0 +1,16 @@
+/* [project]/packages/ui/src/footer.css [app-client] (css) */
+.Footer {
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 2rem;
+  display: flex;
+}
+
+.footer-info {
+  flex-direction: column;
+  gap: .5rem;
+  display: flex;
+}
+
+/*# sourceMappingURL=packages_ui_src_footer_css_1igg3k2._.single.css.map*/

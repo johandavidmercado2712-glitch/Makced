@@ -1,0 +1,3 @@
+module.exports=[30788,a=>{"use strict";var b=a.i(7997);a.s(["default",0,function({children:a}){return(0,b.jsx)("html",{lang:"es",children:(0,b.jsx)("body",{className:"min-h-full flex flex-col",children:a})})},"metadata",0,{title:"MakcedLogin - Acceso",description:"Acceso a la plataforma Makced"}])},40449,function(a){a.n(a.i(30788))}];
+
+//# sourceMappingURL=apps_login_app_layout_tsx_1wj96j8._.js.map

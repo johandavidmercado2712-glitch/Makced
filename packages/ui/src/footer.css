@@ -1,0 +1,12 @@
+.Footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap:2rem;
+    padding: 2rem;
+}
+.footer-info {
+    display: flex;
+    flex-direction: column;
+    gap:0.5rem;
+}

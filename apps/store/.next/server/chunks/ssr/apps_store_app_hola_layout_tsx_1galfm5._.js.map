@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../../../../apps/store/app/hola/layout.tsx"],"sourcesContent":["function saludar(){\nreturn(\n    <h1> hola</h1>\n)\n}\nexport default saludar"],"names":["saludar"],"mappings":"wEAAA,SAASA,EACT,MACI,CAAA,EAAA,EAAA,GAAA,EAAC,KAAA,UAAG,SAER"}

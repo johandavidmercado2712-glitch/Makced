@@ -1,0 +1,74 @@
+/* [project]/apps/store/components/nav/nav.css [app-client] (css) */
+.nav-background {
+  background-color: #e2e2e2;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 400px;
+  display: flex;
+  position: relative;
+}
+
+.nav-fondo {
+  z-index: 0;
+  position: absolute;
+  inset: 0;
+}
+
+.nav-fondo img {
+  width: 100%;
+  height: 100%;
+}
+
+.nav-barra {
+  z-index: 1;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 1rem;
+  display: flex;
+  position: relative;
+}
+
+.nav-link {
+  gap: 1rem;
+  padding: 10px;
+  display: flex;
+}
+
+.nav-link a {
+  color: #fff;
+  text-decoration: none;
+  display: flex;
+}
+
+.nav-titulo {
+  text-align: center;
+  padding: 10px;
+  position: relative;
+}
+
+.nav-menu {
+  gap: .5rem;
+  padding: 10px;
+  display: flex;
+}
+
+/* [project]/apps/store/components/footer/footer.css [app-client] (css) */
+.Footer {
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 2rem;
+  display: flex;
+}
+
+.footer-info {
+  flex-direction: column;
+  gap: .5rem;
+  display: flex;
+}
+
+/*# sourceMappingURL=apps_store_components_1dllht7._.css.map*/
