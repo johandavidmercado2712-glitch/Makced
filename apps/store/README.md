@@ -1,55 +1,41 @@
-# MakcedStore
+# Makced Store
 
-Tienda de calzado y ropa deportiva.
+Tienda de calzado y ropa deportiva. Parte del monorepo [Makced](../../README.md).
 
-## Tech Stack
+## Stack
 
 - **Frontend:** Next.js 16, React 19, TypeScript
 - **Estilos:** Tailwind CSS v4
 - **Backend:** [InsForge](https://insforge.dev) (Postgres, Auth, Storage, Functions)
+- **Paquete del monorepo:** `@makced/store`
 
-## InsForge Backend
+## Desarrollo
 
-- **Project:** Makced
-- **API Base:** `https://i65mdj5r.us-east.insforge.app`
-- **Dashboard:** https://insforge.dev/dashboard/project/7c861cfd-77d7-4e09-9888-19d33388edae
+```bash
+# Desde la raíz del monorepo
+npm run dev              # corre todas las apps
+npx turbo dev --filter=@makced/store   # solo esta app, puerto 3000
+```
 
-## Variables de Entorno
+URL: http://localhost:3000
 
-`.env.local`:
+## Configuración
+
+`.env.local` del monorepo ya cubre esta app; asegúrate de tener:
 
 ```
 NEXT_PUBLIC_INSFORGE_URL=https://i65mdj5r.us-east.insforge.app
 NEXT_PUBLIC_INSFORGE_ANON_KEY=ik_9b2c36cbad3e9371fc147c22ade8386a
 ```
 
-## InsForge CLI
+## Código compartido
 
-```bash
-# Instalar
-npm install -g @insforge/cli
+La autenticación y la conexión a InsForge viven en paquetes del monorepo, no en esta app:
 
-# Login
-insforge login --user-api-key uak_...
-
-# Vincular proyecto
-insforge link --project-id 7c861cfd-77d7-4e09-9888-19d33388edae
-```
-
-## Estructura del Proyecto
-
-- `proxy.ts` — Manejo de sesiones (reemplaza middleware en Next.js 16)
-- `lib/insforge.ts` — Cliente browser del SDK
-- `app/api/auth/refresh/route.ts` — Endpoint para refrescar tokens
-- `app/actions.ts` — Server actions para auth (signIn, signUp, signOut)
-
-## Desarrollo
-
-```bash
-npm run dev
-```
-
-http://localhost:3000
+- **Cliente/sesión/auth:** `@makced/db` (`client`, `actions`, `proxy`, `refresh`, `server`)
+- **Componentes (Nav, Footer):** `@makced/ui`
+- `apps/store/proxy.ts` — re-exporta el proxy de sesión de `@makced/db`
+- `apps/store/app/api/auth/refresh/route.ts` — re-exporta el refresh de `@makced/db`
 
 ## Links
 
