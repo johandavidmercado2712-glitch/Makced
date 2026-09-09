@@ -1,3 +1,4 @@
+import { Globe, Camera, MessageCircle, Mail, Phone, MapPin } from "lucide-react";
 import "./footer.css";
 
 function Footer (){
@@ -6,9 +7,11 @@ function Footer (){
             <div className="footer-info">
                 <h2>KICKZONE</h2>
                 <span>--------</span>
-                <span>--------</span>
-                <span>--------</span>
-                <span>--------</span>
+                <div className="footer-social">
+                    <Globe size={20} />
+                    <Camera size={20} />
+                    <MessageCircle size={20} />
+                </div>
             </div>
 
              <div className="footer-info">
@@ -28,9 +31,9 @@ function Footer (){
 
              <div className="footer-info">
                 <h2>AYUDA</h2>
-                <span>Contacto</span>
-                <span>Envios</span>
-                <span>Metodos de Pago</span>
+                <span><Mail size={14} /> Contacto</span>
+                <span><Phone size={14} /> Envios</span>
+                <span><MapPin size={14} /> Metodos de Pago</span>
             </div>
 
         </div>
