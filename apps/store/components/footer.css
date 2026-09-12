@@ -39,5 +39,5 @@
 }
 
 .footer-social svg:hover {
-    color: #2c7873;
+    color: var(--primary-mint);
 }

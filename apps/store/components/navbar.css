@@ -1,6 +1,8 @@
 .nav-main{
-  background-color: #ffffff;
+  background-color: var(--bg-card);
   width: 100%;
+  border-bottom: 1px solid var(--border-color);
+  transition: background-color 0.3s, border-color 0.3s;
 }
 
 .nav-icon{
@@ -8,7 +10,8 @@
   display: flex;
   justify-content: space-between;
   font-size: 40px;
-  color: #101010;
+  color: var(--text-primary);
+  transition: color 0.3s;
 }
 
 .nav-icon a{
@@ -16,16 +19,19 @@
   gap:10px;
   padding-top: 10px;
   font-size: 40px;
+  color: var(--text-primary);
 }
 
 .nav-icon h2{
   font-weight: 600;
   font-size: 30px;
+  color: var(--text-primary);
 }
 
 /* sessiones */
 .nav-sessiones{
-  background-color:#ffffff;
+  background-color: var(--bg-card);
+  transition: background-color 0.3s;
 }
 
 .nav-session{
@@ -37,12 +43,26 @@
 
 .nav-sessiones a{
   font-size: 20px;
-  color: #101010;
+  color: var(--text-secondary);
   font-weight: 600;
   border-bottom: 3px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
 }
 
-.nav-session a:hover{
-  border-bottom:3px solid #7a3ee1 ;
-  color: #7a3ee1;
+.nav-sessiones a:hover{
+  color: var(--primary-turquoise);
+  border-bottom-color: var(--primary-turquoise);
+}
+
+.nav-sessiones a.active{
+  color: var(--primary-mint);
+  border-bottom-color: var(--primary-mint);
+}
+
+.theme-toggle{
+  transition: color 0.2s;
+}
+
+.theme-toggle:hover{
+  color: var(--primary-mint);
 }

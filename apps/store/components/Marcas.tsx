@@ -1,29 +1,23 @@
 import "./marcas.css"
 import Image from "next/image"
 
+const marcas = [
+  { nombre: "Nike", imagen: "/marca-1.jpg" },
+  { nombre: "Adidas", imagen: "/marca-2.jpg" },
+  { nombre: "Puma", imagen: "/marca-3.jpg" },
+  { nombre: "Reebok", imagen: "/marca-4.jpg" },
+  { nombre: "New Balance", imagen: "/marca-5.jpg" },
+  { nombre: "Under Armour", imagen: "/marca-6.jpg" },
+];
+
 export default function Marcas(){
     return(
-        <div className="product-cards">
-            .
-            <div className="product-card">
-                <Image src="/marca-1.jpg" alt="marca img" width={200} height={200}/>
-            </div>
-            <div className="product-card">
-                <Image src="/marca-2.jpg" alt="marca img" width={200} height={200}/>
-            </div>
-            <div className="product-card">
-                <Image src="/marca-3.jpg" alt="marca img" width={200} height={200}/>
-            </div>
-            <div className="product-card">
-                <Image src="/marca-4.jpg" alt="marca img" width={200} height={200}/>
-            </div>
-            <div className="product-card">
-                <Image src="/marca-5.jpg" alt="marca img" width={200} height={200}/>
-            </div>
-            <div className="product-card">
-                <Image src="/marca-6.jpg" alt="marca img" width={200} height={200}/>
-            </div>
+        <div className="marcas-cards">
+            {marcas.map((marca) => (
+                <div key={marca.nombre} className="marcas-card">
+                    <Image src={marca.imagen} alt={marca.nombre} width={200} height={200}/>
+                </div>
+            ))}
         </div>
     )
-    
 }

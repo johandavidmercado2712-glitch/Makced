@@ -33,18 +33,25 @@
 .ver-mas {
     width: 200px;
     height: 200px;
-    background-color: #e0e0e0;
+    background-color: var(--bg-section);
     border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     padding-bottom: 30px;
+    border: 1px solid var(--border-color);
+    transition: background-color 0.2s;
 }
+
+.ver-mas:hover {
+    background-color: var(--primary-mint-light);
+}
+
 .ver-mas span {
     font-size: 18px;
     font-weight: 600;
-    color: #333;
+    color: var(--text-secondary);
 }
 
 .Producto-espeficacion {
@@ -66,7 +73,8 @@
   align-items: center;
   gap: 20px;
   padding-bottom: 15px;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid var(--border-color);
+  transition: border-color 0.3s;
 }
 
 .info-col {
@@ -86,20 +94,20 @@
 .Producto-informacion h1 {
   font-size: 32px;
   font-weight: 700;
-  color: #101010;
+  color: var(--text-primary);
   margin: 0;
 }
 
 .Producto-informacion h2 {
   font-size: 24px;
   font-weight: 600;
-  color: #333;
+  color: var(--text-secondary);
   margin: 0;
 }
 
 .Producto-informacion p {
   font-size: 16px;
-  color: #555;
+  color: var(--text-secondary);
   margin: 0;
 }
 
@@ -114,18 +122,20 @@
 .Producto-informacion button {
   margin-top: 20px;
   padding: 15px 30px;
-  background-color: #2c7873;
-  color: #fff;
+  background-color: var(--primary-mint);
+  color: var(--text-primary);
   border: none;
   border-radius: 12px;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
   width: 100%;
+  transition: background-color 0.2s, transform 0.2s;
 }
 
 .Producto-informacion button:hover {
-  background-color: #23615d;
+  background-color: var(--primary-turquoise);
+  transform: translateY(-1px);
 }
 
 .Producto-detalle {
@@ -138,15 +148,16 @@
 .Producto-detalle h2 {
   font-size: 16px;
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
   padding-bottom: 8px;
-  border-bottom: 2px solid #e0e0e0;
+  border-bottom: 2px solid var(--border-color);
   cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
 }
 
 .Producto-detalle h2:hover {
-  color: #2c7873;
-  border-bottom-color: #2c7873;
+  color: var(--primary-mint);
+  border-bottom-color: var(--primary-mint);
 }
 
 .vp-productos {
@@ -157,7 +168,7 @@
 .vp-productos-titulo h1 {
   font-size: 20px;
   font-weight: 600;
-  color: #101010;
+  color: var(--text-primary);
   margin-bottom: 15px;
 }
 
@@ -172,8 +183,16 @@
   flex: 0 0 200px;
   padding: 10px;
   border-radius: 12px;
-  background-color: #f5f5f5;
+  background-color: var(--bg-card);
   text-align: center;
+  border: 1px solid var(--border-color);
+  transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+}
+
+.vp-productos-card:hover {
+  border-color: var(--primary-mint);
+  box-shadow: 0 8px 30px rgba(76, 225, 172, 0.15);
+  transform: translateY(-2px);
 }
 
 .vp-productos-card img {
@@ -184,12 +203,12 @@
 
 .vp-productos-card h2 {
   font-size: 14px;
-  color: #333;
+  color: var(--text-primary);
   margin: 8px 0 4px;
 }
 
 .vp-productos-card p {
   font-size: 13px;
-  color: #666;
+  color: var(--text-secondary);
   margin: 0;
 }

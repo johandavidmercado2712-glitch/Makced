@@ -2,52 +2,172 @@ import Image from "next/image"
 import { User, Dumbbell, Heart } from "lucide-react"
 import Marcas from "../components/Marcas"
 import ProductCard from "../components/ProductCard"
+import PanelInfo from "../components/PanelInfo"
 
 export default function Page(){
   return(
     <>
-      <div className="Carrucel">
-        <div className="Carrucel-card" style={{ backgroundImage: "url('/carrucel-card.jpg')" }}>
-          <h2>Tienda Web</h2>
-          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.<br></br> Eligendi consequuntur aliquam obcaecati ut nemo hic. <br></br>Eius alias totam hic voluptatum.</p>
-          <a href="#">
-            <button>Comprar a Hora</button>
-          </a>
+    {/*  SESSION DEL CARRUCEL    */}
+      <div className="carousel rounded-box carrucel">
+        <div id="slide1" className="carousel-item relative w-full">
+          <img
+            src="/carrucel-card.jpg"
+            className="w-full"
+            alt="Slide 1" />
+          <div className="carrucel-overlay">
+            <h2 className="text-4xl font-bold mb-4">Nueva Coleccion</h2>
+            <p className="text-lg mb-6">Descubre las ultimas tendencias en calzado deportivo</p>
+            <button className="btn btn-primary">Ver Ahora</button>
+          </div>
+          <div className="carrucel-nav">
+            <a href="#slide7" className="btn btn-circle">&#10094;</a>
+            <a href="#slide2" className="btn btn-circle">&#10095;</a>
+          </div>
         </div>
-      </div >
+        <div id="slide2" className="carousel-item relative w-full">
+          <img
+            src="https://img.daisyui.com/images/stock/photo-1565098772267-60af42b81ef2.webp"
+            className="w-full"
+            alt="Slide 2" />
+          <div className="carrucel-overlay">
+            <h2 className="text-4xl font-bold mb-4">Ofertas de Temporada</h2>
+            <p className="text-lg mb-6">Hasta 50% de descuento en productos seleccionados</p>
+            <button className="btn btn-primary">Comprar</button>
+          </div>
+          <div className="carrucel-nav">
+            <a href="#slide1" className="btn btn-circle">&#10094;</a>
+            <a href="#slide3" className="btn btn-circle">&#10095;</a>
+          </div>
+        </div>
+        <div id="slide3" className="carousel-item relative w-full">
+          <img
+            src="https://img.daisyui.com/images/stock/photo-1572635148818-ef6fd45eb394.webp"
+            className="w-full"
+            alt="Slide 3" />
+          <div className="carrucel-overlay">
+            <h2 className="text-4xl font-bold mb-4">Ropa Deportiva</h2>
+            <p className="text-lg mb-6">Material de alta rendimiento para tu entrenamiento</p>
+            <button className="btn btn-primary">Explorar</button>
+          </div>
+          <div className="carrucel-nav">
+            <a href="#slide2" className="btn btn-circle">&#10094;</a>
+            <a href="#slide4" className="btn btn-circle">&#10095;</a>
+          </div>
+        </div>
+        <div id="slide4" className="carousel-item relative w-full">
+          <img
+            src="https://img.daisyui.com/images/stock/photo-1494253109108-2e30c049369b.webp"
+            className="w-full"
+            alt="Slide 4" />
+          <div className="carrucel-overlay">
+            <h2 className="text-4xl font-bold mb-4">Envio Gratis</h2>
+            <p className="text-lg mb-6">En compras mayores a $100</p>
+            <button className="btn btn-primary">Comprar Ahora</button>
+          </div>
+          <div className="carrucel-nav">
+            <a href="#slide3" className="btn btn-circle">&#10094;</a>
+            <a href="#slide5" className="btn btn-circle">&#10095;</a>
+          </div>
+        </div>
+        <div id="slide5" className="carousel-item relative w-full">
+          <img
+            src="https://img.daisyui.com/images/stock/photo-1550258987-190a2d41a8ba.webp"
+            className="w-full"
+            alt="Slide 5" />
+          <div className="carrucel-overlay">
+            <h2 className="text-4xl font-bold mb-4">Marcas Premium</h2>
+            <p className="text-lg mb-6">Nike, Adidas, Puma y mas</p>
+            <button className="btn btn-primary">Ver Marcas</button>
+          </div>
+          <div className="carrucel-nav">
+            <a href="#slide4" className="btn btn-circle">&#10094;</a>
+            <a href="#slide6" className="btn btn-circle">&#10095;</a>
+          </div>
+        </div>
+        <div id="slide6" className="carousel-item relative w-full">
+          <img
+            src="https://img.daisyui.com/images/stock/photo-1559181567-c3190ca9959b.webp"
+            className="w-full"
+            alt="Slide 6" />
+          <div className="carrucel-overlay">
+            <h2 className="text-4xl font-bold mb-4">Nuevos Lanzamientos</h2>
+            <p className="text-lg mb-6">Se el primero en拥有的 ultimas novedades</p>
+            <button className="btn btn-primary">Descubrir</button>
+          </div>
+          <div className="carrucel-nav">
+            <a href="#slide5" className="btn btn-circle">&#10094;</a>
+            <a href="#slide7" className="btn btn-circle">&#10095;</a>
+          </div>
+        </div>
+        <div id="slide7" className="carousel-item relative w-full">
+          <img
+            src="https://img.daisyui.com/images/stock/photo-1601004890684-d8cbf643f5f2.webp"
+            className="w-full"
+            alt="Slide 7" />
+          <div className="carrucel-overlay">
+            <h2 className="text-4xl font-bold mb-4">Tu Estilo, Tu Deporte</h2>
+            <p className="text-lg mb-6">Encuentra tu look perfecto para cada ocasion</p>
+            <button className="btn btn-primary">Empezar</button>
+          </div>
+          <div className="carrucel-nav">
+            <a href="#slide6" className="btn btn-circle">&#10094;</a>
+            <a href="#slide1" className="btn btn-circle">&#10095;</a>
+          </div>
+        </div>
+      </div>
 
+      {/*SESSION DE MARCAS*/}
+
+
+      
       <Marcas />
+
+      {/* SESSION DE CATEGORIAS*/}
+
 
       <div className="categoria">
         <div className="categoria-titulo">
-          <h1>CATEGORIAS</h1>
+          <div className="categoria-titulo-texto">
+            <h1>CATEGORIAS</h1>
+          </div>
+          <a href="/categoria">Ver Todas</a>
         </div>
         <div className="categoria-cards">
           <div className="categoria-card">
-            <Image src="/hombre.jpg" alt="marca img" width={350} height={250}/>
-            <h3><User size={18} /> Hombre</h3>
-
+            <Image src="/hombre.jpg" alt="marca img" width={400} height={300}/>
+            <a href="/categoriaProductos"><h3> Hombre</h3></a>
+            <div className="categoria-card-overlay">
+              <span>Ver Coleccion</span>
             </div>
-            <div className="categoria-card">
-              <Image src="/mujer.jpg" alt="marca img" width={350} height={250}/>
-              <h3><User size={18} /> Mujer</h3>
+          </div>
+          <div className="categoria-card">
+            <Image src="/mujer.jpg" alt="marca img" width={400} height={300}/>
+            <h3> Mujer</h3>
+            <div className="categoria-card-overlay">
+              <span>Ver Coleccion</span>
             </div>
-            <div className="categoria-card">
-              <Image src="/deportivo.jpg" alt="marca img" width={350} height={250}/>
-              <h3><Dumbbell size={18} /> Deportivo</h3>
+          </div>
+          <div className="categoria-card">
+            <Image src="/deportivo.jpg" alt="marca img" width={400} height={300}/>
+            <h3> Deportivo</h3>
+            <div className="categoria-card-overlay">
+              <span>Ver Coleccion</span>
             </div>
+          </div>
         </div>
       </div>
 
-      <div className="info">
-        <div className="info-detalle">
-          <h2>titulo</h2>
-          <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Inventore repudiandae natus aspernatur veniam tempore architecto.</p>
-          <a href="#">
-            <button>Ver Coleccion</button>
-          </a>
-        </div>
-      </div>
+
+
+      {/*SESSION DE INFO */}
+
+      <PanelInfo
+        image="/info-coleccion.jpg"
+        titulo="titulo"
+        descripcion="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Inventore repudiandae natus aspernatur veniam tempore architecto."
+        link="#"
+        button="Ver Coleccion"
+      />
 
       <div className="Productos">
         <div className="Productos-titulo">
@@ -59,24 +179,19 @@ export default function Page(){
           <ProductCard image="/producto.jpg" name="Puma Sport" price="$85" rating={4.0} />
           <ProductCard image="/producto.jpg" name="New Balance" price="$110" rating={4.3} />
           <ProductCard image="/producto.jpg" name="Under Armour" price="$130" rating={4.6} />
-          <ProductCard image="/producto.jpg" name="Reebok Classic" price="$75" rating={4.1} />
+          <ProductCard image="/producto.jpg" name="Under Armour" price="$130" rating={4.6} />
+          <ProductCard image="/producto.jpg" name="Under Armour" price="$130" rating={4.6} />
+          <ProductCard image="/producto.jpg" name="Under Armour" price="$130" rating={4.6} />
         </div>
 
-        <div className="Productos-cards">
-          <ProductCard image="/producto.jpg" name="Camiseta Deportiva" price="$35" rating={4.0} />
-          <ProductCard image="/producto.jpg" name="Shorts Running" price="$28" rating={3.9} />
-          <ProductCard image="/producto.jpg" name="Chaqueta Training" price="$65" rating={4.4} />
-          <ProductCard image="/producto.jpg" name="Pants Jogger" price="$45" rating={4.2} />
-          <ProductCard image="/producto.jpg" name="Sudadera Sport" price="$55" rating={4.1} />
-          <ProductCard image="/producto.jpg" name="Jersey Running" price="$40" rating={4.3} />
-        </div>
-
-        <div className="informacion">
-        <div className="informacion-detalle">
-          <h2> MANTENTE INFORMADO</h2>
-          <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Inventore repudiandae natus aspernatur veniam tempore architecto.</p>
-        </div>
-      </div>
+  
+        <PanelInfo
+          image="/informacion.jpg"
+          titulo="MANTENTE INFORMADO"
+          descripcion="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Inventore repudiandae natus aspernatur veniam tempore architecto."
+          link="#"
+          button="Suscribirse"
+        />
       </div>
     </>
   )

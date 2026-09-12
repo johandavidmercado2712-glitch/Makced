@@ -3,4 +3,12 @@ export interface ProductCardProps {
   name: string
   price: string
   rating: number
+};
+
+export interface PanelInfoProps {
+  image:string
+  titulo: string
+  descripcion: string
+  link: string
+  button:string
 }
