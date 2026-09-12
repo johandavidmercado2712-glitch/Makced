@@ -1,69 +1,122 @@
-.login-container {
+.form-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 60vh;
-}
-
-.login-card {
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
   padding: 2rem;
+  background-color: #f4f6f9; /* Fondo claro para destacar la tarjeta */
+  min-height: 100vh;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.form-card {
+  background-color: #ffffff;
+  border-radius: 20px;
+  padding: 2.5rem 2rem;
   width: 100%;
-  max-width: 380px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  max-width: 400px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08), 0 5px 15px rgba(0, 0, 0, 0.04);
+  box-sizing: border-box;
 }
 
-.login-card h2 {
-  margin: 0 0 1.25rem;
-  font-size: 1.5rem;
+/* Encabezado y Marca */
+.form-header {
   text-align: center;
-  color: #111827;
+  margin-bottom: 2rem;
 }
 
-.login-form {
+.logo-text {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1e293b;
+  letter-spacing: -0.5px;
+}
+
+.form-title {
+  font-size: 1.1rem;
+  color: #64748b;
+  font-weight: 400;
+  margin: 0;
+}
+
+.form-body {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 1.25rem;
 }
 
-.login-form input {
-  padding: 0.65rem 0.9rem;
+/* Campos de entrada */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: left;
+}
+
+.input-group label {
+  font-size: 0.85rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.form-input {
+  padding: 0.7rem 0.9rem;
   border: 1px solid #d1d5db;
-  border-radius: 8px;
+  border-radius: 10px;
   font-size: 0.95rem;
+  color: #1e293b;
+  background-color: #ffffff;
   outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  box-sizing: border-box;
+  width: 100%;
 }
 
-.login-form input:focus {
-  border-color: #2563eb;
+.form-input:focus {
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
 }
 
-.login-form button {
-  margin-top: 0.5rem;
-  padding: 0.7rem;
+.form-input.input-invalid {
+  border-color: #dc2626;
+}
+
+.form-input.input-invalid:focus {
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.12);
+}
+
+.form-body button[type='submit'] {
+  margin-top: 0.25rem;
+  padding: 0.75rem 1rem;
   border: none;
-  border-radius: 8px;
-  background: #2563eb;
-  color: #fff;
-  font-size: 1rem;
+  border-radius: 10px;
+  background-color: #4f46e5;
+  color: #ffffff;
+  font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
+  transition: background-color 0.15s ease;
 }
 
-.login-form button:hover {
-  background: #1d4ed8;
+.form-body button[type='submit']:hover {
+  background-color: #4338ca;
 }
 
 .login-message {
   margin-top: 1rem;
-  padding: 0.6rem;
-  border-radius: 8px;
-  background: #f3f4f6;
-  color: #111827;
+  padding: 0.6rem 0.9rem;
+  border-radius: 10px;
   font-size: 0.85rem;
   text-align: center;
+}
+
+.login-message.message-error {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+.login-message.message-success {
+  background-color: #dcfce7;
+  color: #15803d;
 }
 
 .login-toggle {
@@ -71,8 +124,13 @@
   margin: 1rem auto 0;
   background: none;
   border: none;
-  color: #2563eb;
+  color: #4f46e5;
   font-size: 0.85rem;
   cursor: pointer;
   text-decoration: underline;
 }
+
+.login-toggle:hover {
+  color: #4338ca;
+}
+
