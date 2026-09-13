@@ -1,5 +1,6 @@
 import Image from "next/image"
 import "./marcas.css";
+import ScrollReveal from "../../components/ScrollReveal"
 
 const marcas = [
   { nombre: "Nike", imagen: "/marca-1.jpg", cantidad: 120, slug: "nike" },
@@ -13,23 +14,27 @@ const marcas = [
 export default function Page(){
   return(
     <div className="marcas-info">
-      <h1>MARCAS</h1>
-      <p>Descubre las marcas que tenemos para ti. Encuentra tu estilo favorito.</p>
+      <ScrollReveal>
+        <h1>MARCAS</h1>
+        <p>Descubre las marcas que tenemos para ti. Encuentra tu estilo favorito.</p>
+      </ScrollReveal>
 
       <div className="marcas">
-        {marcas.map((marca) => (
-          <div key={marca.nombre} className="card">
-            <div className="card-image">
-              <img src={marca.imagen} alt={marca.nombre} />
-            </div>
-            <div className="card-info">
-              <div className="card-info-text">
-                <h2>{marca.nombre}</h2>
-                <span>{marca.cantidad} productos</span>
+        {marcas.map((marca, index) => (
+          <ScrollReveal key={marca.nombre} delay={index * 100}>
+            <div className="card">
+              <div className="card-image">
+                <img src={marca.imagen} alt={marca.nombre} />
               </div>
-              <a href="/marcasProductos">Ver todos</a>
+              <div className="card-info">
+                <div className="card-info-text">
+                  <h2>{marca.nombre}</h2>
+                  <span>{marca.cantidad} productos</span>
+                </div>
+                <a href="/marcasProductos">Ver todos</a>
+              </div>
             </div>
-          </div>
+          </ScrollReveal>
         ))}
       </div>
     </div>

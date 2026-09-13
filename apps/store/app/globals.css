@@ -4,34 +4,65 @@
 };
 
 :root {
+  /* =========================================
+     1. COLORES PRIMARIOS Y DE ACCIÓN
+     ========================================= */
   --primary-mint: #4CE1AC;
   --primary-turquoise: #00D2B4;
-  --primary-mint-light: #E6FAF6;
-  --primary-dark: #0F474A;
+  --primary-mint-light: #E6FAF5;
+
+  /* =========================================
+     2. COLORES SECUNDARIOS Y DE AVISO
+     ========================================= */
   --secondary-blue: #A5C7FF;
   --secondary-purple: #7C53ED;
-  --secondary-purple-dark: #532E9D;
   --accent-star: #FBBF24;
   --whatsapp-green: #25D366;
+
+  /* =========================================
+     3. NEUTROS Y TEXTO
+     ========================================= */
   --text-primary: #0F172A;
   --text-secondary: #64748B;
   --bg-main: #F8FAFC;
   --bg-card: #FFFFFF;
-  --bg-section: #E6FAF6;
-  --bg-input: #FFFFFF;
   --border-color: #E2E8F0;
+
+  /* =========================================
+     4. SOMBRAS Y EFECTOS
+     ========================================= */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.04);
+  --shadow-card: 0 10px 30px -5px rgba(15, 23, 42, 0.05);
+  --shadow-glow-mint: 0 8px 20px rgba(76, 225, 172, 0.35);
+
+  /* =========================================
+     5. BORDES Y RADIOS
+     ========================================= */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+
+  /* =========================================
+     6. VARIABLES LEGACY (mantener compatibilidad)
+     ========================================= */
+  --primary-dark: #0F474A;
+  --secondary-purple-dark: #532E9D;
+  --bg-section: #E6FAF5;
+  --bg-input: #FFFFFF;
 }
 
 .dark {
+  /* =========================================
+     1. COLORES PRIMARIOS Y DE ACCIÓN (VERDES)
+     ========================================= */
   --primary-mint: #4CE1AC;
   --primary-turquoise: #00D2B4;
-  --primary-mint-light: #0F474A;
-  --primary-dark: #0F474A;
-  --secondary-purple: #7C53ED;
-  --secondary-purple-dark: #532E9D;
-  --secondary-blue: #A5C7FF;
-  --accent-star: #FBBF24;
-  --whatsapp-green: #25D366;
+  --primary-mint-dark: #0F474A;
+
+  /* =========================================
+     2. NEUTROS DE FONDO Y TEXTO (MODO OSCURO)
+     ========================================= */
   --bg-main: #0F172A;
   --bg-card: #1A1C21;
   --bg-section: #111C2E;
@@ -40,6 +71,23 @@
   --text-primary: #E2E8F0;
   --text-secondary: #94A3B8;
   --border-color: #2D3748;
+
+  /* =========================================
+     3. ACENTOS SECUNDARIOS Y DESTACADOS
+     ========================================= */
+  --secondary-purple: #7C53ED;
+  --secondary-purple-dark: #532E9D;
+  --secondary-blue: #A5C7FF;
+  --accent-star: #FBBF24;
+  --whatsapp-green: #25D366;
+
+  /* =========================================
+     4. SOMBRAS Y EFECTOS NEÓN EN MODO OSCURO
+     ========================================= */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
+  --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.35);
+  --shadow-glow-mint: 0 0 25px rgba(76, 225, 172, 0.25);
+  --shadow-glow-purple: 0 0 25px rgba(124, 83, 237, 0.30);
 }
 
 body {
@@ -67,7 +115,7 @@ button{
   color: var(--text-primary);
   padding-left: 20px;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   transition: background-color 0.2s, transform 0.2s;
 }
@@ -110,21 +158,6 @@ button:hover{
 }
 
 
-.product-card{
-  padding: 10px;
-}
-
-.product-cards{
-  display: flex;
-  background-color: var(--bg-card);
-  justify-content: center;
-}
-
-.product-cards img{
-  width: 200px;
-  gap:10px;
-  padding: 10px;
-}
 .categoria{
   padding-top: 30px;
   width: 90%;
@@ -164,7 +197,7 @@ button:hover{
   padding: 30px;
   position: relative;
   padding: 0;
-  border-radius: 20px;
+  border-radius: var(--radius-lg);
   overflow: hidden;
   border: 2px solid transparent;
   transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
@@ -178,14 +211,14 @@ button:hover{
   right: 0;
   height: 50%;
   background: linear-gradient(transparent, rgba(0,0,0,0.4));
-  border-radius: 0 0 20px 20px;
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
   pointer-events: none;
 }
 
 .categoria-card:hover{
   transform: scale(1.03);
   border-color: var(--primary-mint);
-  box-shadow: 0 8px 30px rgba(76, 225, 172, 0.2);
+  box-shadow: var(--shadow-glow-mint);
 }
 .categoria-cards{
   display: flex;
@@ -199,7 +232,7 @@ button:hover{
   width: 400px;
   height: 300px;
   display: block;
-  border-radius: 20px;
+  border-radius: var(--radius-lg);
   transition: transform 0.3s;
 }
 
@@ -261,7 +294,8 @@ button:hover{
 .Productos{
   padding: 20px 30px;
   background: var(--bg-section);
-  border-radius: 20px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
   width: 90%;
   margin: 0 auto 40px;
 }
@@ -286,6 +320,10 @@ button:hover{
   margin-bottom: 1rem;
 }
 
+@keyframes show {
+  
+}
+
 @media (max-width: 1024px) {
   .Productos-cards {
     grid-template-columns: repeat(3, 1fr);
@@ -302,4 +340,18 @@ button:hover{
   .Productos-cards {
     grid-template-columns: 1fr;
   }
+}
+
+/* =========================================
+   SCROLL REVEAL ANIMATIONS
+   ========================================= */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.scroll-reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
 }

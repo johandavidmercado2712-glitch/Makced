@@ -27,15 +27,16 @@
 
 .card {
   background: var(--bg-card);
-  border-radius: 16px;
+  border-radius: var(--radius-lg);
   overflow: hidden;
   border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
   transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
 }
 
 .card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 30px rgba(76, 225, 172, 0.15);
+  box-shadow: var(--shadow-glow-mint);
   border-color: var(--primary-mint);
 }
 

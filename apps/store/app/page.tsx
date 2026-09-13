@@ -3,6 +3,7 @@ import { User, Dumbbell, Heart } from "lucide-react"
 import Marcas from "../components/Marcas"
 import ProductCard from "../components/ProductCard"
 import PanelInfo from "../components/PanelInfo"
+import ScrollReveal from "../components/ScrollReveal"
 
 export default function Page(){
   return(
@@ -122,77 +123,89 @@ export default function Page(){
       
       <Marcas />
 
-      {/* SESSION DE CATEGORIAS*/}
+      {/*SESSION DE CATEGORIAS*/}
 
 
-      <div className="categoria">
-        <div className="categoria-titulo">
-          <div className="categoria-titulo-texto">
-            <h1>CATEGORIAS</h1>
+      <ScrollReveal>
+        <div className="categoria">
+          <div className="categoria-titulo">
+            <div className="categoria-titulo-texto">
+              <h1>CATEGORIAS</h1>
+            </div>
+            <a href="/categoria">Ver Todas</a>
           </div>
-          <a href="/categoria">Ver Todas</a>
+          <div className="categoria-cards">
+            <ScrollReveal delay={100}>
+              <div className="categoria-card">
+                <Image src="/hombre.jpg" alt="marca img" width={400} height={300}/>
+                <a href="/categoriaProductos"><h3> Hombre</h3></a>
+                <div className="categoria-card-overlay">
+                  <span>Ver Coleccion</span>
+                </div>
+              </div>
+            </ScrollReveal>
+            <ScrollReveal delay={200}>
+              <div className="categoria-card">
+                <Image src="/mujer.jpg" alt="marca img" width={400} height={300}/>
+                <h3> Mujer</h3>
+                <div className="categoria-card-overlay">
+                  <span>Ver Coleccion</span>
+                </div>
+              </div>
+            </ScrollReveal>
+            <ScrollReveal delay={300}>
+              <div className="categoria-card">
+                <Image src="/deportivo.jpg" alt="marca img" width={400} height={300}/>
+                <h3> Deportivo</h3>
+                <div className="categoria-card-overlay">
+                  <span>Ver Coleccion</span>
+                </div>
+              </div>
+            </ScrollReveal>
+          </div>
         </div>
-        <div className="categoria-cards">
-          <div className="categoria-card">
-            <Image src="/hombre.jpg" alt="marca img" width={400} height={300}/>
-            <a href="/categoriaProductos"><h3> Hombre</h3></a>
-            <div className="categoria-card-overlay">
-              <span>Ver Coleccion</span>
-            </div>
-          </div>
-          <div className="categoria-card">
-            <Image src="/mujer.jpg" alt="marca img" width={400} height={300}/>
-            <h3> Mujer</h3>
-            <div className="categoria-card-overlay">
-              <span>Ver Coleccion</span>
-            </div>
-          </div>
-          <div className="categoria-card">
-            <Image src="/deportivo.jpg" alt="marca img" width={400} height={300}/>
-            <h3> Deportivo</h3>
-            <div className="categoria-card-overlay">
-              <span>Ver Coleccion</span>
-            </div>
-          </div>
-        </div>
-      </div>
+      </ScrollReveal>
 
 
 
       {/*SESSION DE INFO */}
 
-      <PanelInfo
-        image="/info-coleccion.jpg"
-        titulo="titulo"
-        descripcion="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Inventore repudiandae natus aspernatur veniam tempore architecto."
-        link="#"
-        button="Ver Coleccion"
-      />
-
-      <div className="Productos">
-        <div className="Productos-titulo">
-          <h1>PRODUCTOS</h1>
-        </div>
-        <div className="Productos-cards">
-          <ProductCard image="/producto.jpg" name="Zapatillas Nike" price="$120" rating={4.5} />
-          <ProductCard image="/producto.jpg" name="Adidas Runner" price="$95" rating={4.2} />
-          <ProductCard image="/producto.jpg" name="Puma Sport" price="$85" rating={4.0} />
-          <ProductCard image="/producto.jpg" name="New Balance" price="$110" rating={4.3} />
-          <ProductCard image="/producto.jpg" name="Under Armour" price="$130" rating={4.6} />
-          <ProductCard image="/producto.jpg" name="Under Armour" price="$130" rating={4.6} />
-          <ProductCard image="/producto.jpg" name="Under Armour" price="$130" rating={4.6} />
-          <ProductCard image="/producto.jpg" name="Under Armour" price="$130" rating={4.6} />
-        </div>
-
-  
+      <ScrollReveal>
         <PanelInfo
-          image="/informacion.jpg"
-          titulo="MANTENTE INFORMADO"
+          image="/info-coleccion.jpg"
+          titulo="titulo"
           descripcion="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Inventore repudiandae natus aspernatur veniam tempore architecto."
           link="#"
-          button="Suscribirse"
+          button="Ver Coleccion"
         />
-      </div>
+      </ScrollReveal>
+
+      <ScrollReveal>
+        <div className="Productos">
+          <div className="Productos-titulo">
+            <h1>PRODUCTOS</h1>
+          </div>
+          <div className="Productos-cards">
+            <ProductCard image="/producto.jpg" name="Zapatillas Nike" price="$120" rating={4.5} />
+            <ProductCard image="/producto.jpg" name="Adidas Runner" price="$95" rating={4.2} />
+            <ProductCard image="/producto.jpg" name="Puma Sport" price="$85" rating={4.0} />
+            <ProductCard image="/producto.jpg" name="New Balance" price="$110" rating={4.3} />
+            <ProductCard image="/producto.jpg" name="Under Armour" price="$130" rating={4.6} />
+            <ProductCard image="/producto.jpg" name="Under Armour" price="$130" rating={4.6} />
+            <ProductCard image="/producto.jpg" name="Under Armour" price="$130" rating={4.6} />
+            <ProductCard image="/producto.jpg" name="Under Armour" price="$130" rating={4.6} />
+          </div>
+
+    
+          <PanelInfo
+            image="/informacion.jpg"
+            titulo="MANTENTE INFORMADO"
+            descripcion="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Inventore repudiandae natus aspernatur veniam tempore architecto."
+            link="#"
+            button="Suscribirse"
+          />
+        </div>
+      </ScrollReveal>
     </>
   )
 }

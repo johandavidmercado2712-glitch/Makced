@@ -2,7 +2,7 @@ export interface ProductCardProps {
   image: string
   name: string
   price: string
-  rating: number
+  rating?: number
 };
 
 export interface PanelInfoProps {

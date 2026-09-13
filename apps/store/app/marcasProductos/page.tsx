@@ -1,6 +1,7 @@
 import "./marcasProductos.css";
 import ProductCard from "../../components/ProductCard"
-import PanelInfo from "../../components/PanelInfo"
+import ScrollReveal from "../../components/ScrollReveal"
+
 
 export default function Page(){
   return (
@@ -27,12 +28,14 @@ export default function Page(){
               </li>
             </ul>
           </div>
-          <div className="info-categoria">
-            <div className="info-detalle-categoria">
-              <h2>Marcas</h2>
-              <p>Descubre todas las marcas que tenemos para ti. Encuentra tu estilo favorito.</p>
+          <ScrollReveal>
+            <div className="info-categoria">
+              <div className="info-detalle-categoria">
+                <h2>Marcas</h2>
+                <p>Descubre todas las marcas que tenemos para ti. Encuentra tu estilo favorito.</p>
+              </div>
             </div>
-          </div>
+          </ScrollReveal>
         </div>
 
         <div className="div2">
@@ -46,16 +49,18 @@ export default function Page(){
         </div>
 
         <div className="div3">
-          <div className="Productos-cards">
-            <ProductCard image="/hombre.jpg" name="Zapatillas Nike Air" price="$120,000" rating={4.8} />
-            <ProductCard image="/hombre.jpg" name="Adidas Runner Pro" price="$95,000" rating={4.5} />
-            <ProductCard image="/hombre.jpg" name="Puma Sport Max" price="$85,000" rating={4.3} />
-            <ProductCard image="/hombre.jpg" name="Reebok Classic" price="$75,000" rating={4.6} />
-            <ProductCard image="/hombre.jpg" name="New Balance 574" price="$110,000" rating={4.2} />
-            <ProductCard image="/hombre.jpg" name="Under Armour Hovr" price="$130,000" rating={4.7} />
-            <ProductCard image="/hombre.jpg" name="Nike Training Pro" price="$65,000" rating={4.1} />
-            <ProductCard image="/hombre.jpg" name="Adidas Ultraboost" price="$88,000" rating={4.4} />
-          </div>
+          <ScrollReveal>
+            <div className="Productos-cards">
+              <ProductCard image="/hombre.jpg" name="Zapatillas Nike Air" price="$120,000" rating={4.8} />
+              <ProductCard image="/hombre.jpg" name="Adidas Runner Pro" price="$95,000" rating={4.5} />
+              <ProductCard image="/hombre.jpg" name="Puma Sport Max" price="$85,000" rating={4.3} />
+              <ProductCard image="/hombre.jpg" name="Reebok Classic" price="$75,000" rating={4.6} />
+              <ProductCard image="/hombre.jpg" name="New Balance 574" price="$110,000" rating={4.2} />
+              <ProductCard image="/hombre.jpg" name="Under Armour Hovr" price="$130,000" rating={4.7} />
+              <ProductCard image="/hombre.jpg" name="Nike Training Pro" price="$65,000" rating={4.1} />
+              <ProductCard image="/hombre.jpg" name="Adidas Ultraboost" price="$88,000" rating={4.4} />
+            </div>
+          </ScrollReveal>
         </div>
       </div>
     </>

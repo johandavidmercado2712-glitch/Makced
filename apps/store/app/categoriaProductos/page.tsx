@@ -2,7 +2,8 @@ import Image from "next/image"
 import { User, Dumbbell, Heart } from "lucide-react"
 import "./categoriaProductos.css";
 import ProductCard from "../../components/ProductCard"
-import PanelInfo from "../../components/PanelInfo"
+import ScrollReveal from "../../components/ScrollReveal"
+
 export default function Page(){
   return(
     <>
@@ -62,15 +63,17 @@ export default function Page(){
                     </li>
                 </ul>
             </div>
-            <div className="info-categoria">
-                <div className="info-detalle-categoria">
-                    <h2>Deportivo</h2>
-                    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Inventore repudiandae natus aspernatur veniam tempore architecto.</p>
-                    <a href="/verProducto">
-                        <button>Ver Coleccion</button>
-                    </a>
-                </div>
-      </div>
+            <ScrollReveal>
+              <div className="info-categoria">
+                  <div className="info-detalle-categoria">
+                      <h2>Deportivo</h2>
+                      <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Inventore repudiandae natus aspernatur veniam tempore architecto.</p>
+                      <a href="/verProducto">
+                          <button>Ver Coleccion</button>
+                      </a>
+                  </div>
+              </div>
+            </ScrollReveal>
         </div>
         <div className="div2">
           <div className="filtro-precio">
@@ -82,6 +85,7 @@ export default function Page(){
           </div>
         </div>
         <div className="div3">
+          <ScrollReveal>
             <div className="Productos-cards">
                 <ProductCard 
                     image='/hombre.jpg'
@@ -141,6 +145,7 @@ export default function Page(){
                     className = "Productos-card"
                 />
             </div>
+          </ScrollReveal>
         </div>
     
     </div>

@@ -31,7 +31,7 @@ export default function Navbar() {
           <i><User size={34} /></i>
         </a>
         <h2>MAKCED</h2>
-        <a className="nav-icon-links">
+        <a>
           <i><Search size={34} /></i>
           <i><Heart size={34} /></i>
           <i><ShoppingCart size={34} /></i>

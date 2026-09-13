@@ -1,9 +1,10 @@
 .Productos-card {
   width: 100%;
   background: var(--bg-card);
-  border-radius: 12px;
+  border-radius: var(--radius-md);
   overflow: hidden;
   border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
   text-align: center;
   padding: 30px;
   position: relative;
@@ -13,7 +14,7 @@
 
 .Productos-card:hover {
   border-color: var(--primary-mint);
-  box-shadow: 0 8px 30px rgba(76, 225, 172, 0.15);
+  box-shadow: var(--shadow-glow-mint);
   transform: translateY(-2px);
 }
 
@@ -21,7 +22,7 @@
   width: 100%;
   height: 150px;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
 }
 
 .Productos-card h2 {
