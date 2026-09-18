@@ -104,4 +104,5 @@
   .marcas {
     grid-template-columns: 1fr;
   }
+  .marcas-info { padding: 20px; }
 }

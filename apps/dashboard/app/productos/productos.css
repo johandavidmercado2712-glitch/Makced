@@ -1,0 +1,519 @@
+/* =========================================
+   Base Layout & Header
+   ========================================= */
+.dashboard {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.db-panel {
+  background: var(--db-bg-card);
+  border: 1px solid var(--db-border);
+  border-radius: var(--db-radius-md);
+  padding: 20px;
+}
+
+.db-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.db-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--db-text-primary);
+  margin-bottom: 8px;
+}
+
+.db-subtitle {
+  font-size: 15px;
+  color: var(--db-text-secondary);
+}
+
+.db-header-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.db-btn-primary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: var(--db-btn-primary);
+  color: white;
+  border: none;
+  border-radius: var(--db-radius-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.db-btn-primary:hover {
+  background: var(--db-btn-primary-hover);
+}
+
+/* =========================================
+   Filters Panel
+   ========================================= */
+.db-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.db-filters-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--db-text-primary);
+}
+
+.db-filters-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.db-filter-input {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--db-bg-card);
+  border: 1px solid var(--db-border);
+  border-radius: var(--db-radius-sm);
+  color: var(--db-text-muted);
+  font-size: 14px;
+}
+
+.db-filter-input:focus-within {
+  border-color: var(--db-btn-primary);
+}
+
+.db-filter-input-icon {
+  flex-shrink: 0;
+  color: var(--db-text-muted);
+}
+
+.db-filter-input input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--db-text-primary);
+  font-size: 14px;
+}
+
+.db-filter-input input::placeholder {
+  color: var(--db-text-muted);
+}
+
+.db-filter-select {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--db-bg-card);
+  border: 1px solid var(--db-border);
+  border-radius: var(--db-radius-sm);
+  color: var(--db-text-muted);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.db-filter-select:hover {
+  border-color: var(--db-text-muted);
+}
+
+.db-filter-select-icon {
+  flex-shrink: 0;
+  color: var(--db-text-muted);
+}
+
+.db-filter-select-text {
+  flex: 1;
+}
+
+.db-filter-select-arrow {
+  color: var(--db-text-muted);
+  margin-left: auto;
+}
+
+.db-filter-select-native {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--db-text-primary);
+  font-size: 14px;
+  cursor: pointer;
+  appearance: none;
+}
+
+.db-filter-select-native option {
+  background: var(--db-bg-card);
+  color: var(--db-text-primary);
+}
+
+.db-filters-count {
+  font-size: 13px;
+  color: var(--db-text-muted);
+}
+
+/* =========================================
+   Icon Button
+   ========================================= */
+.db-icon-btn {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--db-bg-card);
+  border: 1px solid var(--db-border);
+  border-radius: 50%;
+  color: var(--db-text-secondary);
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.db-icon-btn:hover {
+  border-color: var(--db-text-muted);
+  color: var(--db-text-primary);
+}
+
+/* =========================================
+   Table
+   ========================================= */
+.db-table-panel {
+  padding: 0;
+  overflow: hidden;
+}
+
+.db-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.db-table thead th {
+  padding: 14px 20px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--db-text-muted);
+  background: var(--db-bg-card);
+  border-bottom: 1px solid var(--db-border);
+}
+
+.db-table tbody td {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--db-border);
+  vertical-align: middle;
+}
+
+.db-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.db-table tbody tr:hover {
+  background: var(--db-bg-card-hover);
+}
+
+/* Product Cell */
+.db-product-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.db-product-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.db-product-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--db-text-primary);
+}
+
+.db-product-brand {
+  font-size: 12px;
+  color: var(--db-text-muted);
+}
+
+/* Category */
+.db-category {
+  font-size: 13px;
+  color: var(--db-text-secondary);
+}
+
+/* Price */
+.db-price-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.db-price {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--db-text-primary);
+}
+
+.db-price-original {
+  font-size: 12px;
+  color: var(--db-text-muted);
+  text-decoration: line-through;
+}
+
+/* Tags */
+.db-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.db-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 8px;
+  border-radius: 20px;
+}
+
+.db-tag-green {
+  background: rgba(52, 211, 153, 0.15);
+  color: var(--db-green-status);
+}
+
+.db-tag-purple {
+  background: rgba(192, 132, 252, 0.15);
+  color: var(--db-magenta);
+}
+
+.db-tag-dash {
+  color: var(--db-text-muted);
+  font-size: 14px;
+}
+
+/* Actions */
+.db-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.db-action-btn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: 1px solid var(--db-border);
+  border-radius: var(--db-radius-sm);
+  color: var(--db-text-secondary);
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.db-action-btn:hover {
+  border-color: var(--db-text-muted);
+  color: var(--db-text-primary);
+}
+
+.db-action-delete:hover {
+  border-color: #F87171;
+  color: #F87171;
+}
+
+/* =========================================
+   Responsive
+   ========================================= */
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .db-filters-row {
+    flex-wrap: wrap;
+  }
+
+  .db-filter-select {
+    min-width: calc(50% - 6px);
+  }
+
+  .db-table {
+    font-size: 13px;
+  }
+
+  .db-table thead th,
+  .db-table tbody td {
+    padding: 12px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .dashboard {
+    padding: 0 8px;
+  }
+
+  .db-panel {
+    padding: 16px;
+  }
+
+  .db-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .db-title {
+    font-size: 24px;
+  }
+
+  .db-header-actions {
+    width: 100%;
+  }
+
+  .db-header-actions button {
+    flex: 1;
+  }
+
+  .db-icon-btn {
+    width: 44px;
+    height: 44px;
+  }
+
+  .db-filters-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .db-filter-input,
+  .db-filter-select {
+    width: 100%;
+    min-width: 100%;
+  }
+
+  .db-filters-count {
+    font-size: 12px;
+  }
+
+  /* Table responsive */
+  .db-table-panel {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .db-table {
+    min-width: 600px;
+  }
+
+  .db-table thead th {
+    padding: 10px 12px;
+    font-size: 10px;
+    white-space: nowrap;
+  }
+
+  .db-table tbody td {
+    padding: 12px;
+  }
+
+  .db-product-cell {
+    gap: 8px;
+  }
+
+  .db-product-avatar {
+    width: 36px;
+    height: 36px;
+    font-size: 12px;
+  }
+
+  .db-product-name {
+    font-size: 13px;
+  }
+
+  .db-product-brand {
+    font-size: 11px;
+  }
+
+  .db-price {
+    font-size: 13px;
+  }
+
+  .db-tag {
+    font-size: 10px;
+    padding: 2px 6px;
+  }
+
+  .db-action-btn {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+/* Mobile small */
+@media (max-width: 480px) {
+  .db-panel {
+    padding: 12px;
+  }
+
+  .db-title {
+    font-size: 20px;
+  }
+
+  .db-subtitle {
+    font-size: 13px;
+  }
+
+  .db-header-actions {
+    flex-direction: column;
+  }
+
+  .db-header-actions button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .db-filter-input,
+  .db-filter-select {
+    padding: 12px;
+  }
+
+  .db-table {
+    min-width: 500px;
+  }
+
+  .db-table thead th {
+    padding: 8px 10px;
+    font-size: 9px;
+  }
+
+  .db-table tbody td {
+    padding: 10px;
+  }
+
+  .db-product-avatar {
+    width: 32px;
+    height: 32px;
+    font-size: 11px;
+  }
+}

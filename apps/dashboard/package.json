@@ -10,8 +10,10 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@insforge/sdk": "^1.5.2",
     "@makced/db": "0.1.0",
     "@makced/ui": "0.1.0",
+    "lucide-react": "^1.47.0",
     "next": "^16.3.1",
     "react": "^19.2.4",
     "react-dom": "^19.2.4"

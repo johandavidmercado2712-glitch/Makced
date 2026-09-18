@@ -3,6 +3,7 @@ export interface ProductCardProps {
   name: string
   price: string
   rating?: number
+  slug?: string
 };
 
 export interface PanelInfoProps {

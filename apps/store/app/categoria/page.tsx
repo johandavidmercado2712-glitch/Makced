@@ -1,8 +1,10 @@
 import Image from "next/image"
-import { User, Dumbbell, Heart } from "lucide-react"
+import Link from "next/link"
+export const revalidate = 120
+import { getCategorias } from "../actions/store";
 
-
-export default function Page(){
+export default async function Page(){
+    const categorias = await getCategorias();
   return(
     <>
     <div className="categoria">
@@ -12,33 +14,21 @@ export default function Page(){
         </div>
 
         <div className="categoria-cards">
-            <div className="categoria-card">
-                <Image src="/hombre.jpg" alt="marca img" width={400} height={300}/>
-                <h3> Hombre</h3>
-                <div className="categoria-card-overlay">
-                    <a href="/categoriaProductos">
-                    <span>Ver Coleccion</span></a>
-                </div>
-            </div>
-            <div className="categoria-card">
-                <Image src="/mujer.jpg" alt="marca img" width={400} height={300}/>
-                <h3> Mujer</h3>
-                <div className="categoria-card-overlay">
-                    <a href="/categoriaProductos">
-                    <span>Ver Coleccion</span></a>
-                </div>
-                </div>
-            <div className="categoria-card">
-                <Image src="/deportivo.jpg" alt="marca img" width={400} height={300}/>
-                <h3> Deportivo</h3>
-                <div className="categoria-card-overlay">
-                    <a href="/categoriaProductos">
-                    <span>Ver Coleccion</span></a>
-                </div>
+        {categorias.map((cat) => (
+            <Link key={cat.id} href={`/categoriaProductos?slug=${cat.slug}`}>
+              <div className="categoria-card">
+              <Image
+                  src={cat.imagen_url || "/placeholder-categoria.jpg"}
+                  alt={cat.nombre}
+                  width={400}
+                  height={400}
+              />
+              <h3>{cat.nombre}</h3>
+              </div>
+            </Link>
+        ))}
         </div>
     </div>
-    </div>
-
     </>
   )
 }

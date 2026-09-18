@@ -1,52 +1,100 @@
 "use client"
+import { useState } from "react";
 import { User, Search, Heart, ShoppingCart, Sun, Moon } from "lucide-react";
 import { useTheme } from "next-themes";
-import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
+import { useSyncExternalStore } from "react";
+import SearchInput from "./SearchInput";
+import Formulario from "./formulario";
 import "./navbar.css";
 
-const links = [
+const fixedLinks = [
   { href: "/", label: "Inicio" },
-  { href: "/categoriaProductos", label: "Hombres" },
-  { href: "/categoriaProductos", label: "Mujeres" },
-  { href: "/categoriaProductos", label: "Niños" },
-  { href: "/categoriaProductos", label: "Novedades" },
+  { href: "/novedades", label: "Novedades" },
   { href: "/marcas", label: "Marcas" },
   { href: "/categoria", label: "Categorias" },
 ];
 
-export default function Navbar() {
+interface NavLink {
+  href: string;
+  label: string;
+  hideOnMobile?: boolean;
+}
+
+interface NavbarProps {
+  initialCategories?: { id: string; nombre: string; slug: string }[];
+}
+
+const emptySubscribe = () => () => {};
+const getServerSnapshot = () => false;
+
+export default function Navbar({ initialCategories = [] }: NavbarProps) {
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
   const { theme, setTheme } = useTheme();
   const pathname = usePathname();
-  const [mounted, setMounted] = useState(false);
+  const searchParams = useSearchParams();
+  const currentSlug = searchParams.get("slug");
+  const mounted = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    getServerSnapshot
+  );
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const dynamicLinks: NavLink[] = initialCategories.map((cat) => ({
+    href: `/categoriaProductos?slug=${cat.slug}`,
+    label: cat.nombre,
+  }));
+
+  const links: NavLink[] = [
+    fixedLinks[0],
+    ...dynamicLinks,
+    fixedLinks[1],
+    fixedLinks[2],
+    fixedLinks[3],
+  ];
+
+  const isActive = (href: string) => {
+    const [linkPath, linkQuery] = href.split("?");
+    if (pathname !== linkPath) return false;
+    if (linkQuery) {
+      const linkSlug = new URLSearchParams(linkQuery).get("slug");
+      return linkSlug === currentSlug;
+    }
+    return !currentSlug;
+  };
 
   return (
     <div className="nav-main">
       <div className="nav-icon">
-        <a href="#">
+        <button type="button" className="nav-user-btn" onClick={() => setShowLogin(true)} aria-label="Iniciar sesión">
           <i><User size={34} /></i>
-        </a>
+        </button>
         <h2>MAKCED</h2>
-        <a>
-          <i><Search size={34} /></i>
+        <div className="nav-icons-right">
+          {searchOpen ? (
+            <SearchInput onClose={() => setSearchOpen(false)} />
+          ) : (
+            <button type="button" className="nav-icon-btn" onClick={() => setSearchOpen(true)} aria-label="Buscar">
+              <Search size={34} />
+            </button>
+          )}
           <i><Heart size={34} /></i>
-          <i><ShoppingCart size={34} /></i>
+          <button type="button" className="nav-icon-btn" onClick={() => window.location.href = "/carrito"} aria-label="Carrito">
+            <ShoppingCart size={34} />
+          </button>
           {mounted && (
-            <i 
-              className="theme-toggle" 
+            <button 
+              type="button"
+              className="nav-icon-btn theme-toggle" 
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              style={{ cursor: "pointer" }}
+              aria-label="Cambiar tema"
             >
               {theme === "dark" ? <Sun size={34} /> : <Moon size={34} />}
-            </i>
+            </button>
           )}
-        </a>
+        </div>
       </div>
-
 
       <div className="nav-sessiones">
         <div className="nav-session">
@@ -54,13 +102,15 @@ export default function Navbar() {
             <a 
               key={link.href + link.label}
               href={link.href}
-              className={pathname === link.href ? "active" : ""}
+              className={`${isActive(link.href) ? "active" : ""}${link.hideOnMobile ? " nav-hide-mobile" : ""}`}
             >
               {link.label}
             </a>
           ))}
         </div>
       </div>
+
+      {showLogin && <Formulario onClose={() => setShowLogin(false)} />}
     </div>
   );
 }

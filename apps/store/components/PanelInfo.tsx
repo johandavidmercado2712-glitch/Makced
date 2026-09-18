@@ -11,7 +11,7 @@ export default function PanelInfo({ titulo, descripcion, link, image, button }: 
   return (
     <div 
       className="panel-info"
-      style={{ backgroundImage: `url(${image})` }}
+      style={{ "--panel-bg": `url(${image})` } as React.CSSProperties}
     >
       <div className="panel-info-detalle">
         <h2>{titulo}</h2>

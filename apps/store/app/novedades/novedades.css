@@ -1,0 +1,80 @@
+.novedades-parent {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 2rem 0;
+}
+
+.novedades-migaja {
+    width: 90%;
+    margin: 0 auto;
+}
+
+.migaja-info {
+    padding: 30px;
+    padding-left: 99px;
+    font-size: 20px;
+}
+
+.novedades-info {
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    background-image: url(/info-coleccion.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    height: 400px;
+    text-align: center;
+    padding: 40px;
+    border-radius: var(--radius-lg);
+    justify-content: left;
+    align-items: center;
+    gap: 10px;
+}
+
+.novedades-detalle {
+    max-width: 600px;
+    text-align: left;
+}
+
+.novedades-detalle h2 {
+    font-size: 29px;
+    color: #ffffff;
+    margin: 0 0 10px 0;
+}
+
+.novedades-detalle p {
+    font-size: 18px;
+    color: #ffffff;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.novedades-content {
+    width: 90%;
+    margin: 0 auto;
+    padding: 0 30px;
+}
+
+.novedades-vacio {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    font-size: 18px;
+    color: var(--text-secondary);
+}
+
+@media (max-width: 768px) {
+  .migaja-info { padding: 20px; padding-left: 20px; }
+  .novedades-info { height: 350px; padding: 30px; }
+  .novedades-detalle h2 { font-size: 24px; }
+  .novedades-detalle p { font-size: 16px; }
+  .novedades-content { padding: 0 15px; }
+}
+
+@media (max-width: 480px) {
+  .novedades-info { height: 300px; padding: 20px; }
+  .novedades-detalle h2 { font-size: 20px; }
+  .novedades-content { padding: 0 10px; }
+}

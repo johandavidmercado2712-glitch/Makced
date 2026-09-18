@@ -1,1 +1,47 @@
 @import "tailwindcss";
+@plugin "daisyui";
+
+.dashboard-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.dashboard-main {
+  flex: 1;
+  margin-left: 260px;
+  padding: 24px;
+}
+
+/* =========================================
+   DASHBOARD - Dark Theme Variables
+   ========================================= */
+:root {
+  --db-bg-main: #0B1120;
+  --db-bg-card: #1A1D23;
+  --db-bg-card-hover: #22252d;
+  --db-border: #2a2d35;
+  --db-text-primary: #E2E8F0;
+  --db-text-secondary: #94A3B8;
+  --db-text-muted: #64748B;
+
+  --db-green: #4CE1AC;
+  --db-blue: #60A5FA;
+  --db-cyan: #22D3EE;
+  --db-magenta: #C084FC;
+
+  --db-amber: #FBBF24;
+  --db-green-status: #34D399;
+  --db-blue-status: #60A5FA;
+
+  --db-btn-primary: #0EA5E9;
+  --db-btn-primary-hover: #0284C7;
+
+  --db-radius-sm: 8px;
+  --db-radius-md: 12px;
+}
+
+body {
+  background: var(--db-bg-main);
+  color: var(--db-text-primary);
+  font-family: var(--font-figtree), sans-serif;
+}

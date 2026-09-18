@@ -57,12 +57,16 @@
 
 @media (max-width: 480px) {
   .marcas-cards {
-    gap: 1.5rem;
-    padding: 10px 15px;
+    gap: 1rem;
+    padding: 8px 10px;
+  }
+
+  .marcas-card {
+    padding: 10px 12px;
   }
 
   .marcas-card img {
-    width: 120px;
-    height: 45px;
+    width: 90px;
+    height: 35px;
   }
 }

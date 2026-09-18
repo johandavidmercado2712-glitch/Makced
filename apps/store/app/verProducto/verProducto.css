@@ -212,3 +212,24 @@
   color: var(--text-secondary);
   margin: 0;
 }
+
+/* =========================================
+   RESPONSIVE - VER PRODUCTO
+   ========================================= */
+@media (max-width: 768px) {
+  .ver-Producto { flex-direction: column; padding: 25px; width: 95%; }
+  .Producto-referencia img { width: 120px; height: 120px; }
+  .ver-mas { width: 120px; height: 120px; }
+  .info-col { flex: 0 0 80px; }
+  .vp-productos-card { flex: 0 0 150px; }
+}
+
+@media (max-width: 480px) {
+  .ver-Producto { padding: 15px; width: 100%; }
+  .Producto-referencia img { width: 80px; height: 80px; }
+  .ver-mas { width: 80px; height: 80px; }
+  .info-col { flex: 0 0 70px; }
+  .info-opciones { flex-wrap: wrap; }
+  .vp-productos-card { flex: 0 0 130px; }
+  .Producto-informacion h1 { font-size: 24px; }
+}

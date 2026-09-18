@@ -51,3 +51,33 @@
   align-items: center;
   gap: 2px;
 }
+
+.Productos-card .product-link {
+  display: block;
+  font-size: 12px;
+  color: var(--primary-mint);
+  margin-top: 8px;
+  opacity: 0;
+  transform: translateY(5px);
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.Productos-card:hover .product-link {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* =========================================
+   RESPONSIVE - PRODUCT CARD
+   ========================================= */
+@media (max-width: 768px) {
+  .Productos-card { padding: 15px; margin-bottom: 20px; }
+  .Productos-card img { height: 120px; }
+}
+
+@media (max-width: 480px) {
+  .Productos-card { padding: 12px; margin-bottom: 15px; }
+  .Productos-card img { height: 100px; }
+  .Productos-card h2 { font-size: 13px; }
+  .Productos-card p { font-size: 12px; }
+}

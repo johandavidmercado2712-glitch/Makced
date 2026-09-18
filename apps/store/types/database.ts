@@ -1,6 +1,7 @@
 export interface Tienda {
   id: string;
   nombre_tienda: string;
+  propietario: string;
   subdominio: string;
   plan_actual: string;
   color_principal: string;
@@ -35,12 +36,27 @@ export interface Categoria {
   activa: boolean;
 }
 
+export interface CategoriaSimple {
+  id: string;
+  nombre: string;
+  slug: string;
+  imagen_url: string | null;
+}
+
 export interface Marca {
   id: string;
   tienda_id: string;
   nombre: string;
   logo_url: string | null;
+  imagen_url: string | null;
   activa: boolean;
+}
+
+export interface MarcaSimple {
+  id: string;
+  nombre: string;
+  logo_url: string | null;
+  imagen_url: string | null;
 }
 
 export interface ProductoConRelaciones extends Producto {

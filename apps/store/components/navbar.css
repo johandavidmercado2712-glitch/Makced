@@ -8,14 +8,32 @@
 
 .nav-icon{
   padding: 20px;
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  column-gap: 20px;
+  align-items: center;
   font-size: 40px;
   color: var(--text-primary);
   transition: color 0.3s;
 }
 
+.nav-icon > :first-child {
+  justify-self: start;
+}
+
+.nav-icon > :last-child {
+  justify-self: end;
+}
+
 .nav-icon a{
+  display: flex;
+  gap:30px;
+  padding-top: 10px;
+  font-size: 40px;
+  color: var(--text-primary);
+}
+
+.nav-icons-right{
   display: flex;
   gap:30px;
   padding-top: 10px;
@@ -66,4 +84,44 @@
 
 .theme-toggle:hover{
   color: var(--primary-mint);
+}
+
+/* =========================================
+   RESPONSIVE - NAVBAR
+   ========================================= */
+.nav-user-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  color: var(--text-primary);
+}
+
+.nav-icon-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  color: var(--text-primary);
+}
+
+@media (max-width: 768px) {
+  .nav-icon { padding: 12px 15px; font-size: 26px; }
+  .nav-icon a, .nav-icons-right { gap: 16px; font-size: 26px; }
+  .nav-icon h2 { font-size: 26px; }
+  .nav-session { gap: 25px; padding-bottom: 12px; overflow-x: auto; }
+  .nav-sessiones a { font-size: 14px; white-space: nowrap; }
+}
+
+@media (max-width: 480px) {
+  .nav-icon { padding: 8px 12px; font-size: 22px; column-gap: 8px; }
+  .nav-icon a, .nav-icons-right { gap: 14px; font-size: 22px; }
+  .nav-icon h2 { font-size: 22px; }
+  .nav-session { gap: 15px; padding-bottom: 8px; padding-left: 10px; padding-right: 10px; }
+  .nav-sessiones a { font-size: 13px; }
+  .nav-hide-mobile { display: none !important; }
 }

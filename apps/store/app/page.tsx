@@ -1,11 +1,22 @@
 import Image from "next/image"
-import { User, Dumbbell, Heart } from "lucide-react"
+import Link from "next/link"
 import Marcas from "../components/Marcas"
 import ProductCard from "../components/ProductCard"
 import PanelInfo from "../components/PanelInfo"
 import ScrollReveal from "../components/ScrollReveal"
+import CarouselNav from "../components/CarouselNav"
+import { getCategorias, getMarcas } from "./actions/store";
+import { getProductosDestacados } from "./actions/products";
 
-export default function Page(){
+export const revalidate = 60;
+
+export default async function Page(){
+
+  const [categorias, marcas, productosDestacados] = await Promise.all([
+    getCategorias(),
+    getMarcas(),
+    getProductosDestacados(),
+  ]);
   return(
     <>
     {/*  SESSION DEL CARRUCEL    */}
@@ -21,13 +32,13 @@ export default function Page(){
             <button className="btn btn-primary">Ver Ahora</button>
           </div>
           <div className="carrucel-nav">
-            <a href="#slide7" className="btn btn-circle">&#10094;</a>
-            <a href="#slide2" className="btn btn-circle">&#10095;</a>
+            <CarouselNav targetId="slide7">&#10094;</CarouselNav>
+            <CarouselNav targetId="slide2">&#10095;</CarouselNav>
           </div>
         </div>
         <div id="slide2" className="carousel-item relative w-full">
           <img
-            src="https://img.daisyui.com/images/stock/photo-1565098772267-60af42b81ef2.webp"
+            src="informacion.jpg"
             className="w-full"
             alt="Slide 2" />
           <div className="carrucel-overlay">
@@ -36,8 +47,8 @@ export default function Page(){
             <button className="btn btn-primary">Comprar</button>
           </div>
           <div className="carrucel-nav">
-            <a href="#slide1" className="btn btn-circle">&#10094;</a>
-            <a href="#slide3" className="btn btn-circle">&#10095;</a>
+            <CarouselNav targetId="slide1">&#10094;</CarouselNav>
+            <CarouselNav targetId="slide3">&#10095;</CarouselNav>
           </div>
         </div>
         <div id="slide3" className="carousel-item relative w-full">
@@ -51,8 +62,8 @@ export default function Page(){
             <button className="btn btn-primary">Explorar</button>
           </div>
           <div className="carrucel-nav">
-            <a href="#slide2" className="btn btn-circle">&#10094;</a>
-            <a href="#slide4" className="btn btn-circle">&#10095;</a>
+            <CarouselNav targetId="slide2">&#10094;</CarouselNav>
+            <CarouselNav targetId="slide4">&#10095;</CarouselNav>
           </div>
         </div>
         <div id="slide4" className="carousel-item relative w-full">
@@ -66,8 +77,8 @@ export default function Page(){
             <button className="btn btn-primary">Comprar Ahora</button>
           </div>
           <div className="carrucel-nav">
-            <a href="#slide3" className="btn btn-circle">&#10094;</a>
-            <a href="#slide5" className="btn btn-circle">&#10095;</a>
+            <CarouselNav targetId="slide3">&#10094;</CarouselNav>
+            <CarouselNav targetId="slide5">&#10095;</CarouselNav>
           </div>
         </div>
         <div id="slide5" className="carousel-item relative w-full">
@@ -81,8 +92,8 @@ export default function Page(){
             <button className="btn btn-primary">Ver Marcas</button>
           </div>
           <div className="carrucel-nav">
-            <a href="#slide4" className="btn btn-circle">&#10094;</a>
-            <a href="#slide6" className="btn btn-circle">&#10095;</a>
+            <CarouselNav targetId="slide4">&#10094;</CarouselNav>
+            <CarouselNav targetId="slide6">&#10095;</CarouselNav>
           </div>
         </div>
         <div id="slide6" className="carousel-item relative w-full">
@@ -92,12 +103,12 @@ export default function Page(){
             alt="Slide 6" />
           <div className="carrucel-overlay">
             <h2 className="text-4xl font-bold mb-4">Nuevos Lanzamientos</h2>
-            <p className="text-lg mb-6">Se el primero en拥有的 ultimas novedades</p>
+            <p className="text-lg mb-6">Se el primero en conocer las ultimas novedades</p>
             <button className="btn btn-primary">Descubrir</button>
           </div>
           <div className="carrucel-nav">
-            <a href="#slide5" className="btn btn-circle">&#10094;</a>
-            <a href="#slide7" className="btn btn-circle">&#10095;</a>
+            <CarouselNav targetId="slide5">&#10094;</CarouselNav>
+            <CarouselNav targetId="slide7">&#10095;</CarouselNav>
           </div>
         </div>
         <div id="slide7" className="carousel-item relative w-full">
@@ -111,8 +122,8 @@ export default function Page(){
             <button className="btn btn-primary">Empezar</button>
           </div>
           <div className="carrucel-nav">
-            <a href="#slide6" className="btn btn-circle">&#10094;</a>
-            <a href="#slide1" className="btn btn-circle">&#10095;</a>
+            <CarouselNav targetId="slide6">&#10094;</CarouselNav>
+            <CarouselNav targetId="slide1">&#10095;</CarouselNav>
           </div>
         </div>
       </div>
@@ -121,7 +132,7 @@ export default function Page(){
 
 
       
-      <Marcas />
+      <Marcas initialMarcas={marcas} />
 
       {/*SESSION DE CATEGORIAS*/}
 
@@ -132,37 +143,25 @@ export default function Page(){
             <div className="categoria-titulo-texto">
               <h1>CATEGORIAS</h1>
             </div>
-            <a href="/categoria">Ver Todas</a>
+            <Link href="/categoria">Ver Todas</Link>
           </div>
           <div className="categoria-cards">
-            <ScrollReveal delay={100}>
-              <div className="categoria-card">
-                <Image src="/hombre.jpg" alt="marca img" width={400} height={300}/>
-                <a href="/categoriaProductos"><h3> Hombre</h3></a>
-                <div className="categoria-card-overlay">
-                  <span>Ver Coleccion</span>
-                </div>
-              </div>
-            </ScrollReveal>
-            <ScrollReveal delay={200}>
-              <div className="categoria-card">
-                <Image src="/mujer.jpg" alt="marca img" width={400} height={300}/>
-                <h3> Mujer</h3>
-                <div className="categoria-card-overlay">
-                  <span>Ver Coleccion</span>
-                </div>
-              </div>
-            </ScrollReveal>
-            <ScrollReveal delay={300}>
-              <div className="categoria-card">
-                <Image src="/deportivo.jpg" alt="marca img" width={400} height={300}/>
-                <h3> Deportivo</h3>
-                <div className="categoria-card-overlay">
-                  <span>Ver Coleccion</span>
-                </div>
-              </div>
-            </ScrollReveal>
-          </div>
+              {categorias.map((cat, index) => (
+                <ScrollReveal key={cat.id} delay={(index + 1) * 100}>
+                  <Link href={`/categoriaProductos?slug=${cat.slug}`}>
+                    <div className="categoria-card">
+                      <Image
+                        src={cat.imagen_url || "/placeholder-categoria.jpg"}
+                        alt={cat.nombre}
+                        width={400}
+                        height={400}
+                      />
+                      <h3>{cat.nombre}</h3>
+                    </div>
+                  </Link>
+                </ScrollReveal>
+              ))}
+            </div>
         </div>
       </ScrollReveal>
 
@@ -186,14 +185,17 @@ export default function Page(){
             <h1>PRODUCTOS</h1>
           </div>
           <div className="Productos-cards">
-            <ProductCard image="/producto.jpg" name="Zapatillas Nike" price="$120" rating={4.5} />
-            <ProductCard image="/producto.jpg" name="Adidas Runner" price="$95" rating={4.2} />
-            <ProductCard image="/producto.jpg" name="Puma Sport" price="$85" rating={4.0} />
-            <ProductCard image="/producto.jpg" name="New Balance" price="$110" rating={4.3} />
-            <ProductCard image="/producto.jpg" name="Under Armour" price="$130" rating={4.6} />
-            <ProductCard image="/producto.jpg" name="Under Armour" price="$130" rating={4.6} />
-            <ProductCard image="/producto.jpg" name="Under Armour" price="$130" rating={4.6} />
-            <ProductCard image="/producto.jpg" name="Under Armour" price="$130" rating={4.6} />
+            {productosDestacados.map((producto) => (
+              <ScrollReveal key={producto.id}>
+                <ProductCard
+                  image={producto.imagen_url || "/producto.jpg"}
+                  name={producto.nombre}
+                  price={`$${producto.precio.toLocaleString("es-CO")}`}
+                  rating={4.5}
+                  slug={producto.slug || undefined}
+                />
+              </ScrollReveal>
+            ))}
           </div>
 
     
