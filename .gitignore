@@ -44,3 +44,4 @@ yarn-error.log*
 .roo
 .trae
 .windsurf
+packages/ui/.github/workflows/react-doctor.yml
