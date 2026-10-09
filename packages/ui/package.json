@@ -21,5 +21,8 @@
     "next": ">=16",
     "react": ">=19",
     "react-dom": ">=19"
+  },
+  "scripts": {
+    "doctor": "npx react-doctor@latest"
   }
 }
