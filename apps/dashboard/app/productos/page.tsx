@@ -1,44 +1,72 @@
+
 import { Suspense } from "react";
+import Link from "next/link";
 import {
-  RefreshCw,
-  Plus,
   Star,
-  Pencil,
-  Trash2,
   SlidersHorizontal,
-  Tag,
-  Box,
 } from "lucide-react";
 import "./productos.css";
-import { getProductos, getProductosCount } from "@/actions/products";
+import {
+  getProductosPaginado,
+  getProductosCount,
+  guardarProducto,
+  eliminarProducto,
+} from "@/actions/products";
+import { PRODUCTOS_POR_PAGINA } from "@/lib/paginacion";
 import { getCategorias, getMarcas } from "@/actions/categoria";
 import SearchInput from "@/components/SearchInput";
 import FilterSelect from "@/components/FilterSelect";
+import Pagination from "@/components/Pagination";
+import { ModalProduct } from "@/components/modal/modalProduct";
+import ProductosActions from "@/components/ProductosActions";
+import ToggleShowPrices from "@/components/ToggleShowPrices";
+import { getTienda } from "@/actions/tienda";
 
 export default async function ProductosPage({
   searchParams,
 }: {
-  searchParams: Promise<{ search?: string; marca?: string; categoria?: string }>;
+  searchParams: Promise<{
+    search?: string;
+    marca?: string;
+    categoria?: string;
+    page?: string;
+  }>;
 }) {
-  const { search, marca, categoria } = await searchParams;
+  const { search, marca, categoria, page } = await searchParams;
+  const pagina = page && Number.isFinite(Number(page)) && Number(page) >= 1
+    ? Math.floor(Number(page))
+    : 1;
 
-  const [products, total, marcas, categorias] = await Promise.all([
-    getProductos(search, marca, categoria),
+  const [resultado, totalCatalogo, marcas, categorias] = await Promise.all([
+    getProductosPaginado(search, marca, categoria, pagina),
     getProductosCount(),
     getMarcas(),
     getCategorias(),
   ]);
+
+  const tienda = await getTienda();
+  const diseno = (tienda?.diseno ?? {}) as { mostrar_precios?: unknown };
+  const mostrarPrecios = Boolean(diseno.mostrar_precios ?? true);
+  const { productos: products, total, totalPaginas, page: paginaActual } = resultado;
+  const hayFiltros = Boolean(search || marca || categoria);
+
+  const desde = total === 0 ? 0 : (paginaActual - 1) * PRODUCTOS_POR_PAGINA + 1;
+  const hasta = total === 0 ? 0 : desde + products.length - 1;
 
   return (
     <div className="dashboard">
       <div className="db-panel db-header">
         <div>
           <h1 className="db-title">Productos</h1>
-          <p className="db-subtitle">{total} productos en el catálogo</p>
+          <p className="db-subtitle">{totalCatalogo} productos en el catálogo</p>
         </div>
-        <div className="db-header-actions">
-          <button className="db-icon-btn"><RefreshCw size={18} /></button>
-          <button className="db-btn-primary"><Plus size={18} /> Nuevo producto</button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          <ProductosActions
+            marcas={marcas}
+            categorias={categorias}
+            onSave={guardarProducto}
+          />
+          <ToggleShowPrices initial={mostrarPrecios} />
         </div>
       </div>
 
@@ -71,7 +99,9 @@ export default async function ProductosPage({
           </Suspense>
         </div>
         <span className="db-filters-count">
-          {products.length} de {total} productos
+          {total === 0
+            ? "0"
+            : `${desde}–${hasta} de ${total}`} productos
           {search && ` (buscando: "${search}")`}
           {marca && ` (marca: ${marcas.find((m) => m.id === marca)?.nombre})`}
           {categoria && ` (categoría: ${categorias.find((c) => c.id === categoria)?.nombre})`}
@@ -92,8 +122,28 @@ export default async function ProductosPage({
           <tbody>
             {products.length === 0 ? (
               <tr>
-                <td colSpan={5} style={{ textAlign: "center", padding: "40px 0", color: "var(--db-text-muted)" }}>
-                  No se encontraron productos
+                <td colSpan={5}>
+                  <div className="db-empty">
+                    {hayFiltros ? (
+                      <>
+                        <p className="db-empty-titulo">No hay resultados</p>
+                        <p className="db-empty-texto">
+                          Ningún producto coincide con
+                          {search ? ` “${search}”` : " los filtros aplicados"}.
+                        </p>
+                        <Link className="db-empty-cta" href="/productos">
+                          Limpiar filtros
+                        </Link>
+                      </>
+                    ) : (
+                      <>
+                        <p className="db-empty-titulo">Tu catálogo está vacío</p>
+                        <p className="db-empty-texto">
+                          Crea tu primer producto con el botón “Nuevo producto” de arriba.
+                        </p>
+                      </>
+                    )}
+                  </div>
                 </td>
               </tr>
             ) : (
@@ -103,17 +153,25 @@ export default async function ProductosPage({
                     <div className="db-product-cell">
                       <div
                         className="db-product-avatar"
-                        style={{ background: "rgba(148, 163, 184, 0.2)", color: "#94A3B8" }}
+                        style={
+                          p.imagen_url
+                            ? undefined
+                            : { background: "rgba(148, 163, 184, 0.2)", color: "#94A3B8" }
+                        }
                       >
-                        {p.marca?.[0]?.nombre?.[0] || "?"}
+                        {p.imagen_url ? (
+                          <img src={p.imagen_url} alt={p.nombre} />
+                        ) : (
+                          p.marca?.nombre?.[0] || "?"
+                        )}
                       </div>
                       <div>
                         <p className="db-product-name">{p.nombre}</p>
-                        <p className="db-product-brand">{p.marca?.[0]?.nombre}</p>
+                        <p className="db-product-brand">{p.marca?.nombre}</p>
                       </div>
                     </div>
                   </td>
-                  <td><span className="db-category">{p.categoria?.[0]?.nombre}</span></td>
+                  <td><span className="db-category">{p.categoria?.nombre}</span></td>
                   <td>
                     <div className="db-price-cell">
                       <span className="db-price">${p.precio.toLocaleString("es-CO")}</span>
@@ -138,16 +196,25 @@ export default async function ProductosPage({
                     </div>
                   </td>
                   <td>
-                    <div className="db-actions">
-                      <button className="db-action-btn"><Pencil size={16} /></button>
-                      <button className="db-action-btn db-action-delete"><Trash2 size={16} /></button>
-                    </div>
+                    <ModalProduct
+                      producto={p}
+                      marcas={marcas}
+                      categorias={categorias}
+                      onSave={guardarProducto}
+                      onDelete={eliminarProducto}
+                    />
                   </td>
                 </tr>
               ))
             )}
           </tbody>
         </table>
+        <Suspense>
+          <Pagination
+            currentPage={paginaActual}
+            totalPages={totalPaginas}
+          />
+        </Suspense>
       </div>
     </div>
   );

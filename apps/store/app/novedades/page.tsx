@@ -1,6 +1,6 @@
 import "./novedades.css";
-import ProductCard from "../../components/ProductCard"
-import ScrollReveal from "../../components/ScrollReveal"
+import ProductCard from "../../components/product/ProductCard"
+import ScrollReveal from "../../components/ui/ScrollReveal"
 import { getProductosNuevos } from "../actions/products";
 import Link from "next/link";
 

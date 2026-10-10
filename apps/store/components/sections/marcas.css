@@ -1,0 +1,93 @@
+/* =========================================
+   Marcas - Infinite Carousel
+   ========================================= */
+.marcas {
+  overflow: hidden;
+  background-color: var(--bg-main);
+  padding: 20px 0;
+}
+
+.marcas-track {
+  display: flex;
+  gap: 3rem;
+  width: max-content;
+  animation: marquee 20s linear infinite;
+}
+
+.marcas-track:hover {
+  animation-play-state: paused;
+}
+
+/* =========================================
+   Marca Card
+   ========================================= */
+.marcas-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-card);
+  border-radius: var(--radius-md);
+  padding: 15px 20px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  opacity: 0.6;
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+
+.marcas-card:hover {
+  transform: scale(1.08);
+  opacity: 1;
+}
+
+.marcas-card img {
+  width: 180px;
+  height: 70px;
+  object-fit: contain;
+  transition: opacity 0.3s ease;
+}
+
+.marcas-card:hover img {
+  opacity: 1;
+}
+
+/* =========================================
+   Marquee Animation
+   ========================================= */
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* =========================================
+   Responsive
+   ========================================= */
+@media (max-width: 768px) {
+  .marcas-track {
+    gap: 1.5rem;
+  }
+
+  .marcas-card img {
+    width: 140px;
+    height: 55px;
+  }
+}
+
+@media (max-width: 480px) {
+  .marcas-track {
+    gap: 0.75rem;
+    animation-duration: 26s;
+  }
+
+  .marcas-card {
+    padding: 10px 12px;
+  }
+
+  .marcas-card img {
+    width: 90px;
+    height: 35px;
+  }
+}

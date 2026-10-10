@@ -3,14 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "exports": {
-    "./Nav": {
-      "types": "./src/Nav.tsx",
-      "default": "./src/Nav.tsx"
-    },
-    "./Footer": {
-      "types": "./src/Footer.tsx",
-      "default": "./src/Footer.tsx"
-    },
     "./LoginForm": {
       "types": "./src/LoginForm.tsx",
       "default": "./src/LoginForm.tsx"
@@ -21,5 +13,8 @@
     "next": ">=16",
     "react": ">=19",
     "react-dom": ">=19"
+  },
+  "dependencies": {
+    "lucide-react": "^1.47.0"
   }
 }

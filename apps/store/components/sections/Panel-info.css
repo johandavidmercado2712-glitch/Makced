@@ -1,0 +1,114 @@
+.panel-info {
+  width: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 400px;
+  text-align: left;
+  padding: 0;
+  border-radius: 5px;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.panel-info::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: var(--panel-bg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  transition: transform 0.6s ease;
+  z-index: 0;
+}
+
+.panel-info:hover::before {
+  transform: scale(1.08);
+}
+
+.panel-info::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0.35) 50%, transparent 100%);
+  border-radius: 5px;
+  pointer-events: none;
+  z-index: 1;
+  transition: background 0.6s ease;
+}
+
+.panel-info:hover::after {
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.25) 50%, transparent 100%);
+}
+
+.panel-info-detalle {
+  max-width: 600px;
+  text-align: left;
+  position: relative;
+  z-index: 2;
+  padding: 60px 80px;
+}
+
+.panel-info-detalle h2 {
+  font-size: 36px;
+  color: #ffffff;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  line-height: 1.1;
+  margin: 0 0 15px 0;
+}
+
+.panel-info-detalle p {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0 0 25px 0;
+  line-height: 1.6;
+  max-width: 480px;
+}
+
+.panel-info-detalle button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 20px;
+  width: 170px;
+  height: 60px;
+  border-radius: 8px;
+  background-color: transparent;
+  color: #ffffff;
+  border: 1px solid #ffffff;
+  margin: 5px;
+  font-weight: 600;
+  padding: 0;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.panel-info-detalle button:hover {
+  background-color: #ffffff;
+  color: #121212;
+}
+
+/* =========================================
+   RESPONSIVE - PANEL INFO
+   ========================================= */
+@media (max-width: 768px) {
+  .panel-info { min-height: 350px; }
+  .panel-info-detalle { padding: 32px 24px; }
+  .panel-info-detalle h2 { font-size: clamp(24px, 4vw, 30px); }
+  .panel-info-detalle button { width: min(180px, 100%); min-height: 48px; }
+}
+
+@media (max-width: 480px) {
+  .panel-info { min-height: 280px; }
+  .panel-info-detalle { width: 100%; box-sizing: border-box; padding: 24px 18px; }
+  .panel-info-detalle h2 { font-size: 21px; }
+  .panel-info-detalle p { font-size: 14px; margin-bottom: 18px; }
+  .panel-info-detalle button { width: min(220px, 100%); font-size: 16px; }
+}

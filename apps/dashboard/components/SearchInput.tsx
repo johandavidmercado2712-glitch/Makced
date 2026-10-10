@@ -1,7 +1,7 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
-import { useTransition } from "react";
+import { useRouter, useSearchParams } from "next/navigation"; //useRouter navergar por medio de codigo . useSearchParams leer los parametros despues de ? para el filtro
+import { useTransition } from "react"; //controllar el rendimiento 
 import { Search } from "lucide-react";
 
 export default function SearchInput({ defaultValue }: { defaultValue?: string }) {
@@ -10,14 +10,15 @@ export default function SearchInput({ defaultValue }: { defaultValue?: string })
   const [isPending, startTransition] = useTransition();
 
   function handleSearch(term: string) {
-    const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams(searchParams.toString()); //crea una copia de la url actual 
     if (term) {
-      params.set("search", term);
+      params.set("search", term); // Si el usuario escribió algo, agrega o actualiza el parámetro "search
     } else {
-      params.delete("search");
+      params.delete("search"); // Si el campo está vacío, borra el parámetro de la URL
     }
+    params.delete("page"); // un cambio de búsqueda reinicia la paginación
     startTransition(() => {
-      router.replace(`/productos?${params.toString()}`);
+      router.replace(`/productos?${params.toString()}`); //actualiza con los nuevos parametros dentro de una transicio para el rendimiento 
     });
   }
 
@@ -27,6 +28,7 @@ export default function SearchInput({ defaultValue }: { defaultValue?: string })
       <input
         type="text"
         placeholder="Buscar por nombre..."
+        aria-label="Buscar productos"
         defaultValue={defaultValue}
         onChange={(e) => handleSearch(e.target.value)}
       />

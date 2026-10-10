@@ -1,21 +1,29 @@
 import "./marcasProductos.css";
-import ScrollReveal from "../../components/ScrollReveal"
-import FiltroPrecio from "../../components/FiltroPrecio"
-import ProductGrid from "../../components/ProductGrid"
-import Breadcrumbs from "../../components/Breadcrumbs"
-import { getProductosPorMarca } from "../actions/products";
+import { Suspense } from "react"
+import ScrollReveal from "../../components/ui/ScrollReveal"
+import FiltroPrecio from "../../components/product/FiltroPrecio"
+import Breadcrumbs from "../../components/ui/Breadcrumbs"
+import ProductGridSkeleton from "../../components/product/ProductGridSkeleton"
+import ProductGrid from "../../components/product/ProductGrid"
+import { getProductosPorMarca, getMaxPrice } from "../actions/products";
 import Link from "next/link";
 
 export const revalidate = 30;
 
+async function ProductosPorMarca({ slug, maxPrice }: { slug: string; maxPrice?: number }) {
+  const productos = await getProductosPorMarca(slug, maxPrice)
+  return <ProductGrid productos={productos} />
+}
+
 export default async function Page({
   searchParams,
 }: {
-  searchParams: Promise<{ slug?: string }>;
+  searchParams: Promise<{ slug?: string; maxPrice?: string }>;
 }) {
-  const { slug } = await searchParams;
+  const { slug, maxPrice } = await searchParams;
   const marcaNombre = slug || "Nike";
-  const productos = await getProductosPorMarca(marcaNombre);
+  const maxPriceNum = maxPrice ? Number(maxPrice) : undefined;
+  const maxPriceDB = await getMaxPrice();
 
   return (
     <>
@@ -29,14 +37,16 @@ export default async function Page({
             <div className="info-categoria">
               <div className="info-detalle-categoria">
                 <h2>{marcaNombre}</h2>
-                <p>Descubre todas las productos de {marcaNombre}. Encuentra tu estilo favorito.</p>
+                <p>Descubre todos los productos de {marcaNombre}. Encuentra tu estilo favorito.</p>
               </div>
             </div>
           </ScrollReveal>
         </div>
 
-        <FiltroPrecio />
-        <ProductGrid productos={productos} />
+        <FiltroPrecio maxPrice={maxPriceDB} />
+        <Suspense fallback={<ProductGridSkeleton count={4} />}>
+          <ProductosPorMarca slug={marcaNombre} maxPrice={maxPriceNum} />
+        </Suspense>
       </div>
     </>
   )

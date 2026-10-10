@@ -22,6 +22,10 @@
     "./server": {
       "types": "./src/server.ts",
       "default": "./src/server.ts"
+    },
+    "./diseno": {
+      "types": "./src/diseno.ts",
+      "default": "./src/diseno.ts"
     }
   },
   "peerDependencies": {

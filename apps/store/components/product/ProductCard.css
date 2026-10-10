@@ -1,0 +1,169 @@
+.Productos-card {
+  width: 100%;
+  min-width: 0;
+  max-width: 280px;
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
+  text-align: left;
+  padding: 0;
+  position: relative;
+  transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+  margin: 0 auto 40px;
+}
+
+.Productos-card:hover {
+  box-shadow: var(--shadow-glow-mint);
+  transform: translateY(-2px);
+}
+
+/* =========================================
+   Image - Aspect Ratio 1:1
+   ========================================= */
+.product-image-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1/1;
+  overflow: hidden;
+  background: var(--bg-main);
+}
+
+.product-image-wrapper img {
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.Productos-card:hover .product-image-wrapper img {
+  transform: scale(1.05);
+}
+
+/* =========================================
+   Content - Left Aligned Hierarchy
+   ========================================= */
+.product-content {
+  padding: 16px;
+}
+
+.product-marca {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+  margin: 0 0 4px 0;
+}
+
+.product-nombre {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 8px 0;
+  overflow-wrap: anywhere;
+}
+
+.product-precio-fila {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.product-precio {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--primary-mint);
+  margin: 0;
+}
+
+/* =========================================
+   Heart Rating - Tooltip
+   ========================================= */
+.product-rating {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  z-index: 2;
+}
+
+.heart-icon {
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.9);
+  transition: color 0.2s, transform 0.2s;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 6px;
+  border-radius: 50%;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.heart-icon:hover {
+  color: #ef4444;
+  transform: scale(1.15);
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.heart-tooltip {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 4px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+  transition: opacity 0.2s, transform 0.2s, visibility 0.2s;
+  background: var(--primary-mint);
+  color: var(--text-primary);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+}
+
+.heart-icon:hover ~ .heart-tooltip,
+.product-rating:hover .heart-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* =========================================
+   Responsive
+   ========================================= */
+@media (max-width: 768px) {
+  .Productos-card { margin: 0 auto 20px; max-width: none; }
+  .product-content { padding: 12px; }
+  .product-nombre { font-size: 14px; }
+  .product-precio { font-size: 14px; }
+  .heart-icon { width: 32px; height: 32px; padding: 6px; }
+}
+
+@media (max-width: 480px) {
+  .Productos-card { margin-bottom: 12px; }
+  .product-content { padding: 9px; }
+  .product-marca { font-size: 10px; }
+  .product-nombre { font-size: 12px; line-height: 1.35; }
+  .product-precio { font-size: 13px; }
+  .product-rating { top: 6px; right: 6px; }
+  .heart-icon { width: 30px; height: 30px; }
+}
+
+/* =========================================
+   Loading / Skeleton State
+   ========================================= */
+.Productos-card.loading {
+  pointer-events: none;
+}
+
+.Productos-card.loading .product-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}

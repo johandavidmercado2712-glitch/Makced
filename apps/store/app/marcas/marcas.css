@@ -97,12 +97,44 @@
 @media (max-width: 768px) {
   .marcas {
     grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
   }
+
+  .marcas-info {
+    width: 100%;
+    padding: 28px 20px;
+    box-sizing: border-box;
+  }
+
+  .card-info { padding: 12px; gap: 8px; }
+  .card-info a { opacity: 1; transform: none; }
 }
 
 @media (max-width: 480px) {
   .marcas {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
   }
-  .marcas-info { padding: 20px; }
+
+  .marcas-info {
+    padding: 22px 12px;
+  }
+
+  .marcas-info h1 { font-size: 24px; }
+  .marcas-info p { font-size: 14px; margin-bottom: 20px; }
+  .card-image img { height: 130px; }
+  .card-info {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 10px;
+  }
+  .card-info-text h2 { font-size: 14px; overflow-wrap: anywhere; }
+  .card-info-text span { font-size: 12px; }
+  .card-info a { font-size: 12px; }
+}
+
+@media (max-width: 360px) {
+  .marcas {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }

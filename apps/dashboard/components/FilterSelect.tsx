@@ -3,24 +3,12 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTransition } from "react";
 import { Tag, Box, ChevronDown, type LucideIcon } from "lucide-react";
+import type { FilterSelectProps } from "@/types/components";
 
 const iconMap: Record<string, LucideIcon> = {
   Tag,
   Box,
 };
-
-interface Option {
-  id: string;
-  nombre: string;
-}
-
-interface FilterSelectProps {
-  icon: string;
-  label: string;
-  options: Option[];
-  paramKey: string;
-  defaultValue?: string;
-}
 
 export default function FilterSelect({
   icon,
@@ -42,6 +30,7 @@ export default function FilterSelect({
     } else {
       params.delete(paramKey);
     }
+    params.delete("page"); // un cambio de filtro reinicia la paginación
     startTransition(() => {
       router.replace(`/productos?${params.toString()}`);
     });
@@ -53,6 +42,7 @@ export default function FilterSelect({
       <select
         className="db-filter-select-native"
         defaultValue={defaultValue || ""}
+        aria-label={label}
         onChange={(e) => handleChange(e.target.value)}
       >
         <option value="">Todas las {label}</option>

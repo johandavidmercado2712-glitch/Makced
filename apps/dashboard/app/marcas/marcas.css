@@ -1,0 +1,43 @@
+/* Estilos propios de /marcas (tablas y layout vienen de productos.css) */
+
+.dashboard > .db-table-panel + .db-table-panel {
+  margin-top: 16px;
+}
+
+.db-section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--db-border);
+}
+
+.db-section-header h2 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0;
+  flex: 1;
+}
+
+.db-section-titles {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.db-section-titles h2 {
+  flex: 0 0 auto;
+}
+
+.db-section-titles p {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--db-text-secondary);
+}
+
+.db-tag-muted {
+  background: rgba(148, 163, 184, 0.15);
+  color: var(--db-text-muted);
+}

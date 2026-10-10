@@ -1,0 +1,196 @@
+/* =========================================
+   CarouselNav - Hero Section
+   ========================================= */
+.carousel-nav {
+  width: 100%;
+  min-height: 60vh;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 60px;
+  padding: 0 60px;
+  background-color: var(--bg-card);
+  transition: background-color 0.3s;
+}
+
+.carousel-nav-content {
+  max-width: 550px;
+}
+
+/* =========================================
+   Text Rotate - Spans
+   ========================================= */
+.text-rotate {
+  display: grid;
+  min-height: 4.5rem;
+  height: auto;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.text-rotate-word {
+  grid-row: 1;
+  grid-column: 1;
+  color: var(--primary-mint);
+  font-size: 3.5rem;
+  font-weight: 700;
+  font-style: italic;
+  opacity: 0;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  animation: rotateWords 12s infinite;
+}
+
+.dark .text-rotate-word {
+  text-shadow: 0 2px 10px rgba(248, 250, 252, 0.3);
+}
+
+/* =========================================
+   Text Rotate - Paragraphs
+   ========================================= */
+.text-rotate-p {
+  display: grid;
+  min-height: 6rem;
+  height: auto;
+  overflow: hidden;
+  margin-bottom: 30px;
+}
+
+.text-rotate-p-word {
+  grid-row: 1;
+  grid-column: 1;
+  color: var(--text-secondary);
+  font-size: 16px;
+  line-height: 1.6;
+  opacity: 0;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.15);
+  animation: rotateParagraphs 12s infinite;
+}
+
+.dark .text-rotate-p-word {
+  text-shadow: 0 1px 6px rgba(248, 250, 252, 0.2);
+}
+
+/* =========================================
+   Carousel Image
+   ========================================= */
+.carousel-nav-image {
+  position: relative;
+  width: 450px;
+  height: 450px;
+  border-radius: 16px;
+  flex-shrink: 0;
+  filter: drop-shadow(0 25px 40px rgba(0, 0, 0, 0.35));
+}
+
+.carousel-nav-image img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 16px;
+  opacity: 0;
+  animation: rotateImages 12s infinite;
+}
+
+/* =========================================
+   Animations - 3 items, each visible 33% (no gaps)
+   ========================================= */
+@keyframes rotateWords {
+  0%           { opacity: 0; transform: translateY(8px); }
+  2%           { opacity: 1; transform: translateY(0); }
+  30%          { opacity: 1; transform: translateY(0); }
+  33%          { opacity: 0; transform: translateY(-8px); }
+  100%         { opacity: 0; }
+}
+
+@keyframes rotateParagraphs {
+  0%           { opacity: 0; transform: translateY(8px); }
+  2%           { opacity: 1; transform: translateY(0); }
+  30%          { opacity: 1; transform: translateY(0); }
+  33%          { opacity: 0; transform: translateY(-8px); }
+  100%         { opacity: 0; }
+}
+
+@keyframes rotateImages {
+  0%           { opacity: 0; transform: scale(1.05); }
+  2%           { opacity: 1; transform: scale(1); }
+  30%          { opacity: 1; transform: scale(1); }
+  33%          { opacity: 0; transform: scale(1.05); }
+  100%         { opacity: 0; }
+}
+
+/* =========================================
+   Button
+   ========================================= */
+.carousel-nav-content .btn-primary {
+  padding: 12px 28px;
+  font-size: 16px;
+}
+
+/* =========================================
+   Responsive
+   ========================================= */
+@media (max-width: 1024px) {
+  .carousel-nav {
+    padding: 0 30px;
+    gap: 40px;
+  }
+
+  .carousel-nav-image {
+    width: 350px;
+    height: 350px;
+  }
+}
+
+@media (max-width: 768px) {
+  .carousel-nav {
+    min-height: 0;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    padding: 40px 20px;
+  }
+
+  .carousel-nav-content {
+    max-width: 100%;
+  }
+
+  .text-rotate-word {
+    font-size: 2.5rem;
+  }
+
+  .text-rotate-p-word {
+    font-size: 14px;
+  }
+
+  .carousel-nav-image {
+    width: min(300px, 78vw);
+    height: auto;
+    aspect-ratio: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .carousel-nav {
+    gap: 18px;
+    padding: 32px 16px;
+  }
+
+  .text-rotate { min-height: 2.6rem; margin-bottom: 12px; }
+  .text-rotate-p { min-height: 5rem; margin-bottom: 18px; }
+  .text-rotate-word {
+    font-size: 2rem;
+    line-height: 1.2;
+  }
+
+  .text-rotate-p-word {
+    font-size: 13px;
+  }
+
+  .carousel-nav-image {
+    width: min(260px, 78vw);
+  }
+}

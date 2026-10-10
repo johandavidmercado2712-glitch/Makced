@@ -33,12 +33,12 @@ async function seed() {
   // 2. Crear marcas
   console.log("Creando marcas...");
   const marcas = [
-    { tienda_id: tienda.id, nombre: "Nike", logo_url: "/marca-1.jpg", activa: true },
-    { tienda_id: tienda.id, nombre: "Adidas", logo_url: "/marca-2.jpg", activa: true },
-    { tienda_id: tienda.id, nombre: "Puma", logo_url: "/marca-3.jpg", activa: true },
-    { tienda_id: tienda.id, nombre: "Reebok", logo_url: "/marca-4.jpg", activa: true },
-    { tienda_id: tienda.id, nombre: "New Balance", logo_url: "/marca-5.jpg", activa: true },
-    { tienda_id: tienda.id, nombre: "Under Armour", logo_url: "/marca-6.jpg", activa: true },
+    { tienda_id: tienda.id, nombre: "Nike", logo_url: "https://worldvectorlogo.com/logos/nike.svg", activa: true },
+    { tienda_id: tienda.id, nombre: "Adidas", logo_url: "https://worldvectorlogo.com/logos/adidas-2.svg", activa: true },
+    { tienda_id: tienda.id, nombre: "Puma", logo_url: "https://worldvectorlogo.com/logos/puma-logo.svg", activa: true },
+    { tienda_id: tienda.id, nombre: "Reebok", logo_url: "https://worldvectorlogo.com/logos/reebok.svg", activa: true },
+    { tienda_id: tienda.id, nombre: "New Balance", logo_url: "https://worldvectorlogo.com/logos/new-balance-2.svg", activa: true },
+    { tienda_id: tienda.id, nombre: "Under Armour", logo_url: "https://worldvectorlogo.com/logos/under-armour-logo.svg", activa: true },
   ];
 
   const { data: marcasCreadas, error: marcasError } = await insforge.database

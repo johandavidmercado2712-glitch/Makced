@@ -7,8 +7,8 @@
   /* =========================================
      1. COLORES PRIMARIOS Y DE ACCIÓN
      ========================================= */
-  --primary-mint: #4CE1AC;
-  --primary-turquoise: #00D2B4;
+  --primary-mint: #00E599;
+  --primary-turquoise: #00E599;
   --primary-mint-light: #E6FAF5;
 
   /* =========================================
@@ -22,10 +22,10 @@
   /* =========================================
      3. NEUTROS Y TEXTO
      ========================================= */
-  --text-primary: #0F172A;
+  --text-primary: #121212;
   --text-secondary: #64748B;
-  --bg-main: #F8FAFC;
-  --bg-card: #FFFFFF;
+  --bg-main: #FAF9F6;
+  --bg-card: #FAF9F6;
   --border-color: #E2E8F0;
 
   /* =========================================
@@ -40,7 +40,7 @@
      ========================================= */
   --radius-sm: 8px;
   --radius-md: 12px;
-  --radius-lg: 20px;
+  --radius-lg: 5px;
   --radius-full: 9999px;
 
   /* =========================================
@@ -57,15 +57,15 @@
      1. COLORES PRIMARIOS Y DE ACCIÓN (VERDES)
      ========================================= */
   --primary-mint: #4CE1AC;
-  --primary-turquoise: #00D2B4;
+  --primary-turquoise: #00E599;
   --primary-mint-dark: #0F474A;
 
   /* =========================================
      2. NEUTROS DE FONDO Y TEXTO (MODO OSCURO)
      ========================================= */
-  --bg-main: #0F172A;
-  --bg-card: #1A1C21;
-  --bg-section: #111C2E;
+  --bg-main: #121316;
+  --bg-card: #121316;
+  --bg-section: #1A1C21;
   --bg-card-highlighted: #102B30;
   --bg-input: #141F2F;
   --text-primary: #E2E8F0;
@@ -106,22 +106,6 @@ body {
 
 .layout-main {
   flex: 1;
-}
-
-button{
-  text-align: center;
-  justify-content: center;
-  background-color: var(--primary-mint);
-  color: var(--text-primary);
-  padding-left: 20px;
-  border: none;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  transition: background-color 0.2s, transform 0.2s;
-}
-
-button:hover{
-  background-color: var(--primary-turquoise);
 }
 
 .carrucel{
@@ -173,7 +157,7 @@ button:hover{
 }
 
 .categoria-titulo{
-  font-size: 20px;
+  font-size: 25px;
   color: var(--text-primary);
   font-weight: 600;
   margin-bottom: 30px;
@@ -181,6 +165,7 @@ button:hover{
   justify-content: space-between;
   align-items: baseline;
   width: 100%;
+  padding-bottom: 30px;
 }
 
 .categoria-titulo-texto h1{
@@ -189,12 +174,13 @@ button:hover{
 }
 
 .categoria-titulo a{
-  font-size: 14px;
+  font-size: 24px;
   color: var(--primary-mint);
   text-decoration: none;
-  font-weight: 400;
+  font-weight: 600;
   transition: color 0.2s;
 }
+
 
 .categoria-titulo a:hover{
   color: var(--primary-turquoise);
@@ -231,14 +217,21 @@ button:hover{
 .categoria-cards{
   display: flex;
   justify-content: center;
-  gap: 5rem;
+  gap: 6rem;
   scrollbar-width: none;
   -ms-overflow-style: none;
   padding-bottom: 60px;
 }
+.categoria-card{
+  position: relative;
+  aspect-ratio: 3/4;
+  width: 350px;
+  overflow: hidden;
+}
 .categoria-card img{
-  width: 400px;
-  height: 300px;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   display: block;
   border-radius: var(--radius-lg);
   transition: transform 0.3s;
@@ -300,12 +293,12 @@ button:hover{
 
 
 .Productos{
-  padding: 20px 30px;
-  background: var(--bg-section);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-card);
-  width: 90%;
-  margin: 0 auto 40px;
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none;
+  width: 100%;
+  margin: 0;
 }
 
 .Productos-titulo{
@@ -323,7 +316,7 @@ button:hover{
 
 .Productos-cards {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 1rem;
   margin-bottom: 1rem;
 }
@@ -334,19 +327,70 @@ button:hover{
 
 @media (max-width: 1024px) {
   .Productos-cards {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 768px) {
   .Productos-cards {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
   }
 }
 
 @media (max-width: 480px) {
   .Productos-cards {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.625rem;
+  }
+
+  .categoria {
+    width: calc(100% - 32px);
+  }
+
+  .categoria-titulo {
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 18px;
+    margin-bottom: 18px;
+    font-size: 20px;
+  }
+
+  .categoria-titulo a {
+    flex-shrink: 0;
+    font-size: 15px;
+  }
+
+  .categoria-cards {
+    justify-content: flex-start;
+    gap: 12px;
+    overflow-x: auto;
+    padding: 0 2px 20px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .categoria-cards > * {
+    flex: 0 0 min(72vw, 250px);
+    scroll-snap-align: start;
+  }
+
+  .categoria-card {
+    width: 100%;
+  }
+
+  .categoria-card h3 {
+    bottom: 20px;
+    max-width: calc(100% - 20px);
+    font-size: 17px;
+  }
+
+  .Productos-titulo {
+    padding: 24px 12px 0;
+  }
+
+  .Productos-titulo h1 {
+    font-size: 18px;
   }
 }
 
@@ -374,16 +418,9 @@ button:hover{
    ========================================= */
 @media (max-width: 768px) {
   .categoria-cards { gap: 3rem; }
-  .categoria-card img { width: 280px; height: 220px; }
-  .Productos { padding: 20px 20px; }
+  .categoria-card { width: 280px; }
+  .Productos { padding: 0; }
   .Productos-titulo { padding-left: 15px; }
-}
-
-@media (max-width: 480px) {
-  .categoria-cards { gap: 2rem; }
-  .categoria-card img { width: 220px; height: 180px; }
-  .Productos { padding: 15px; width: 95%; }
-  .Productos-titulo { padding-left: 10px; }
 }
 
 /* =========================================

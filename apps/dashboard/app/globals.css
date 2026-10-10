@@ -8,22 +8,35 @@
 
 .dashboard-main {
   flex: 1;
-  margin-left: 260px;
+  min-width: 0;
+  margin-left: 80px;
   padding: 24px;
 }
 
 /* =========================================
-   DASHBOARD - Dark Theme Variables
+   THEME: LIGHT (default — paleta del store)
    ========================================= */
 :root {
-  --db-bg-main: #0B1120;
-  --db-bg-card: #1A1D23;
-  --db-bg-card-hover: #22252d;
-  --db-border: #2a2d35;
-  --db-text-primary: #E2E8F0;
-  --db-text-secondary: #94A3B8;
-  --db-text-muted: #64748B;
+  color-scheme: light;
 
+  --db-bg-main: #FAF9F6;
+  --db-bg-card: #FFFFFF;
+  --db-bg-card-hover: #F5F5F5;
+  --db-border: #E2E8F0;
+  --db-text-primary: #121212;
+  --db-text-secondary: #64748B;
+  --db-text-muted: #94A3B8;
+
+  /* Variables compartidas con el store (las usa sidebar.css) */
+  --bg-main: #FAF9F6;
+  --bg-card: #FFFFFF;
+  --bg-section: #E6FAF5;
+  --text-primary: #121212;
+  --text-secondary: #64748B;
+  --border-color: #E2E8F0;
+  --primary-mint: #059669;
+
+  /* Acentos (iguales en ambos temas) */
   --db-green: #4CE1AC;
   --db-blue: #60A5FA;
   --db-cyan: #22D3EE;
@@ -33,15 +46,55 @@
   --db-green-status: #34D399;
   --db-blue-status: #60A5FA;
 
-  --db-btn-primary: #0EA5E9;
-  --db-btn-primary-hover: #0284C7;
+  --db-btn-primary: #047857;
+  --db-btn-primary-hover: #065F46;
 
   --db-radius-sm: 8px;
   --db-radius-md: 12px;
+}
+
+/* =========================================
+   THEME: DARK (paleta del store)
+   ========================================= */
+.dark {
+  color-scheme: dark;
+
+  --db-bg-main: #121316;
+  --db-bg-card: #1A1C21;
+  --db-bg-card-hover: #22252d;
+  --db-border: #2D3748;
+  --db-text-primary: #E2E8F0;
+  --db-text-secondary: #94A3B8;
+  --db-text-muted: #64748B;
+
+  --bg-main: #121316;
+  --bg-card: #1A1C21;
+  --bg-section: #1A1C21;
+  --text-primary: #E2E8F0;
+  --text-secondary: #94A3B8;
+  --border-color: #2D3748;
+  --primary-mint: #4CE1AC;
+  --db-btn-primary: #4CE1AC;
+  --db-btn-primary-hover: #00E599;
 }
 
 body {
   background: var(--db-bg-main);
   color: var(--db-text-primary);
   font-family: var(--font-figtree), sans-serif;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Keep the icon navigation at the left on narrow screens. */
+@media (max-width: 1024px) {
+  .dashboard-main {
+    margin-left: 68px;
+    padding: 20px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-main {
+    padding: 16px 12px;
+  }
 }

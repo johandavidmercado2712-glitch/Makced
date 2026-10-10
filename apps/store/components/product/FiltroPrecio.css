@@ -1,0 +1,95 @@
+.filtro-precio {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 24px;
+    background-color: var(--bg-card);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    width: fit-content;
+    min-width: min(300px, 100%);
+    box-sizing: border-box;
+    transition: background-color 0.3s, border-color 0.3s;
+    margin: 24px 30px;
+}
+
+.filtro-precio-texto {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+    transition: opacity 0.2s;
+}
+
+.filtro-precio-texto--pending {
+    opacity: 0.6;
+}
+
+.filtro-precio-slider {
+    flex: 1;
+    position: relative;
+    min-width: 80px;
+    height: 24px;
+    cursor: pointer;
+    touch-action: none;
+    display: flex;
+    align-items: center;
+}
+
+.filtro-precio-slider:focus-visible {
+    outline: 2px solid var(--primary-mint);
+    outline-offset: 4px;
+    border-radius: 4px;
+}
+
+.filtro-precio-track {
+    width: 100%;
+    height: 6px;
+    background-color: var(--border-color);
+    border-radius: 3px;
+    transition: background 0.1s;
+}
+
+.filtro-precio-thumb {
+    position: absolute;
+    top: 50%;
+    left: 30%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    background-color: var(--primary-mint);
+    border: 3px solid var(--bg-card);
+    border-radius: 50%;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    cursor: grab;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.filtro-precio-thumb:hover {
+    background-color: var(--primary-turquoise);
+    transform: translate(-50%, -50%) scale(1.1);
+}
+
+.filtro-precio-thumb:active {
+    cursor: grabbing;
+    transform: translate(-50%, -50%) scale(1.15);
+}
+
+@media (max-width: 768px) {
+    .filtro-precio {
+        width: 100%;
+        min-width: 0;
+        margin: 0 0 20px;
+        padding: 16px;
+        gap: 12px;
+    }
+
+    .filtro-precio-texto {
+        font-size: 14px;
+    }
+
+    .filtro-precio-slider {
+        min-width: 60px;
+    }
+}

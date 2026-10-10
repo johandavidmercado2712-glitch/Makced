@@ -1,0 +1,63 @@
+schema: spec-driven
+
+context: |
+  MAKCED - E-commerce de sneakers premium
+
+  ## Arquitectura
+  - Monorepo Turborepo: apps/store, apps/login, apps/dashboard, packages/db, packages/ui
+  - Next.js 16.3.1 (App Router), React 19, TypeScript 5
+  - Tailwind CSS v4, DaisyUI v5
+  - Font: Figtree (Google Fonts)
+
+  ## Backend
+  - InsForge (Postgres BaaS): https://253fnuce.us-east.insforge.app
+  - SDK: @insforge/sdk ^1.5.2
+  - Database tables (11): usuarios, tiendas, productos, categorias, marcas, pedidos, detalles_pedido, cupones, cupones_uso, favoritos, valoraciones
+  - Server Actions + Revalidation (no Realtime)
+  - InsForge joins return arrays: relacion.map(x => x.nombre)
+
+  ## Design System
+  - Primary: #4CE1AC (mint), Hover: #00D2B4 (turquoise)
+  - Purple: #7C53ED, Star: #FBBF24, WhatsApp: #25D366
+  - Dark theme: --db-* CSS variables (bg: #0B1120, cards: #1A1D23)
+
+  ## Dashboard
+  - Sidebar fijo 260px, margin-left: 260px en main
+  - Conectado a DB: productos, pedidos, tienda, marcas, categorías
+  - Filtros: SearchInput + FilterSelect (string icons, no component props)
+
+  ## Convenciones
+  - Componentes Client: "use client" directive
+  - Server Components por defecto
+  - Iconos: lucide-react
+  - CSS: archivos .css separados por página/componente
+  - Tipos: interfaces en types/database.ts
+
+rules:
+  proposal:
+    - Incluir sección "Non-goals" siempre
+    - Mantener proposals bajo 500 palabras
+    - Especificar si afecta store, dashboard, o ambos
+  specs:
+    - Usar formato GIVEN/WHEN/THEN para scenarios
+    - Requisitos en formato SHALL/MUST
+    - Referenciar archivos y líneas relevantes
+  design:
+    - Incluir diagrama de flujo si hay más de 3 pasos
+    - Especificar qué Server Actions se crean/modifican
+    - Indicar si se necesitan cambios en DB (SQL)
+  tasks:
+    - Tareas en chunks de max 2 horas
+    - Cada tarea debe ser verificable con typecheck
+    - Incluir "Correr typecheck" como tarea final
+
+operations:
+  apply:
+    guidance:
+      - Correr npm run typecheck después de cada cambio significativo
+      - No commitear hasta que typecheck pase sin errores
+      - Verificar que los Server Actions retornan datos simples (no objetos con métodos)
+  archive:
+    guidance:
+      - Actualizar specs/ con los delta specs del cambio
+      - Mover change a archive/ con fecha

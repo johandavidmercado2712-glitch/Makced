@@ -1,6 +1,6 @@
 import Link from "next/link"
 import "./marcas.css";
-import ScrollReveal from "../../components/ScrollReveal"
+import ScrollReveal from "../../components/ui/ScrollReveal"
 export const revalidate = 300;
 import { getMarcas } from "../actions/store";
 

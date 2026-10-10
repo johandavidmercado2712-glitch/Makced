@@ -15,7 +15,7 @@ export async function getProductosDestacados() {
   return data || [];
 }
 
-export async function getProductosPorCategoria(slug: string) {
+export async function getProductosPorCategoria(slug: string, maxPrice?: number) {
   const { data: cat } = await insforge.database
     .from("categorias")
     .select("id")
@@ -24,19 +24,22 @@ export async function getProductosPorCategoria(slug: string) {
 
   if (!cat) return [];
 
-  const { data } = await insforge.database
+  let query = insforge.database                    
     .from("productos")
-    .select(
-      "id, nombre, precio, precio_descuento, imagen_url, slug, estado"
-    )
+    .select("id, nombre, precio, precio_descuento, imagen_url, slug, estado")
     .eq("estado", true)
-    .eq("categoria_id", cat.id)
-    .limit(20);
+    .eq("categoria_id", cat.id);
+
+  if (maxPrice) {                                  
+    query = query.lte("precio", maxPrice);         
+  }
+
+  const { data } = await query.limit(20);         
 
   return data || [];
 }
 
-export async function getProductosPorMarca(nombre: string) {
+export async function getProductosPorMarca(nombre: string, maxPrice?: number) {
   const { data: marca } = await insforge.database
     .from("marcas")
     .select("id")
@@ -45,24 +48,30 @@ export async function getProductosPorMarca(nombre: string) {
 
   if (!marca) return [];
 
-  const { data } = await insforge.database
+  let query = insforge.database
     .from("productos")
-    .select(
-      "id, nombre, precio, precio_descuento, imagen_url, slug, estado"
-    )
+    .select("id, nombre, precio, precio_descuento, imagen_url, slug, estado")
     .eq("estado", true)
-    .eq("marca_id", marca.id)
-    .limit(20);
+    .eq("marca_id", marca.id);
 
+  if (maxPrice) {
+    query = query.lte("precio", maxPrice);
+  }
+
+  const { data } = await query.limit(20);
   return data || [];
 }
 
 export async function getProductoPorSlug(slug: string) {
   const { data } = await insforge.database
     .from("productos")
-    .select(
-      "id, nombre, descripcion, precio, precio_descuento, imagen_url, slug, stock, es_nuevo, es_destacado"
-    )
+    .select(`
+      id, nombre, descripcion, precio, precio_descuento, 
+      imagen_url, slug, stock, es_nuevo, es_destacado,
+      colores, referencia,
+      marca:marcas(nombre),
+      categoria:categorias(nombre)
+    `)
     .eq("slug", slug)
     .single();
 
@@ -91,4 +100,15 @@ export async function getProductosNuevos() {
     .limit(20);
 
   return data || [];
+}
+
+export async function getMaxPrice(): Promise<number> {
+  const { data } = await insforge.database
+    .from("productos")
+    .select("precio")
+    .eq("estado", true)
+    .order("precio", { ascending: false })
+    .limit(1)
+    .single();
+  return data?.precio || 500000;
 }
