@@ -12,10 +12,10 @@ import {
 
 import {
   initiateOAuth,
+  sendResetPasswordEmail,
   signIn,
   signUp,
   verifyEmail,
-  resetPassword,
 } from '@makced/db/actions';
 
 import './LoginForm.css';
@@ -58,6 +58,9 @@ function useLoginForm(initialStep: Step) {
     }
 
     if (step === 'forgot-password') {
+      if (!email.includes('@')) {
+        return 'Ingresa un correo electrónico válido';
+      }
       return null;
     }
 
@@ -102,7 +105,7 @@ function useLoginForm(initialStep: Step) {
     }
 
     if (step === 'forgot-password') {
-      const res = await resetPassword(formData);
+      const res = await sendResetPasswordEmail(formData);
 
       if (res?.error) {
         setError(res.error.message ?? 'No se pudo enviar el correo de restablecimiento de contraseña'
