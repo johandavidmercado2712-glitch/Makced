@@ -6,6 +6,8 @@ import { createAuthActions, createServerClient } from '@insforge/sdk/ssr';
 
 const LOGIN_URL = process.env.NEXT_PUBLIC_LOGIN_URL ?? 'http://localhost:3001';
 const DASHBOARD_URL = process.env.NEXT_PUBLIC_DASHBOARD_URL ?? 'http://localhost:3002';
+const RESET_PASSWORD_URL =
+  process.env.NEXT_PUBLIC_RESET_PASSWORD_URL ?? 'http://localhost:3001/reset-password';
 
 function FormatAuthError(error: {message?: string, statusCode?: number} | null) {
   if (!error) return null;
@@ -73,30 +75,46 @@ export async function verifyEmail(formData: FormData) {
   redirect(DASHBOARD_URL);
 }
 
-export async function resetPassword(formData: FormData) {
+export async function sendResetPasswordEmail(formData: FormData) {
   const client = createServerClient({ cookies: await cookies() });
 
   const email = String(formData.get('email'));
-  const code = String(formData.get('otp'));
-  const newPassword = String(formData.get('newPassword'));
 
-  const { data: exchanged, error: exchangeError } =
-    await client.auth.exchangeResetPasswordToken({ email, code });
-
-  if (exchangeError) {
-    return { success: false, error: FormatAuthError(exchangeError) };
-  }
-
-  const { error } = await client.auth.resetPassword({
-    newPassword,
-    otp: exchanged?.token ?? '',
+  const { error } = await client.auth.sendResetPasswordEmail({
+    email,
+    redirectTo: RESET_PASSWORD_URL,
   });
 
   if (error) {
     return { success: false, error: FormatAuthError(error) };
   }
 
-  redirect(LOGIN_URL);
+  return { success: true, error: null };
+}
+
+export async function resetPassword(formData: FormData) {
+  const client = createServerClient({ cookies: await cookies() });
+
+  const token = String(formData.get('token'));
+  const newPassword = String(formData.get('newPassword'));
+
+  if (!token) {
+    return {
+      success: false,
+      error: { message: 'Enlace de restablecimiento inválido o expirado' },
+    };
+  }
+
+  const { error } = await client.auth.resetPassword({
+    newPassword,
+    otp: token,
+  });
+
+  if (error) {
+    return { success: false, error: FormatAuthError(error) };
+  }
+
+  return { success: true, error: null };
 }
 
 export async function initiateOAuth(provider: string) {
