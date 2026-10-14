@@ -18,17 +18,11 @@ interface ProductCardExtendedProps {
 export default function ProductCard({ image = "/producto.jpg", name = "", price, rating = 4.5, slug, className = "Productos-card", loading }: ProductCardExtendedProps) {
   if (loading) {
     return (
-      <div className={`${className} loading`}>
-        <div className="product-image-wrapper">
-          <div className="skeleton h-full w-full"></div>
-        </div>
-        <div className="product-content">
-          <div className="flex items-center gap-3">
-            <div className="skeleton h-4 w-16 shrink-0"></div>
-            <div className="skeleton h-4 w-24"></div>
-          </div>
-          <div className="skeleton h-5 w-20 mt-3"></div>
-        </div>
+      <div className={`${className} loading flex flex-col gap-4 p-4`}>
+        <div className="skeleton h-32 w-full"></div>
+        <div className="skeleton h-4 w-28"></div>
+        <div className="skeleton h-4 w-full"></div>
+        <div className="skeleton h-4 w-full"></div>
       </div>
     )
   }

@@ -219,7 +219,7 @@
 
 .db-img-modes button.active {
   background: var(--db-btn-primary);
-  color: #fff;
+  color: var(--db-btn-primary-fg);
 }
 
 .db-file-btn {
@@ -391,7 +391,7 @@
 
 .db-modal-btn-primary {
   background: var(--db-btn-primary);
-  color: #fff;
+  color: var(--db-btn-primary-fg);
 }
 
 .db-modal-btn-primary:hover {

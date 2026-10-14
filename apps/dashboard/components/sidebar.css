@@ -3,7 +3,7 @@
   flex-direction: column;
   width: 80px;
   height: 100vh;
-  min-height: 100dvh;
+  height: 100dvh;
   background-color: var(--bg-card, #1a1d23);
   border-right: 1px solid var(--border-color, #2a2d35);
   position: fixed;

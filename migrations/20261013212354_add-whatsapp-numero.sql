@@ -1,0 +1,1 @@
+ALTER TABLE tiendas ADD COLUMN IF NOT EXISTS whatsapp_numero TEXT;

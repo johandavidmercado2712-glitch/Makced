@@ -1,5 +1,6 @@
 "use server";
 import { cookies } from "next/headers";
+import { revalidatePath } from "next/cache";
 import { createServerClient } from "@insforge/sdk/ssr";
 import { getCurrentUser } from "@makced/db/server";
 import type { Tienda } from "@/types/database";
@@ -47,7 +48,7 @@ export async function getTiendaPublica(): Promise<Tienda | null> {
   const { data } = await insforge.database
     .from("tiendas")
     .select(
-      "id, usuario_id, nombre_tienda, propietario, subdominio, plan_actual, plantilla_id, color_principal, logo_url, descripcion, activa, created_at, diseno",
+      "id, usuario_id, nombre_tienda, propietario, subdominio, plan_actual, plantilla_id, color_principal, logo_url, descripcion, activa, created_at, diseno, whatsapp_numero",
     )
     .eq("activa", true)
     .single();
@@ -71,6 +72,42 @@ export async function getUsuarioTienda(
   if (!data) return null;
   const perfil = data as { email?: string; profile?: { name?: string } | null };
   return { email: perfil.email ?? "", nombre: perfil.profile?.name ?? null };
+}
+
+// Actualiza el número de WhatsApp de pedidos de la tienda del usuario.
+// Valida formato: solo dígitos, 8–15 caracteres (ej. 573001234567).
+export async function updateTiendaWhatsapp(
+  numero: string,
+): Promise<{ ok: boolean; error: string | null }> {
+  try {
+    const limpio = numero.trim();
+    if (!/^\d{8,15}$/.test(limpio)) {
+      return {
+        ok: false,
+        error: "El número debe contener solo dígitos (8–15 caracteres), sin espacios ni símbolos.",
+      };
+    }
+
+    const { tienda, error: authError } = await requireTiendaDelUsuario();
+    if (!tienda) {
+      return { ok: false, error: authError ?? "No autorizado. Inicia sesión." };
+    }
+
+    const insforge = createServerClient({ cookies: await cookies() });
+    const { error } = await insforge.database
+      .from("tiendas")
+      .update({ whatsapp_numero: limpio })
+      .eq("id", tienda.id);
+
+    if (error) {
+      return { ok: false, error: `No se pudo guardar el número: ${error.message}` };
+    }
+
+    revalidatePath("/mi-tienda");
+    return { ok: true, error: null };
+  } catch (err) {
+    return { ok: false, error: `Error inesperado: ${err instanceof Error ? err.message : String(err)}` };
+  }
 }
 
 

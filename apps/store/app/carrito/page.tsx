@@ -2,6 +2,7 @@
 
 import "./carrito.css"
 import Link from "next/link"
+import { useEffect, useState } from "react"
 import {
   LockKeyhole,
   MessageCircle,
@@ -11,6 +12,7 @@ import {
   Truck,
 } from "lucide-react";
 import { useCart } from "../../components/auth/CartContext";
+import { insforge } from "../../lib/insforge";
 
 const formatter = new Intl.NumberFormat("es-CO", {
   style: "currency",
@@ -43,6 +45,32 @@ export default function Page() {
   const shipping = subtotal >= FREE_SHIPPING_THRESHOLD || subtotal === 0 ? 0 : SHIPPING_COST;
   const total = subtotal + shipping;
   const freeShipping = shipping === 0;
+
+  // ─── WHATSAPP DE LA TIENDA ──────────────────────────────────
+  // Fetch público del número de pedidos (RLS permite SELECT de tiendas).
+  // Mientras carga o si falla, el botón degrada a wa.me/?text=.
+  const [whatsappNumero, setWhatsappNumero] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelado = false;
+    (async () => {
+      try {
+        const { data } = await insforge.database
+          .from("tiendas")
+          .select("whatsapp_numero")
+          .eq("activa", true)
+          .maybeSingle();
+        if (!cancelado) {
+          setWhatsappNumero((data as { whatsapp_numero?: string | null } | null)?.whatsapp_numero ?? null);
+        }
+      } catch {
+        // Fallback: sin número, wa.me/?text=
+      }
+    })();
+    return () => {
+      cancelado = true;
+    };
+  }, []);
 
   // ─── MENSAJE DE WHATSAPP ────────────────────────────────────
   // Construye un mensaje codificado con los items del carrito
@@ -202,7 +230,7 @@ export default function Page() {
 
             {/* Botón WhatsApp con mensaje pre-cargado */}
             <a
-              href={`https://wa.me/?text=${whatsappMessage}`}
+              href={`https://wa.me/${whatsappNumero ?? ""}?text=${whatsappMessage}`}
               target="_blank"
               rel="noopener noreferrer"
               className="login-submit"

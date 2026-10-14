@@ -8,6 +8,13 @@
   align-items: start;
 }
 
+.mt-col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
 .mt-head {
   display: flex;
   align-items: center;
@@ -118,31 +125,34 @@
   text-decoration: underline;
 }
 
-/* Accesos rápidos */
-.mt-accesos {
+/* Pedidos por WhatsApp */
+.mt-wsp {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+  flex-direction: column;
+  gap: 14px;
 }
 
-.mt-acceso {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 16px;
-  border: 1px solid var(--db-border);
-  border-radius: var(--db-radius-sm, 8px);
-  background: var(--db-bg-card-hover);
-  color: var(--db-text-primary);
-  font-size: 13.5px;
+.mt-wsp-ayuda {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--db-text-muted);
+  line-height: 1.6;
+}
+
+.mt-wsp-btn {
+  align-self: flex-start;
+  width: auto;
+}
+
+.mt-wsp-aviso {
+  margin: 0;
+  font-size: 13px;
   font-weight: 600;
-  text-decoration: none;
-  transition: border-color 0.2s, color 0.2s;
+  color: var(--db-btn-primary);
 }
 
-.mt-acceso:hover {
-  border-color: var(--db-btn-primary);
-  color: var(--db-btn-primary);
+.mt-wsp-aviso-error {
+  color: #f87171;
 }
 
 /* Contraseña (decorativa por ahora) */
@@ -231,9 +241,7 @@
     max-width: 100%;
   }
 
-  .mt-acceso {
-    justify-content: center;
+  .mt-wsp-btn {
     width: 100%;
-    min-height: 44px;
   }
 }

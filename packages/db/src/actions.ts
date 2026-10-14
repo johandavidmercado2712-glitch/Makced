@@ -127,6 +127,21 @@ export async function sendPasswordResetEmail(formData: FormData) {
   return { error: FormatAuthError(error) };
 }
 
+export async function sendResetPasswordEmail(formData: FormData) {
+  const email = formValue(formData, 'email');
+  if (!email) {
+    return { error: { message: 'Ingresa tu correo electrónico' } };
+  }
+
+  const client = createServerClient({ cookies: await cookies() });
+  const { error } = await client.auth.sendResetPasswordEmail({
+    email,
+    redirectTo: new URL('/reset-password', LOGIN_URL).toString(),
+  });
+
+  return { error: FormatAuthError(error) };
+}
+
 export async function resetPassword(formData: FormData) {
   const resetToken = formValue(formData, 'reset-token');
   const email = formValue(formData, 'email');

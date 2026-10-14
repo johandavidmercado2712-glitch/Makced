@@ -12,6 +12,7 @@ export interface Tienda {
   activa: boolean;
   created_at: string;
   diseno: unknown;
+  whatsapp_numero: string | null;
 }
 
 export interface UsuarioCuenta {

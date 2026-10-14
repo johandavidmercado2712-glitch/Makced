@@ -93,7 +93,6 @@ export default function Navbar({
               <Search size={34} />
             </button>
           )}
-          <i><Heart size={34} /></i>
           <button type="button" className="nav-icon-btn" onClick={() => router.push("/carrito")} aria-label={`Carrito (${totalItems} productos)`}>
             <ShoppingCart size={34} />
             {totalItems > 0 && (

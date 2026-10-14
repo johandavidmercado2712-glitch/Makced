@@ -60,7 +60,7 @@ export default async function ProductosPage({
           <h1 className="db-title">Productos</h1>
           <p className="db-subtitle">{totalCatalogo} productos en el catálogo</p>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+        <div className="db-header-actions">
           <ProductosActions
             marcas={marcas}
             categorias={categorias}

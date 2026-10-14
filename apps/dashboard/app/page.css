@@ -1,70 +1,13 @@
-.dashboard {
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
 /* =========================================
-   Header
+   Resumen — estilos propios de la home del dashboard.
+   La base compartida (panel, header, botones, tabla…)
+   vive en db-base.css importada desde globals.css.
    ========================================= */
-.db-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-}
 
 .db-greeting {
   font-size: 14px;
   color: var(--db-text-secondary);
   margin-bottom: 4px;
-}
-
-.db-title {
-  font-size: 32px;
-  font-weight: 700;
-  color: var(--db-text-primary);
-  margin-bottom: 8px;
-}
-
-.db-subtitle {
-  font-size: 15px;
-  color: var(--db-text-secondary);
-}
-
-.db-header-actions {
-  display: flex;
-  gap: 12px;
-}
-
-.db-btn-primary {
-  padding: 10px 20px;
-  background: var(--db-btn-primary);
-  color: white;
-  border: none;
-  border-radius: var(--db-radius-sm);
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.db-btn-primary:hover {
-  background: var(--db-btn-primary-hover);
-}
-
-.db-btn-secondary {
-  padding: 10px 20px;
-  background: transparent;
-  color: var(--db-text-secondary);
-  border: 1px solid var(--db-border);
-  border-radius: var(--db-radius-sm);
-  font-weight: 500;
-  cursor: pointer;
-  transition: border-color 0.2s, color 0.2s;
-}
-
-.db-btn-secondary:hover {
-  border-color: var(--db-text-muted);
-  color: var(--db-text-primary);
 }
 
 /* =========================================
@@ -139,13 +82,6 @@
   gap: 16px;
 }
 
-.db-panel {
-  background: var(--db-bg-card);
-  border: 1px solid var(--db-border);
-  border-radius: var(--db-radius-md);
-  padding: 20px;
-}
-
 .db-panel-header {
   display: flex;
   justify-content: space-between;
@@ -173,7 +109,7 @@
 }
 
 /* =========================================
-   Orders
+   Orders (reservado — datos de pedidos pendientes)
    ========================================= */
 .db-order-row {
   display: flex;
@@ -358,18 +294,11 @@
 }
 
 @media (max-width: 640px) {
-  .db-cards { gap: 10px; }
+  .db-cards {
+    gap: 10px;
+    /* 1 columna: el riel de 68px ya descuenta ancho efectivo */
+    grid-template-columns: minmax(0, 1fr);
+  }
   .db-summary-card { padding: 14px; min-width: 0; }
   .db-card-value { font-size: 24px; }
-  .db-header {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 12px;
-  }
-  .db-header-actions { width: 100%; }
-  .db-header-actions > * { flex: 1; }
-}
-
-@media (max-width: 380px) {
-  .db-cards { grid-template-columns: minmax(0, 1fr); }
 }

@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./db-base.css";
 @plugin "daisyui";
 
 .dashboard-layout {
@@ -48,6 +49,7 @@
 
   --db-btn-primary: #047857;
   --db-btn-primary-hover: #065F46;
+  --db-btn-primary-fg: #FFFFFF;
 
   --db-radius-sm: 8px;
   --db-radius-md: 12px;
@@ -76,6 +78,7 @@
   --primary-mint: #4CE1AC;
   --db-btn-primary: #4CE1AC;
   --db-btn-primary-hover: #00E599;
+  --db-btn-primary-fg: #121212;
 }
 
 body {

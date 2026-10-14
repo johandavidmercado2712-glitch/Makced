@@ -161,9 +161,3 @@
 .Productos-card.loading {
   pointer-events: none;
 }
-
-.Productos-card.loading .product-content {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}

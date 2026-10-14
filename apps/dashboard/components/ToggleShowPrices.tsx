@@ -1,14 +1,22 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function ToggleShowPrices({ initial = true }: { initial?: boolean }) {
   const [checked, setChecked] = useState<boolean>(initial);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
 
   async function toggle() {
     setLoading(true);
     setMessage(null);
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
     try {
       const res = await fetch('/api/settings/mostrar-precios', {
         method: 'POST',
@@ -33,27 +41,38 @@ export default function ToggleShowPrices({ initial = true }: { initial?: boolean
       } else {
         setMessage(json?.error ? `Error: ${json.error}` : 'Error al guardar');
       }
-    } catch (err) {
+    } catch {
       // Solo llega aquí en errores de red o JSON inválido.
       setMessage('Error de conexión. Revisa tu internet.');
     } finally {
       setLoading(false);
-      setTimeout(() => setMessage(null), 2000);
+      timeoutRef.current = setTimeout(() => setMessage(null), 2000);
     }
   }
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-      <label style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-        <input
-          type="checkbox"
-          checked={checked}
-          onChange={toggle}
-          disabled={loading}
-        />
-        <span>Mostrar precios en tienda</span>
-      </label>
-      {message && <span style={{ fontSize: 12 }}>{message}</span>}
+    <div className="toggle-precios">
+      <button
+        type="button"
+        role="switch"
+        aria-checked={checked}
+        aria-busy={loading}
+        aria-label="Mostrar precios en tienda"
+        className={`toggle-precios-switch${checked ? " toggle-precios-switch--on" : ""}`}
+        onClick={toggle}
+        disabled={loading}
+      >
+        <span className="toggle-precios-thumb" />
+      </button>
+      <span className="toggle-precios-label">Mostrar precios en tienda</span>
+      {message && (
+        <span
+          className={`toggle-precios-msg${message === "Guardado" ? "" : " toggle-precios-msg--error"}`}
+          role="status"
+        >
+          {message}
+        </span>
+      )}
     </div>
   );
 }
