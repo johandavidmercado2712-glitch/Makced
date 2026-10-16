@@ -2,12 +2,17 @@ import "./novedades.css";
 import ProductCard from "../../components/product/ProductCard"
 import ScrollReveal from "../../components/ui/ScrollReveal"
 import { getProductosNuevos } from "../actions/products";
+import { getConfigDiseno } from "../actions/store";
 import Link from "next/link";
 
 export const revalidate = 30;
 
 export default async function Page() {
-  const productos = await getProductosNuevos();
+  const [productos, { config }] = await Promise.all([
+    getProductosNuevos(),
+    getConfigDiseno(),
+  ]);
+  const mostrarPrecios = Boolean(config.mostrar_precios ?? true);
 
   return(
     <>
@@ -67,7 +72,11 @@ export default async function Page() {
                 <ProductCard
                     image={producto.imagen_url || "/producto.jpg"}
                     name={producto.nombre}
-                    price={`$${producto.precio.toLocaleString("es-CO")}`}
+                    price={
+                      mostrarPrecios
+                        ? `$${producto.precio.toLocaleString("es-CO")}`
+                        : undefined
+                    }
                     rating={4.5}
                     slug={producto.slug || undefined}
                 />

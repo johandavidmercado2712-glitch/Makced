@@ -8,10 +8,10 @@ export default async function Page(){
   return(
     <>
     <div className="categoria">
-        <div className="categoria-titulo">
+        <header className="categoria-titulo categoria-listado-titulo">
             <h1>Categorias</h1>
             <p>Encuentra el estilo que buscas explorando nuestras categorías.</p>
-        </div>
+        </header>
 
         <div className="categoria-cards">
         {categorias.map((cat) => (

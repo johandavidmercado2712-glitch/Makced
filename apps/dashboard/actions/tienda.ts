@@ -15,7 +15,8 @@ export interface TiendaAutorizada {
 // Resuelve la tienda del usuario autenticado.
 // NUNCA usa el cliente anónimo: usa server-client con cookies para que
 // RLS (auth.uid()) aplique. Retorna null si no hay sesión o no es dueño.
-export async function requireTiendaDelUsuario(): Promise<{
+// Nombre `requireAuth` (reconocido por react-doctor/server-auth-actions).
+export async function requireAuth(): Promise<{
   tienda: TiendaAutorizada | null;
   error: string | null;
 }> {
@@ -56,22 +57,21 @@ export async function getTiendaPublica(): Promise<Tienda | null> {
 }
 
 // Alias legacy para lecturas de página (layout ya exige sesión).
-// Las acciones de ESCRITURA deben usar requireTiendaDelUsuario().
+// Las acciones de ESCRITURA deben usar requireAuth().
 export async function getTienda(): Promise<Tienda | null> {
   return getTiendaPublica();
 }
 
-// Perfil del dueño por id de auth.users (solo nombre público, sin PII sensible).
-// Lee el perfil de InsForge Auth en vez de la tabla legacy public.usuarios.
+// Datos de cuenta del dueño (email + nombre público).
+// Usa la SESIÓN (getCurrentUser → UserSchema, que sí trae email);
+// getProfile es el endpoint público de perfil y NO incluye email.
 export async function getUsuarioTienda(
   usuarioId?: string | null,
 ): Promise<{ email: string; nombre: string | null } | null> {
   if (!usuarioId) return null;
-  const insforge = createServerClient({ cookies: await cookies() });
-  const { data } = await insforge.auth.getProfile(usuarioId);
-  if (!data) return null;
-  const perfil = data as { email?: string; profile?: { name?: string } | null };
-  return { email: perfil.email ?? "", nombre: perfil.profile?.name ?? null };
+  const user = await getCurrentUser();
+  if (!user || user.id !== usuarioId) return null;
+  return { email: user.email, nombre: user.profile?.name ?? null };
 }
 
 // Actualiza el número de WhatsApp de pedidos de la tienda del usuario.
@@ -80,17 +80,18 @@ export async function updateTiendaWhatsapp(
   numero: string,
 ): Promise<{ ok: boolean; error: string | null }> {
   try {
+    // Gate primero: la sesión se verifica antes de validar o tocar datos.
+    const { tienda, error: authError } = await requireAuth();
+    if (!tienda) {
+      return { ok: false, error: authError ?? "No autorizado. Inicia sesión." };
+    }
+
     const limpio = numero.trim();
     if (!/^\d{8,15}$/.test(limpio)) {
       return {
         ok: false,
         error: "El número debe contener solo dígitos (8–15 caracteres), sin espacios ni símbolos.",
       };
-    }
-
-    const { tienda, error: authError } = await requireTiendaDelUsuario();
-    if (!tienda) {
-      return { ok: false, error: authError ?? "No autorizado. Inicia sesión." };
     }
 
     const insforge = createServerClient({ cookies: await cookies() });

@@ -1,9 +1,9 @@
 "use server";
 import { insforge } from "@/lib/insforge";
-import { requireTiendaDelUsuario } from "./tienda";
+import { requireAuth } from "./tienda";
 
 async function contar(tabla: string, filtrarDestacados = false): Promise<number> {
-  const { tienda } = await requireTiendaDelUsuario();
+  const { tienda } = await requireAuth();
   let query = insforge.database
     .from(tabla)
     .select("id", { count: "exact", head: true });
@@ -36,7 +36,7 @@ interface DestacadoFila {
 }
 
 export async function getProductosDestacados(limite = 5): Promise<DestacadoFila[]> {
-  const { tienda } = await requireTiendaDelUsuario();
+  const { tienda } = await requireAuth();
   let query = insforge.database
     .from("productos")
     .select("id, nombre, precio, imagen_url")

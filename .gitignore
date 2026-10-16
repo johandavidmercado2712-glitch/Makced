@@ -10,6 +10,11 @@
 **/.next/
 **/out/
 
+# Playwright
+/playwright-report/
+/test-results/
+/blob-report/
+
 # production
 /build
 /dist

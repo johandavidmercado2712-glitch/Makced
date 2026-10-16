@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { insforge } from "@/lib/insforge";
 import { borrarArchivoStorage, resolverImagen, texto } from "@/lib/imagenes";
 import { generarSlugUnico } from "@/lib/slug";
-import { requireTiendaDelUsuario } from "./tienda";
+import { requireAuth } from "./tienda";
 import type { CategoriaAdmin, MarcaAdmin } from "@/types/database";
 import type { GuardadoResultado } from "@/types/components";
 
@@ -18,7 +18,7 @@ function errorInesperado(err: unknown, mensaje: string): GuardadoResultado {
 // ---------- listados (activas e inactivas, solo de SU tienda) ----------
 
 export async function listarMarcas(): Promise<MarcaAdmin[]> {
-  const { tienda } = await requireTiendaDelUsuario();
+  const { tienda } = await requireAuth();
   let query = insforge.database
     .from("marcas")
     .select("id, nombre, logo_url, logo_key, activa, created_at")
@@ -31,7 +31,7 @@ export async function listarMarcas(): Promise<MarcaAdmin[]> {
 }
 
 export async function listarCategorias(): Promise<CategoriaAdmin[]> {
-  const { tienda } = await requireTiendaDelUsuario();
+  const { tienda } = await requireAuth();
   let query = insforge.database
     .from("categorias")
     .select("id, nombre, slug, imagen_url, imagen_key, activa, created_at")
@@ -47,7 +47,7 @@ export async function listarCategorias(): Promise<CategoriaAdmin[]> {
 
 export async function guardarMarca(formData: FormData): Promise<GuardadoResultado> {
   try {
-    const { tienda, error: authError } = await requireTiendaDelUsuario();
+    const { tienda, error: authError } = await requireAuth();
     if (!tienda) {
       return { ok: false, error: authError ?? "No autorizado. Inicia sesión." };
     }
@@ -118,7 +118,7 @@ export async function guardarMarca(formData: FormData): Promise<GuardadoResultad
 
 export async function guardarCategoria(formData: FormData): Promise<GuardadoResultado> {
   try {
-    const { tienda, error: authError } = await requireTiendaDelUsuario();
+    const { tienda, error: authError } = await requireAuth();
     if (!tienda) {
       return { ok: false, error: authError ?? "No autorizado. Inicia sesión." };
     }
@@ -193,7 +193,7 @@ export async function guardarCategoria(formData: FormData): Promise<GuardadoResu
 
 export async function eliminarMarca(id: string): Promise<GuardadoResultado> {
   try {
-    const { tienda, error: authError } = await requireTiendaDelUsuario();
+    const { tienda, error: authError } = await requireAuth();
     if (!tienda) {
       return { ok: false, error: authError ?? "No autorizado. Inicia sesión." };
     }
@@ -242,7 +242,7 @@ export async function eliminarMarca(id: string): Promise<GuardadoResultado> {
 
 export async function eliminarCategoria(id: string): Promise<GuardadoResultado> {
   try {
-    const { tienda, error: authError } = await requireTiendaDelUsuario();
+    const { tienda, error: authError } = await requireAuth();
     if (!tienda) {
       return { ok: false, error: authError ?? "No autorizado. Inicia sesión." };
     }

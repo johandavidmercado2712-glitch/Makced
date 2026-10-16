@@ -1,16 +1,11 @@
 "use client";
 
-import { useState, useRef } from "react";
-import { useRouter } from "next/navigation";
-import { Pencil, Trash2 } from "lucide-react";
-import { subirImagenEnForm } from "@/lib/imagenes";
-import type {
-  ImagenEstado,
-  ModalProductProps,
-} from "@/types/components";
+import type { ModalProductProps } from "@/types/components";
 import { ImagenSelector } from "./ImagenSelector";
 import { Modal } from "./Modal";
-import { esFallo } from "./modal-utils";
+import { ModalAcciones } from "./ModalAcciones";
+import { etiquetaSubmit } from "./modal-utils";
+import { useModalCrud } from "./useModalCrud";
 
 export type {
   ModalProductProps,
@@ -21,6 +16,43 @@ export type {
 const pick = <T,>(value: T | T[] | null | undefined): T | undefined =>
   Array.isArray(value) ? value[0] : (value ?? undefined);
 
+// si la marca/categoría asignada está inactiva, se agrega a las opciones
+// para que el select la muestre (los selectores solo traen activas)
+const opcionesConInactiva = <T extends { id: string }>(
+  actual: T | undefined,
+  lista: T[],
+): T[] => (actual && !lista.some((o) => o.id === actual.id) ? [{ ...actual }, ...lista] : lista);
+
+function SelectOpciones({
+  id,
+  etiqueta,
+  placeholder,
+  opciones,
+  actual,
+}: {
+  id: string;
+  etiqueta: string;
+  placeholder: string;
+  opciones: { id: string; nombre: string }[];
+  actual?: { id: string };
+}) {
+  return (
+    <div className="db-field">
+      <label className="db-label" htmlFor={id}>
+        {etiqueta}
+      </label>
+      <select id={id} name={id} className="db-select" defaultValue={actual?.id ?? ""}>
+        <option value="">{placeholder}</option>
+        {opciones.map((o) => (
+          <option key={o.id} value={o.id}>
+            {o.nombre}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+}
+
 export function ModalProduct({
   producto,
   marcas = [],
@@ -29,138 +61,49 @@ export function ModalProduct({
   onDelete,
   trigger,
 }: ModalProductProps) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [fase, setFase] = useState<"idle" | "subiendo" | "guardando" | "eliminando">("idle");
-  const [errorGuardado, setErrorGuardado] = useState<string | null>(null);
-  const imagenRef = useRef<ImagenEstado>({
-    modo: "archivo",
-    archivo: null,
-    url: "",
-    quitar: false,
+  const {
+    isOpen,
+    fase,
+    errorGuardado,
+    imagenRef,
+    esCrear,
+    ocupado,
+    id,
+    nombre,
+    abrir,
+    cerrar,
+    handleSubmit,
+    handleEliminar,
+    setErrorGuardado,
+  } = useModalCrud({
+    entidad: producto,
+    prefijo: "pm",
+    carpeta: "productos",
+    mensajes: {
+      crear: "No se pudo crear el producto",
+      editar: "No se pudieron guardar los cambios",
+      eliminar: "No se pudo eliminar el producto",
+    },
+    onSave,
+    onDelete,
   });
-  const router = useRouter();
+
   const marca = pick(producto?.marca);
   const categoria = pick(producto?.categoria);
-  const esCrear = !producto?.id;
-  const ocupado = fase !== "idle";
-
-  // si la marca/categoría asignada está inactiva, se agrega a las opciones
-  // para que el select la muestre (los selectores solo traen activas)
-  const opcionesMarcas =
-    marca && !marcas.some((m) => m.id === marca.id)
-      ? [{ ...marca }, ...marcas]
-      : marcas;
-  const opcionesCategorias =
-    categoria && !categorias.some((c) => c.id === categoria.id)
-      ? [{ ...categoria }, ...categorias]
-      : categorias;
-
-  const abrir = () => {
-    setFase("idle");
-    setErrorGuardado(null);
-    setIsOpen(true);
-  };
-
-  const cerrar = () => {
-    setFase("idle");
-    setErrorGuardado(null);
-    setIsOpen(false);
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!onSave || ocupado) return;
-
-    const formData = new FormData(e.currentTarget);
-    const estado = imagenRef.current;
-
-    setErrorGuardado(null);
-    try {
-      if (estado.modo === "archivo" && estado.archivo && !estado.quitar) {
-        setFase("subiendo");
-      }
-      await subirImagenEnForm(formData, "pm", estado, "productos");
-
-      setFase("guardando");
-      const resultado = await onSave(formData, producto);
-      if (esFallo(resultado)) {
-        setFase("idle");
-        setErrorGuardado(resultado.error);
-        return;
-      }
-      cerrar();
-      router.refresh();
-    } catch (err) {
-      setFase("idle");
-      setErrorGuardado(
-        err instanceof Error
-          ? err.message
-          : esCrear
-            ? "No se pudo crear el producto"
-            : "No se pudieron guardar los cambios",
-      );
-    }
-  };
-
-  const handleEliminar = async () => {
-    if (!producto?.id || !onDelete || ocupado) return;
-
-    const confirmado = window.confirm(
-      `¿Eliminar "${producto.nombre}"?\nEsta acción no se puede deshacer.`,
-    );
-    if (!confirmado) return;
-
-    setFase("eliminando");
-    try {
-      const resultado = await onDelete(producto.id);
-      if (esFallo(resultado)) {
-        window.alert(resultado.error);
-      } else {
-        router.refresh();
-      }
-    } catch (err) {
-      window.alert(
-        err instanceof Error ? err.message : "No se pudo eliminar el producto",
-      );
-    } finally {
-      setFase("idle");
-    }
-  };
+  const opcionesMarcas = opcionesConInactiva(marca, marcas);
+  const opcionesCategorias = opcionesConInactiva(categoria, categorias);
 
   return (
     <>
-      {trigger ? (
-        <button
-          type="button"
-          className="db-btn-primary db-modal-trigger"
-          onClick={abrir}
-        >
-          {trigger}
-        </button>
-      ) : (
-        <div className="db-actions">
-          <button
-            type="button"
-            className="db-action-btn"
-            onClick={abrir}
-            aria-label={`Editar ${producto?.nombre ?? "producto"}`}
-          >
-            <Pencil size={16} />
-          </button>
-
-          {onDelete && producto?.id && (
-            <button
-              type="button"
-              className="db-action-btn db-action-delete"
-              onClick={handleEliminar}
-              disabled={ocupado}
-              aria-label={`Eliminar ${producto.nombre}`}
-            >
-              <Trash2 size={16} />
-            </button>
-          )}
-        </div>
-      )}
+      <ModalAcciones
+        trigger={trigger}
+        onAbrir={abrir}
+        onEliminar={handleEliminar}
+        puedeEliminar={Boolean(onDelete && id)}
+        ocupado={ocupado}
+        editarLabel={`Editar ${nombre || "producto"}`}
+        eliminarLabel={`Eliminar ${nombre}`}
+      />
 
       <Modal
         isOpen={isOpen}
@@ -200,43 +143,21 @@ export function ModalProduct({
               onError={setErrorGuardado}
             />
 
-            <div className="db-field">
-              <label className="db-label" htmlFor="pm-marca">
-                Marca
-              </label>
-              <select
-                id="pm-marca"
-                name="pm-marca"
-                className="db-select"
-                defaultValue={marca?.id ?? ""}
-              >
-                <option value="">Seleccionar marca</option>
-                {opcionesMarcas.map((m) => (
-                  <option key={m.id} value={m.id}>
-                    {m.nombre}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <SelectOpciones
+              id="pm-marca"
+              etiqueta="Marca"
+              placeholder="Seleccionar marca"
+              opciones={opcionesMarcas}
+              actual={marca}
+            />
 
-            <div className="db-field">
-              <label className="db-label" htmlFor="pm-categoria">
-                Categoría
-              </label>
-              <select
-                id="pm-categoria"
-                name="pm-categoria"
-                className="db-select"
-                defaultValue={categoria?.id ?? ""}
-              >
-                <option value="">Seleccionar categoría</option>
-                {opcionesCategorias.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.nombre}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <SelectOpciones
+              id="pm-categoria"
+              etiqueta="Categoría"
+              placeholder="Seleccionar categoría"
+              opciones={opcionesCategorias}
+              actual={categoria}
+            />
 
             <div className="db-field">
               <label className="db-label" htmlFor="pm-precio">
@@ -340,19 +261,9 @@ export function ModalProduct({
         }
         errorGuardado={errorGuardado}
         ocupado={ocupado}
-        submitLabel={
-          fase === "subiendo"
-            ? "Subiendo imagen..."
-            : fase === "guardando"
-              ? esCrear
-                ? "Creando..."
-                : "Guardando..."
-              : esCrear
-                ? "Crear producto"
-                : "Guardar cambios"
-        }
+        submitLabel={etiquetaSubmit(fase, esCrear, "producto")}
         onSubmit={handleSubmit}
-        idValue={producto?.id ?? ""}
+        idValue={id ?? ""}
       />
     </>
   );

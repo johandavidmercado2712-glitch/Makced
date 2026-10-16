@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import { createServerClient } from "@insforge/sdk/ssr";
 import { revalidatePath } from "next/cache";
 import { borrarArchivoStorage, resolverImagen } from "@/lib/imagenes";
-import { requireTiendaDelUsuario } from "./tienda";
+import { requireAuth } from "./tienda";
 import {
   COLOR_PRINCIPAL_DEFECTO,
   TIPOGRAFIAS,
@@ -57,7 +57,7 @@ export async function guardarDiseno(
   formData: FormData,
 ): Promise<GuardadoResultado> {
   try {
-    const { tienda, error: authError } = await requireTiendaDelUsuario();
+    const { tienda, error: authError } = await requireAuth();
     if (!tienda) {
       return { ok: false, error: authError ?? "No autorizado. Inicia sesión." };
     }
@@ -216,7 +216,7 @@ export async function guardarDiseno(
  */
 export async function restaurarDiseno(): Promise<GuardadoResultado> {
   try {
-    const { tienda, error: authError } = await requireTiendaDelUsuario();
+    const { tienda, error: authError } = await requireAuth();
     if (!tienda) {
       return { ok: false, error: authError ?? "No autorizado. Inicia sesión." };
     }

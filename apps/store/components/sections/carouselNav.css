@@ -3,19 +3,19 @@
    ========================================= */
 .carousel-nav {
   width: 100%;
-  min-height: 60vh;
+  min-height: min(68vh, 680px);
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 60px;
-  padding: 0 60px;
-  background-color: var(--bg-card);
+  gap: clamp(32px, 6vw, 80px);
+  padding: 48px max(24px, calc((100% - var(--content-width)) / 2));
+  background-color: var(--bg-main);
   transition: background-color 0.3s;
 }
 
 .carousel-nav-content {
-  max-width: 550px;
+  max-width: 520px;
 }
 
 /* =========================================
@@ -23,19 +23,22 @@
    ========================================= */
 .text-rotate {
   display: grid;
-  min-height: 4.5rem;
+  min-height: 1.2em;
   height: auto;
   overflow: hidden;
-  margin-bottom: 20px;
+  margin: 0 0 20px;
+  font-size: clamp(42px, 5.5vw, 72px);
+  line-height: 1.05;
+  letter-spacing: -0.045em;
 }
 
 .text-rotate-word {
   grid-row: 1;
   grid-column: 1;
-  color: var(--primary-mint);
-  font-size: 3.5rem;
+  color: var(--action-color);
+  font-size: inherit;
   font-weight: 700;
-  font-style: italic;
+  font-style: normal;
   opacity: 0;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   animation: rotateWords 12s infinite;
@@ -50,7 +53,7 @@
    ========================================= */
 .text-rotate-p {
   display: grid;
-  min-height: 6rem;
+  min-height: 5rem;
   height: auto;
   overflow: hidden;
   margin-bottom: 30px;
@@ -60,7 +63,7 @@
   grid-row: 1;
   grid-column: 1;
   color: var(--text-secondary);
-  font-size: 16px;
+  font-size: 18px;
   line-height: 1.6;
   opacity: 0;
   text-shadow: 0 1px 6px rgba(0, 0, 0, 0.15);
@@ -76,9 +79,10 @@
    ========================================= */
 .carousel-nav-image {
   position: relative;
-  width: 450px;
-  height: 450px;
-  border-radius: 16px;
+  width: min(42vw, 500px);
+  aspect-ratio: 1;
+  height: auto;
+  border-radius: var(--radius-lg);
   flex-shrink: 0;
   filter: drop-shadow(0 25px 40px rgba(0, 0, 0, 0.35));
 }
@@ -90,7 +94,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 16px;
+  border-radius: var(--radius-lg);
   opacity: 0;
   animation: rotateImages 12s infinite;
 }
@@ -135,13 +139,12 @@
    ========================================= */
 @media (max-width: 1024px) {
   .carousel-nav {
-    padding: 0 30px;
+    padding-inline: 32px;
     gap: 40px;
   }
 
   .carousel-nav-image {
-    width: 350px;
-    height: 350px;
+    width: min(40vw, 380px);
   }
 }
 
@@ -151,24 +154,23 @@
     flex-direction: column;
     align-items: center;
     gap: 24px;
-    padding: 40px 20px;
+    padding: 48px 24px;
   }
 
   .carousel-nav-content {
     max-width: 100%;
   }
 
-  .text-rotate-word {
-    font-size: 2.5rem;
+  .text-rotate {
+    font-size: clamp(38px, 8vw, 56px);
   }
 
   .text-rotate-p-word {
-    font-size: 14px;
+    font-size: 16px;
   }
 
   .carousel-nav-image {
-    width: min(300px, 78vw);
-    height: auto;
+    width: min(360px, 78vw);
     aspect-ratio: 1;
   }
 }
@@ -176,21 +178,36 @@
 @media (max-width: 480px) {
   .carousel-nav {
     gap: 18px;
-    padding: 32px 16px;
+    padding: 36px 16px;
   }
 
-  .text-rotate { min-height: 2.6rem; margin-bottom: 12px; }
+  .text-rotate {
+    min-height: 1.1em;
+    margin-bottom: 12px;
+    font-size: clamp(34px, 10vw, 46px);
+  }
+
   .text-rotate-p { min-height: 5rem; margin-bottom: 18px; }
-  .text-rotate-word {
-    font-size: 2rem;
-    line-height: 1.2;
-  }
-
   .text-rotate-p-word {
-    font-size: 13px;
+    font-size: 15px;
   }
 
   .carousel-nav-image {
     width: min(260px, 78vw);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .text-rotate-word,
+  .text-rotate-p-word,
+  .carousel-nav-image img {
+    animation: none;
+  }
+
+  .text-rotate-word:first-child,
+  .text-rotate-p-word:first-child,
+  .carousel-nav-image img:first-child {
+    opacity: 1;
+    transform: none;
   }
 }

@@ -27,8 +27,16 @@ export default async function RootLayout({
   if (!user) redirect(LOGIN_URL);
 
   return (
-    <html lang="es" className={figtree.variable}>
+    <html lang="es" className={figtree.variable} suppressHydrationWarning>
       <body>
+        {/* Aplica el tema ANTES del primer paint (evita el flash claro→oscuro
+           al recargar). Mismo STORAGE_KEY "theme" que el store. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              '(function(){try{var t=localStorage.getItem("theme");if(t!=="light"&&t!=="dark"){t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}document.documentElement.classList.toggle("dark",t==="dark")}catch(e){}})()',
+          }}
+        />
         <ThemeProvider>
           <div className="dashboard-layout">
             <Sidebar />

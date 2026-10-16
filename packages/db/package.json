@@ -33,5 +33,8 @@
     "next": ">=16",
     "react": ">=19",
     "react-dom": ">=19"
+  },
+  "scripts": {
+    "test": "vitest run"
   }
 }

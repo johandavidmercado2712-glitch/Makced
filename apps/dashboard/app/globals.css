@@ -10,45 +10,51 @@
 .dashboard-main {
   flex: 1;
   min-width: 0;
-  margin-left: 80px;
-  padding: 24px;
+  margin-left: 220px;
+  padding: 32px 36px;
+  transition: margin 0.2s ease, padding 0.2s ease;
 }
 
 /* =========================================
-   THEME: LIGHT (default — paleta del store)
+   THEME: LIGHT (dashboard)
    ========================================= */
 :root {
   color-scheme: light;
 
+  /* 1. Fondos base (Mantenidos) */
   --db-bg-main: #FAF9F6;
   --db-bg-card: #FFFFFF;
-  --db-bg-card-hover: #F5F5F5;
+  --db-bg-card-hover: #F1F5F9;
   --db-border: #E2E8F0;
-  --db-text-primary: #121212;
+
+  /* 2. Textos (Nueva jerarquía Slate) */
+  --db-text-primary: #0F172A;
   --db-text-secondary: #64748B;
   --db-text-muted: #94A3B8;
 
-  /* Variables compartidas con el store (las usa sidebar.css) */
+  /* Variables compartidas con sidebar/componentes */
   --bg-main: #FAF9F6;
   --bg-card: #FFFFFF;
-  --bg-section: #E6FAF5;
-  --text-primary: #121212;
+  --bg-section: #F8FAFC;
+  --text-primary: #0F172A;
   --text-secondary: #64748B;
   --border-color: #E2E8F0;
-  --primary-mint: #059669;
+  --primary-mint: #10B981;
 
-  /* Acentos (iguales en ambos temas) */
-  --db-green: #4CE1AC;
-  --db-blue: #60A5FA;
-  --db-cyan: #22D3EE;
-  --db-magenta: #C084FC;
-
+  /* Acentos y estados */
+  --db-green: #10B981;
+  --db-blue: #3B82F6;
+  --db-cyan: #06B6D4;
+  --db-magenta: #7C53ED;
   --db-amber: #FBBF24;
-  --db-green-status: #34D399;
-  --db-blue-status: #60A5FA;
+  --db-orange: #F97316;
 
-  --db-btn-primary: #047857;
-  --db-btn-primary-hover: #065F46;
+  --db-green-status: #059669;
+  --db-blue-status: #3B82F6;
+
+  /* Botones primarios (Emerald 600 para contraste AA óptimo con blanco) */
+  --db-btn-primary: #059669;
+  --db-btn-primary-hover: #047857;
   --db-btn-primary-fg: #FFFFFF;
 
   --db-radius-sm: 8px;
@@ -56,34 +62,77 @@
 }
 
 /* =========================================
-   THEME: DARK (paleta del store)
+   THEME: DARK (dashboard)
    ========================================= */
 .dark {
   color-scheme: dark;
 
+  /* 1. Fondos base (Mantenidos) */
   --db-bg-main: #121316;
   --db-bg-card: #1A1C21;
-  --db-bg-card-hover: #22252d;
+  --db-bg-card-hover: #22252D;
   --db-border: #2D3748;
-  --db-text-primary: #E2E8F0;
+
+  /* 2. Textos (Nueva jerarquía Slate oscura) */
+  --db-text-primary: #F8FAFC;
   --db-text-secondary: #94A3B8;
   --db-text-muted: #64748B;
 
   --bg-main: #121316;
   --bg-card: #1A1C21;
-  --bg-section: #1A1C21;
-  --text-primary: #E2E8F0;
+  --bg-section: #22252D;
+  --text-primary: #F8FAFC;
   --text-secondary: #94A3B8;
   --border-color: #2D3748;
-  --primary-mint: #4CE1AC;
-  --db-btn-primary: #4CE1AC;
-  --db-btn-primary-hover: #00E599;
-  --db-btn-primary-fg: #121212;
+  --primary-mint: #10B981;
+
+  --db-green: #10B981;
+  --db-blue: #60A5FA;
+  --db-cyan: #22D3EE;
+  --db-magenta: #A855F7;
+  --db-amber: #FBBF24;
+  --db-orange: #FB923C;
+
+  --db-green-status: #34D399;
+  --db-blue-status: #60A5FA;
+
+  /* Botones primarios (Emerald 500 con texto oscuro Slate para alto contraste) */
+  --db-btn-primary: #10B981;
+  --db-btn-primary-hover: #34D399;
+  --db-btn-primary-fg: #0F172A;
 }
 
 body {
   background: var(--db-bg-main);
   color: var(--db-text-primary);
+/* =========================================
+   REDUCED MOTION
+   ========================================= */
+@media (prefers-reduced-motion: reduce) {
+  .dashboard-main {
+    transition: none !important;
+  }
+
+  .db-skeleton,
+  .skeleton {
+    animation: none !important;
+  }
+
+  .modal,
+  .dropdown,
+  .tooltip,
+  .slider,
+  .range {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Keep the icon navigation at the left on narrow screens. */
   font-family: var(--font-figtree), sans-serif;
   transition: background-color 0.3s, color 0.3s;
 }
@@ -92,12 +141,14 @@ body {
 @media (max-width: 1024px) {
   .dashboard-main {
     margin-left: 68px;
-    padding: 20px 16px;
+    padding: 24px 20px;
   }
 }
 
 @media (max-width: 480px) {
   .dashboard-main {
-    padding: 16px 12px;
+    margin-left: 0;
+    margin-bottom: 70px;
+    padding: 16px 14px;
   }
 }

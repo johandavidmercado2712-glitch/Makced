@@ -73,8 +73,8 @@
 .carrito-vacio a {
     display: inline-block;
     padding: 12px 32px;
-    background: var(--primary-mint);
-    color: #121212;
+    background: var(--action-color);
+    color: var(--on-action);
     font-weight: 600;
     border-radius: 12px;
     text-decoration: none;
@@ -82,7 +82,7 @@
 }
 
 .carrito-vacio a:hover {
-    background: var(--primary-turquoise);
+    background: var(--action-color-hover);
 }
 
 .carrito-product-card {
@@ -228,7 +228,7 @@
     gap: 8px;
     font-size: 14px;
     font-weight: 600;
-    color: var(--primary-mint);
+    color: var(--action-color);
     margin-bottom: 12px;
 }
 
@@ -280,7 +280,7 @@
 }
 
 .carrito-linea-valor--gratis {
-    color: var(--primary-mint);
+    color: var(--action-color);
 }
 
 .carrito-separador {
@@ -324,7 +324,7 @@
 }
 
 .carrito-beneficio svg {
-    color: var(--primary-mint);
+    color: var(--action-color);
     flex-shrink: 0;
 }
 

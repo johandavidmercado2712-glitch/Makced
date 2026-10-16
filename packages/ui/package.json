@@ -20,5 +20,8 @@
   },
   "dependencies": {
     "lucide-react": "^1.47.0"
+  },
+  "scripts": {
+    "test": "vitest run"
   }
 }

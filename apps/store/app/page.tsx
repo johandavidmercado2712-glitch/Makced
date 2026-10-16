@@ -1,68 +1,36 @@
-import Image from "next/image"
-import Link from "next/link"
 import { Suspense } from "react"
-import Marcas from "../components/sections/Marcas"
 import PanelInfo from "../components/sections/PanelInfo"
 import ScrollReveal from "../components/ui/ScrollReveal"
 import CarouselNav from "../components/sections/CarouselNav"
 import FeaturedProducts from "../components/product/FeaturedProducts"
 import ProductGridSkeleton from "../components/product/ProductGridSkeleton"
-import { getCategorias, getConfigDiseno, getMarcas } from "./actions/store";
+import HomeMarcas from "../components/sections/HomeMarcas"
+import HomeCategorias from "../components/sections/HomeCategorias"
+import CategoriaSkeleton from "../components/ui/CategoriaSkeleton"
+import { getConfigDiseno } from "./actions/store";
 
 export const revalidate = 60;
 
 export default async function Page(){
 
-  const [categorias, marcas, { config }] = await Promise.all([
-    getCategorias(),
-    getMarcas(),
-    getConfigDiseno(),
-  ]);
+  const { config } = await getConfigDiseno();
   return(
     <>
-    <CarouselNav slides={config.banner.slides} />
-
-
-      {/*SESSION DE MARCAS*/}
-
-
-      
-      <Marcas initialMarcas={marcas} />
-
-      {/*SESSION DE CATEGORIAS*/}
-
-
-      <ScrollReveal>
-        <div className="categoria">
-          <div className="categoria-titulo">
-            <div className="categoria-titulo-texto">
-              <h1>{config.titulos.categorias}</h1>
-            </div>
-            <Link href="/categoria">Ver Todas</Link>
+      <CarouselNav slides={config.banner.slides} />
+      <Suspense
+        fallback={
+          <div className="marcas-destacadas" role="status" aria-busy="true">
+            <span className="sr-only">Cargando marcas…</span>
+            <div className="skeleton h-28 w-full" />
           </div>
-          <div className="categoria-cards">
-              {categorias.map((cat, index) => (
-                <ScrollReveal key={cat.id} delay={(index + 1) * 100}>
-                  <Link href={`/categoriaProductos?slug=${cat.slug}`}>
-                    <div className="categoria-card">
-                      <Image
-                        src={cat.imagen_url || "/placeholder-categoria.jpg"}
-                        alt={cat.nombre}
-                        fill
-                        sizes="(max-width: 768px) 100vw, 350px"
-                      />
-                      <h3>{cat.nombre}</h3>
-                    </div>
-                  </Link>
-                </ScrollReveal>
-              ))}
-            </div>
-        </div>
-      </ScrollReveal>
+        }
+      >
+        <HomeMarcas />
+      </Suspense>
 
-
-
-      {/*SESSION DE INFO */}
+      <Suspense fallback={<CategoriaSkeleton count={4} />}>
+        <HomeCategorias titulo={config.titulos.categorias} />
+      </Suspense>
 
       <ScrollReveal>
         <PanelInfo
@@ -74,16 +42,15 @@ export default async function Page(){
         />
       </ScrollReveal>
 
-      <ScrollReveal>
-        <div className="Productos">
-          <div className="Productos-titulo">
-            <h1>{config.titulos.productos}</h1>
-          </div>
+      <section className="Productos" aria-labelledby="productos-heading">
+        <ScrollReveal>
+          <header className="Productos-titulo">
+            <h2 id="productos-heading">{config.titulos.productos}</h2>
+          </header>
           <Suspense fallback={<ProductGridSkeleton count={5} />}>
-            <FeaturedProducts />
+            <FeaturedProducts mostrarPrecios={Boolean(config.mostrar_precios ?? true)} />
           </Suspense>
 
-    
           <PanelInfo
             image={config.newsletter.imagen}
             titulo={config.newsletter.titulo}
@@ -91,8 +58,8 @@ export default async function Page(){
             link={config.newsletter.link}
             button={config.newsletter.boton}
           />
-        </div>
-      </ScrollReveal>
+        </ScrollReveal>
+      </section>
     </>
   )
 }

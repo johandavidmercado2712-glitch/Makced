@@ -54,6 +54,7 @@ export default function Navbar({
   const dynamicLinks: NavLink[] = initialCategories.map((cat) => ({
     href: `/categoriaProductos?slug=${cat.slug}`,
     label: cat.nombre,
+    hideOnMobile: true,
   }));
 
   const links: NavLink[] = [
@@ -83,7 +84,7 @@ export default function Navbar({
         {logoUrl ? (
           <img className="nav-logo" src={logoUrl} alt={marca} />
         ) : (
-          <h2>{marca}</h2>
+          <span className="nav-brand">{marca}</span>
         )}
         <div className="nav-icons-right">
           {searchOpen ? (
@@ -112,7 +113,7 @@ export default function Navbar({
         </div>
       </div>
 
-      <div className="nav-sessiones">
+      <nav className="nav-sessiones" aria-label="Navegación principal">
         <div className="nav-session">
           {links.map((link) => (
             <Link 
@@ -124,7 +125,7 @@ export default function Navbar({
             </Link>
           ))}
         </div>
-      </div>
+      </nav>
 
       
 

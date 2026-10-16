@@ -28,11 +28,7 @@
   aspect-ratio: 1;
   object-fit: cover;
   border-radius: 24px;
-  background: #F5F5F0;
-}
-
-.dark .producto-imagen-principal {
-  background: #1A1A1A;
+  background: var(--bg-media);
 }
 
 /* Galería 4 miniaturas - alineada a ancho principal */
@@ -47,14 +43,10 @@
   aspect-ratio: 1;
   object-fit: cover;
   border-radius: 16px;
-  background: #F5F5F0;
+  background: var(--bg-media);
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
   border: 2px solid transparent;
-}
-
-.dark .producto-miniatura {
-  background: #1A1A1A;
 }
 
 .producto-miniatura:hover {
@@ -90,11 +82,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: #71717A; /* zinc-400 */
-}
-
-.dark .producto-marca-categoria {
-  color: #A1A1AA; /* zinc-400 dark */
+  color: var(--text-muted);
 }
 
 .producto-titulo {
@@ -117,19 +105,15 @@
 .precio-original {
   font-size: 20px;
   font-weight: 500;
-  color: #71717A;
+  color: var(--text-muted);
   text-decoration: line-through;
-}
-
-.dark .precio-original {
-  color: #A1A1AA;
 }
 
 .precio-descuento {
   font-size: 32px;
   font-weight: 800;
   font-family: var(--font-figtree);
-  color: var(--primary-mint);
+  color: var(--action-color);
 }
 
 .precio-actual {
@@ -176,16 +160,16 @@
 .color-swatch:hover {
   transform: scale(1.15);
   border-color: var(--primary-mint);
-  box-shadow: 0 4px 16px rgba(76, 225, 172, 0.4);
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--primary-mint) 40%, transparent);
 }
 
 .color-swatch:focus-visible {
-  outline: 2px solid var(--primary-mint);
+  outline: 2px solid var(--focus-ring);
   outline-offset: 2px;
 }
 
 .color-swatch.selected {
-  border-color: #121212;
+  border-color: var(--bg-strong);
   box-shadow: 0 0 0 3px var(--primary-mint);
 }
 
@@ -219,18 +203,18 @@
 }
 
 .talla-btn.selected {
-  background: #121212;
-  border-color: #121212;
-  color: #FFFFFF;
+  background: var(--bg-strong);
+  border-color: var(--bg-strong);
+  color: var(--on-strong);
 }
 
 .talla-btn.selected:hover {
-  background: #1F1F1F;
-  border-color: #1F1F1F;
+  background: color-mix(in srgb, var(--bg-strong), #fff 10%);
+  border-color: color-mix(in srgb, var(--bg-strong), #fff 10%);
 }
 
 .talla-btn:focus-visible {
-  outline: 2px solid var(--primary-mint);
+  outline: 2px solid var(--focus-ring);
   outline-offset: 2px;
 }
 
@@ -246,8 +230,8 @@
   font-size: 16px;
   font-weight: 600;
   font-family: var(--font-figtree);
-  color: #121212;
-  background: var(--primary-mint);
+  color: var(--on-action);
+  background: var(--action-color);
   border: none;
   border-radius: 16px; /* rounded-2xl */
   cursor: pointer;
@@ -255,16 +239,10 @@
 }
 
 .cta-btn:hover {
-  background: var(--primary-turquoise);
-  color: #121212;
+  background: var(--action-color-hover);
+  color: var(--on-action);
   transform: translateY(-1px);
-  box-shadow: 0 8px 24px rgba(76, 225, 172, 0.35);
-}
-
-.cta-btn:hover {
-  background: #1F1F1F;
-  transform: translateY(-1px);
-  box-shadow: 0 8px 24px rgba(18, 18, 18, 0.3);
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--primary-mint) 35%, transparent);
 }
 
 .cta-btn:active {
@@ -272,7 +250,7 @@
 }
 
 .cta-btn:focus-visible {
-  outline: 2px solid var(--primary-mint);
+  outline: 2px solid var(--focus-ring);
   outline-offset: 3px;
 }
 
@@ -301,7 +279,7 @@
   margin-top: 8px;
   font-size: 13px;
   font-weight: 600;
-  color: #ef4444;
+  color: var(--text-danger);
 }
 
 /* =========================================
@@ -419,7 +397,7 @@
   }
 
   .producto-marca-categoria {
-    font-size: 11px;
+    font-size: var(--fs-xs);
   }
 
   .producto-titulo {

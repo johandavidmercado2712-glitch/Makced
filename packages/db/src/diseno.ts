@@ -154,6 +154,24 @@ function hexARgba(hex: string, alfa: number): string {
   return `rgba(${r}, ${g}, ${b}, ${alfa})`;
 }
 
+function textoContraste(hex: string): string {
+  let limpio = hex.slice(1);
+  if (limpio.length === 3) {
+    limpio = limpio
+      .split("")
+      .map((c) => c + c)
+      .join("");
+  }
+
+  const canales = [0, 2, 4].map((inicio) => {
+    const canal = parseInt(limpio.slice(inicio, inicio + 2), 16) / 255;
+    return canal <= 0.04045 ? canal / 12.92 : ((canal + 0.055) / 1.055) ** 2.4;
+  });
+  const luminancia = 0.2126 * canales[0] + 0.7152 * canales[1] + 0.0722 * canales[2];
+
+  return luminancia > 0.179 ? "#121212" : "#FFFFFF";
+}
+
 /**
  * Combina el config guardado en la DB con los defaults.
  * DB vacía ({}) => defaults completos; campos futuros ausentes => default.
@@ -209,6 +227,7 @@ export function varsDesdeConfig(
 
   const vars: Record<string, string> = {
     "--primary-mint": principal,
+    "--on-action": textoContraste(principal),
     "--primary-turquoise": normalizarHex(
       config.color_secundario,
       COLOR_SECUNDARIO_DEFECTO

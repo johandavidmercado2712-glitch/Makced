@@ -2,6 +2,7 @@ import ProductCard from "../../components/product/ProductCard"
 import ScrollReveal from "../../components/ui/ScrollReveal"
 import "./verProducto.css"
 import { getProductoPorSlug, getProductosDestacados } from "../actions/products";
+import { getConfigDiseno } from "../actions/store";
 import ProductoSelector from "../../components/product/ProductoSelector"
 
 
@@ -26,10 +27,12 @@ export default async function Page({
   const { slug } = await searchParams;
   const productoSlug = slug || "zapatillas-nike-air-max-270";
 
-  const [producto, recomendados] = await Promise.all([
+  const [producto, recomendados, { config }] = await Promise.all([
     getProductoPorSlug(productoSlug),
     getProductosDestacados(),
+    getConfigDiseno(),
   ]);
+  const mostrarPrecios = Boolean(config.mostrar_precios ?? true);
 
   return (
     <>
@@ -72,23 +75,25 @@ export default async function Page({
                 </h1>
               </div>
 
-              {/* PRECIO: Grande + tachado si descuento */}
-              <div className="producto-precio">
-                {producto?.precio_descuento && producto.precio_descuento < producto.precio ? (
-                  <>
-                    <span className="precio-original">
-                      {formatCOP(producto.precio)}
+              {/* PRECIO: Grande + tachado si descuento (oculto si la tienda oculta precios) */}
+              {mostrarPrecios && (
+                <div className="producto-precio">
+                  {producto?.precio_descuento && producto.precio_descuento < producto.precio ? (
+                    <>
+                      <span className="precio-original">
+                        {formatCOP(producto.precio)}
+                      </span>
+                      <span className="precio-descuento">
+                        {formatCOP(producto.precio_descuento)}
+                      </span>
+                    </>
+                  ) : (
+                    <span className="precio-actual">
+                      {formatCOP(producto?.precio ?? 0)}
                     </span>
-                    <span className="precio-descuento">
-                      {formatCOP(producto.precio_descuento)}
-                    </span>
-                  </>
-                ) : (
-                  <span className="precio-actual">
-                    {formatCOP(producto?.precio ?? 0)}
-                  </span>
-                )}
-              </div>
+                  )}
+                </div>
+              )}
 
               {/* COLOR + TALLA + CTA (Client Component con estado) */}
               <ProductoSelector producto={producto!} />
@@ -110,7 +115,7 @@ export default async function Page({
                 <ProductCard
                   image={rec.imagen_url || "/producto.jpg"}
                   name={rec.nombre}
-                  price={formatCOP(rec.precio)}
+                  price={mostrarPrecios ? formatCOP(rec.precio) : undefined}
                   rating={4.5}
                   slug={rec.slug || undefined}
                 />

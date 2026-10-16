@@ -360,7 +360,7 @@
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 480px) {
   .de-campos,
   .de-colors,
   .de-tarjeta-campos {

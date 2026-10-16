@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, type FormEvent, type ReactNode } from "react";
+import { useEffect, useId, useRef, type FormEvent, type ReactNode } from "react";
 import { X } from "lucide-react";
 import "./modalProduct.css";
 
@@ -35,6 +35,7 @@ export function Modal({
   idValue,
 }: ModalProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const titleId = useId();
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -51,6 +52,7 @@ export function Modal({
       ref={dialogRef}
       className="db-modal"
       onClose={onClose}
+      aria-labelledby={titleId}
     >
       {isOpen && (
         <form className="db-modal-box" onSubmit={onSubmit}>
@@ -58,7 +60,7 @@ export function Modal({
 
           <div className="db-modal-header">
             <div>
-              <h2 className="db-modal-title">{title}</h2>
+              <h2 id={titleId} className="db-modal-title">{title}</h2>
               <p className="db-modal-subtitle">{subtitle}</p>
             </div>
             <button

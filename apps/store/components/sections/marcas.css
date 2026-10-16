@@ -1,15 +1,17 @@
 /* =========================================
    Marcas - Infinite Carousel
    ========================================= */
-.marcas {
+.marcas-destacadas {
   overflow: hidden;
-  background-color: var(--bg-main);
-  padding: 20px 0;
+  background-color: var(--bg-card);
+  padding: 16px 0;
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .marcas-track {
   display: flex;
-  gap: 3rem;
+  gap: clamp(24px, 4vw, 56px);
   width: max-content;
   animation: marquee 20s linear infinite;
 }
@@ -25,11 +27,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--bg-card);
+  background-color: transparent;
   border-radius: var(--radius-md);
-  padding: 15px 20px;
+  padding: 12px 16px;
   transition: transform 0.3s ease, opacity 0.3s ease;
-  opacity: 0.6;
+  opacity: 0.72;
   cursor: pointer;
   flex: 0 0 auto;
 }
@@ -89,5 +91,17 @@
   .marcas-card img {
     width: 90px;
     height: 35px;
+  }
+}
+
+/* Sensibilidad al movimiento: el marquee infinito se detiene. */
+@media (prefers-reduced-motion: reduce) {
+  .marcas-track {
+    animation: none;
+  }
+
+  .marcas-card,
+  .marcas-card img {
+    transition: none;
   }
 }

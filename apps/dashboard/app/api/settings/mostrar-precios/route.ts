@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { createServerClient } from '@insforge/sdk/ssr';
-import { requireTiendaDelUsuario } from '@/actions/tienda';
+import { requireAuth } from '@/actions/tienda';
 
 export async function POST(request: Request) {
   try {
     // Solo el dueño de la tienda puede cambiar este ajuste.
-    const { tienda, error: authError } = await requireTiendaDelUsuario();
+    const { tienda, error: authError } = await requireAuth();
     if (!tienda) {
       const status = authError === 'No autorizado. Inicia sesión.' ? 401 : 403;
       return NextResponse.json({ ok: false, error: authError }, { status });

@@ -21,7 +21,7 @@ Monorepo de la plataforma Makced con **Turborepo + npm workspaces**. Consta de t
 
 - Node.js 22+
 - npm 10+
-- Un proyecto InsForge (este repositorio usa el proyecto **Makced**)
+- Un proyecto InsForge (este repositorio usa el proyecto **Makced-Store**)
 
 ## Instalación
 
@@ -35,8 +35,8 @@ Copia las credenciales de InsForge en el archivo `.env.local` de **cada** aplica
 
 ```
 # apps/store/.env.local, apps/login/.env.local, apps/dashboard/.env.local
-NEXT_PUBLIC_INSFORGE_URL=https://i65mdj5r.us-east.insforge.app
-NEXT_PUBLIC_INSFORGE_ANON_KEY=ik_9b2c36cbad3e9371fc147c22ade8386a
+NEXT_PUBLIC_INSFORGE_URL=https://253fnuce.us-east.insforge.app
+NEXT_PUBLIC_INSFORGE_ANON_KEY=anon_xxx...   # copia la anon key desde el proyecto InsForge (ver .env.example)
 ```
 
 > ⚠️ Nunca subas los `.env.local` al repositorio (están en `.gitignore`).
@@ -59,7 +59,45 @@ npm run dev
 npm run build        # build de todas las apps
 npm run lint         # lint de todas las apps
 npm run typecheck    # typecheck de todas las apps
+npm run test         # tests unitarios (Vitest) de todos los paquetes
 ```
+
+## Estados de carga (skeletons)
+
+Convención única para mostrar siluetas mientras el servidor resuelve datos.
+Ambas variantes heredan el modo oscuro y respetan `prefers-reduced-motion`:
+
+| App | Skeleton | Dónde |
+|-----|----------|-------|
+| Store | `skeleton` de daisyUI + utilidades (`skeleton h-32 w-full`) | `components/product/ProductCard.tsx` (prop `loading`), `ProductGridSkeleton.tsx`, `components/ui/{Categoria,Marcas,ProductoDetalle}Skeleton.tsx`, activados desde `app/**/loading.tsx` |
+| Dashboard | `.db-skeleton` (tokens `--db-*`, sin daisyUI) | `components/skeleton/TablaSkeleton.tsx`, `components/skeleton/ResumenSkeleton.tsx`, activados desde `app/**/loading.tsx` |
+
+Reglas:
+
+- **Store → daisyUI; dashboard → `.db-skeleton`** (`app/db-base.css`). No mezclar: el panel no usa clases de utilidad.
+- Todo estado de carga lleva `role="status"` + `aria-busy="true"` y un texto oculto (`.db-sr-only` / `sr-only`).
+- Las páginas del dashboard son server components con `await`: el punto de activación es su archivo `app/<ruta>/loading.tsx`, no `useState`.
+- En el store, cada sección del home (marcas, categorías, destacados) hace fetch **dentro** de su propio componente servidor con `<Suspense>` + skeleton, para no bloquear el render completo.
+- Nota: con ISR (páginas `○` estáticas) el HTML ya viene listo, así que el skeleton solo se ve en la primera compilación/visita en frío o en rutas dinámicas (`ƒ`). No es un bug, es intencionado (rendimiento).
+
+## Convenciones de estilo (store y dashboard)
+
+- **Breakpoints canónicos:** `480px` (móvil) · `768px` (tablet) · `1024px` (escritorio). No usar otros valores: los `640px` heredados se unificaron a `480px`.
+- **Escala tipográfica (store):** tokens `--fs-xs … --fs-3xl` + `--fs-display` en `apps/store/app/globals.css`, todos en `rem`. Texto de lectura mínimo `--fs-xs` (12px); solo los badges numéricos pueden ir a 11px.
+- **Tokens semánticos de color:** `--bg-media`, `--bg-strong`/`--on-strong`, `--text-muted`, `--text-danger`, `--focus-ring`. Regla: en componentes, nunca hex sueltos — siempre tokens (el dark mode y el theming dependen de ello).
+
+## Pruebas end-to-end
+
+Playwright prueba recorridos reales de la tienda en Chromium. Instala el navegador
+una sola vez y ejecuta las pruebas desde la raíz del monorepo:
+
+```bash
+npx playwright install chromium
+npm run test:e2e
+```
+
+Playwright inicia la tienda en `http://127.0.0.1:3000` si no hay ya un servidor
+disponible. Las pruebas están en `tests/e2e/`.
 
 También puedes filtrar por aplicación:
 
@@ -85,10 +123,10 @@ Makced/
 
 ## Backend
 
-InsForge **Makced**:
+InsForge **Makced-Store**:
 
-- **API Base:** `https://i65mdj5r.us-east.insforge.app`
-- **Dashboard:** https://insforge.dev/dashboard/project/7c861cfd-77d7-4e09-9888-19d33388edae
+- **API Base:** `https://253fnuce.us-east.insforge.app`
+- **Dashboard:** https://insforge.dev/dashboard/project/32f1493f-b2c4-4039-bcfb-ca8a0639ca6b
 
 ### InsForge CLI
 
@@ -100,7 +138,7 @@ npm install -g @insforge/cli
 insforge login --user-api-key uak_...
 
 # Vincular proyecto (desde la raíz del monorepo)
-insforge link --project-id 7c861cfd-77d7-4e09-9888-19d33388edae
+insforge link --project-id 32f1493f-b2c4-4039-bcfb-ca8a0639ca6b
 ```
 
 ## Links

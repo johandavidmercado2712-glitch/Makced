@@ -6,6 +6,7 @@ import Breadcrumbs from "../../components/ui/Breadcrumbs"
 import ProductGridSkeleton from "../../components/product/ProductGridSkeleton"
 import ProductGrid from "../../components/product/ProductGrid"
 import { getProductosPorMarca, getMaxPrice } from "../actions/products";
+import { getConfigDiseno } from "../actions/store";
 import Link from "next/link";
 
 export const revalidate = 30;
@@ -23,7 +24,9 @@ export default async function Page({
   const { slug, maxPrice } = await searchParams;
   const marcaNombre = slug || "Nike";
   const maxPriceNum = maxPrice ? Number(maxPrice) : undefined;
-  const maxPriceDB = await getMaxPrice();
+  const { config } = await getConfigDiseno();
+  const mostrarPrecios = Boolean(config.mostrar_precios ?? true);
+  const maxPriceDB = mostrarPrecios ? await getMaxPrice() : undefined;
 
   return (
     <>
@@ -43,7 +46,9 @@ export default async function Page({
           </ScrollReveal>
         </div>
 
-        <FiltroPrecio maxPrice={maxPriceDB} />
+        {mostrarPrecios && maxPriceDB !== undefined && (
+          <FiltroPrecio maxPrice={maxPriceDB} />
+        )}
         <Suspense fallback={<ProductGridSkeleton count={4} />}>
           <ProductosPorMarca slug={marcaNombre} maxPrice={maxPriceNum} />
         </Suspense>

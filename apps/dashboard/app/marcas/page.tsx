@@ -10,6 +10,7 @@ import {
 import { ModalCategoria } from "@/components/modal/modalCategoria";
 import { ModalMarca } from "@/components/modal/modalMarca";
 import MarcasActions from "@/components/MarcasActions";
+import { urlImagen } from "@/lib/imagenes";
 import "../productos/productos.css";
 import "./marcas.css";
 
@@ -80,7 +81,7 @@ export default async function MarcasPage() {
                         style={m.logo_url ? undefined : AVATAR_SIN_IMAGEN}
                       >
                         {m.logo_url ? (
-                          <img src={m.logo_url} alt={m.nombre} />
+                          <img src={urlImagen(m.logo_url)} alt={m.nombre} />
                         ) : (
                           m.nombre[0]
                         )}
@@ -150,7 +151,7 @@ export default async function MarcasPage() {
                         style={c.imagen_url ? undefined : AVATAR_SIN_IMAGEN}
                       >
                         {c.imagen_url ? (
-                          <img src={c.imagen_url} alt={c.nombre} />
+                          <img src={urlImagen(c.imagen_url)} alt={c.nombre} />
                         ) : (
                           c.nombre[0]
                         )}

@@ -6,7 +6,7 @@ import { insforge } from "@/lib/insforge";
 import { borrarArchivoStorage, resolverImagen, texto } from "@/lib/imagenes";
 import { generarSlugUnico } from "@/lib/slug";
 import { PRODUCTOS_POR_PAGINA } from "@/lib/paginacion";
-import { getTienda, requireTiendaDelUsuario } from "./tienda";
+import { getTienda, requireAuth } from "./tienda";
 import type { ProductoLista, ProductoUpdate, RefSimple } from "@/types/database";
 import type { GuardadoResultado } from "@/types/components";
 
@@ -40,7 +40,7 @@ export async function getProductosPaginado(
 }> {
   // Scoping por tienda del usuario (layout ya exige sesión).
   // Lectura: RLS permite SELECT público; el filtro tienda_id evita ver datos ajenos.
-  const { tienda } = await requireTiendaDelUsuario();
+  const { tienda } = await requireAuth();
   const tiendaId = tienda?.id;
   // total filtrado (mismos criterios que la página)
   let countQuery = insforge.database
@@ -98,7 +98,7 @@ export async function getProductosPaginado(
 }
 
 export async function getProductosCount() {
-  const { tienda } = await requireTiendaDelUsuario();
+  const { tienda } = await requireAuth();
   let q = insforge.database
     .from("productos")
     .select("*", { count: "exact", head: true });
@@ -110,7 +110,7 @@ export async function getProductosCount() {
 }
 
 export async function updateProducto(id: string, patch: ProductoUpdate) {
-  const { tienda, error: authError } = await requireTiendaDelUsuario();
+  const { tienda, error: authError } = await requireAuth();
   if (!tienda) {
     throw new Error(authError ?? "No autorizado. Inicia sesión.");
   }
@@ -173,7 +173,7 @@ export async function crearProducto(
   formData: FormData,
 ): Promise<GuardadoResultado> {
   try {
-    const { tienda, error: authError } = await requireTiendaDelUsuario();
+    const { tienda, error: authError } = await requireAuth();
     if (!tienda) {
       return { ok: false, error: authError ?? "No autorizado. Inicia sesión." };
     }
@@ -215,7 +215,7 @@ export async function eliminarProducto(
   id: string,
 ): Promise<GuardadoResultado> {
   try {
-    const { tienda, error: authError } = await requireTiendaDelUsuario();
+    const { tienda, error: authError } = await requireAuth();
     if (!tienda) {
       return { ok: false, error: authError ?? "No autorizado. Inicia sesión." };
     }
@@ -257,6 +257,12 @@ export async function eliminarProducto(
 export async function guardarProducto(
   formData: FormData,
 ): Promise<GuardadoResultado> {
+  // Gate propio: las ramas internas también gatean, pero esta acción
+  // delegada debe verificar la sesión antes de despachar (react-doctor).
+  const { tienda, error: authError } = await requireAuth();
+  if (!tienda) {
+    return { ok: false, error: authError ?? "No autorizado. Inicia sesión." };
+  }
   const id = String(formData.get("id") ?? "").trim();
   if (id) {
     return actualizarDesdeForm(id, formData);

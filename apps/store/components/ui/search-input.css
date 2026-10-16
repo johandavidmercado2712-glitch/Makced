@@ -43,7 +43,7 @@
 .search-input:not(:placeholder-shown) ~ .search-label {
   top: -4px;
   font-size: 12px;
-  color: var(--primary-mint);
+  color: var(--action-color);
 }
 
 .search-close {
@@ -59,7 +59,7 @@
 }
 
 .search-close:hover {
-  color: var(--primary-mint);
+  color: var(--action-color);
 }
 
 .search-dropdown {
@@ -106,7 +106,7 @@
 
 .search-result-price {
   font-size: 13px;
-  color: var(--primary-mint);
+  color: var(--action-color);
   font-weight: 600;
 }
 

@@ -75,7 +75,7 @@
 }
 
 .card-info a {
-  color: var(--primary-mint);
+  color: var(--action-color);
   font-size: 14px;
   font-weight: 600;
   text-decoration: none;
@@ -91,7 +91,7 @@
 }
 
 .card-info a:hover {
-  color: var(--primary-turquoise);
+  color: var(--action-color-hover);
 }
 
 @media (max-width: 768px) {

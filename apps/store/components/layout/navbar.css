@@ -41,7 +41,7 @@
   color: var(--text-primary);
 }
 
-.nav-icon h2{
+.nav-brand{
   font-weight: 600;
   font-size: 40px;
   color: var(--text-primary);
@@ -76,12 +76,12 @@
 }
 
 .nav-sessiones a:hover{
-  color: var(--primary-turquoise);
-  border-bottom-color: var(--primary-turquoise);
+  color: var(--action-color);
+  border-bottom-color: var(--primary-mint);
 }
 
 .nav-sessiones a.active{
-  color: var(--primary-mint);
+  color: var(--action-color);
   border-bottom-color: var(--primary-mint);
 }
 
@@ -90,7 +90,12 @@
 }
 
 .theme-toggle:hover{
-  color: var(--primary-mint);
+  color: var(--action-color);
+}
+
+.nav-icon-btn:hover,
+.nav-user-btn:hover {
+  color: var(--action-color);
 }
 
 /* =========================================
@@ -125,7 +130,7 @@
   height: 18px;
   padding: 0 5px;
   background: var(--primary-mint);
-  color: #121212;
+  color: var(--bg-strong); /* dígitos del contador del carrito (11px es intencional en badges) */
   font-size: 11px;
   font-weight: 700;
   border-radius: 9999px;
@@ -139,39 +144,16 @@
 @media (max-width: 768px) {
   .nav-icon { padding: 12px 16px; font-size: 26px; }
   .nav-icon a, .nav-icons-right { gap: 12px; font-size: 26px; }
-  .nav-icon h2 { font-size: 26px; }
+  .nav-brand { font-size: 26px; }
   .nav-logo { height: 30px; max-width: 160px; }
-  /* Affordance de scroll horizontal: degradados fijos en los bordes */
-  .nav-sessiones { position: relative; }
-  .nav-sessiones::before,
-  .nav-sessiones::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 24px;
-    pointer-events: none;
-    z-index: 1;
-  }
-  .nav-sessiones::before {
-    left: 0;
-    background: linear-gradient(to right, var(--bg-card), transparent);
-  }
-  .nav-sessiones::after {
-    right: 0;
-    background: linear-gradient(to left, var(--bg-card), transparent);
-  }
   .nav-session {
-    justify-content: flex-start;
-    gap: 24px;
-    padding: 0 16px 12px;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    scroll-snap-type: x proximity;
+    justify-content: center;
+    gap: clamp(12px, 4vw, 24px);
+    padding: 0 12px 12px;
+    overflow-x: visible;
   }
-  .nav-session::-webkit-scrollbar { display: none; }
-  .nav-sessiones a { font-size: 14px; white-space: nowrap; scroll-snap-align: start; }
+  .nav-sessiones a { font-size: 14px; white-space: nowrap; }
+  .nav-hide-mobile { display: none !important; }
 }
 
 @media (max-width: 480px) {
@@ -181,7 +163,7 @@
     padding: 8px 10px;
   }
 
-  .nav-icon h2 {
+  .nav-brand {
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -198,7 +180,7 @@
   }
   .nav-icon-btn svg, .nav-user-btn svg { width: 22px; height: 22px; }
   .nav-logo { height: 26px; max-width: min(30vw, 130px); }
-  .nav-session { gap: 16px; padding: 0 10px 8px; }
+  .nav-session { gap: clamp(10px, 3vw, 16px); padding: 0 8px 8px; }
   /* Targets táctiles ≥44px en las pestañas de sesión */
   .nav-sessiones a {
     font-size: 13px;
@@ -206,5 +188,4 @@
     align-items: center;
     min-height: 44px;
   }
-  .nav-hide-mobile { display: none !important; }
 }

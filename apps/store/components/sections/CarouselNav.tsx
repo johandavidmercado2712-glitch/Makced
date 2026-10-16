@@ -16,24 +16,24 @@ export default function CarouselNav({
   const lista = slides.length > 0 ? slides : DEFAULT_DISENO.banner.slides
 
   return (
-    <div className="carousel-nav">
+    <section className="carousel-nav" aria-label="Presentación de la tienda">
       <div className="carousel-nav-content">
-        <div className="text-rotate">
+        <h1 className="text-rotate" aria-label={lista[0].palabra}>
           {lista.map((slide, i) => (
             <span
-              key={i}
+              key={slide.palabra}
               className="text-rotate-word"
               style={{ animationDelay: `${i * 4}s` }}
             >
               {slide.palabra}
             </span>
           ))}
-        </div>
+        </h1>
 
         <div className="text-rotate-p">
           {lista.map((slide, i) => (
             <p
-              key={i}
+              key={slide.palabra}
               className="text-rotate-p-word"
               style={{ animationDelay: `${i * 4}s` }}
             >
@@ -44,16 +44,16 @@ export default function CarouselNav({
 
       </div>
 
-      <div className="carousel-nav-image">
+      <div className="carousel-nav-image" aria-hidden="true">
         {lista.map((slide, i) => (
           <img
-            key={i}
+            key={slide.palabra}
             src={slide.imagen || DEFAULT_DISENO.banner.slides[i].imagen}
-            alt={`Carousel ${i + 1}`}
+            alt=""
             style={{ animationDelay: `${i * 4}s` }}
           />
         ))}
       </div>
-    </div>
+    </section>
   )
 }

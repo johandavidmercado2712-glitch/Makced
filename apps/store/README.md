@@ -24,8 +24,8 @@ URL: http://localhost:3000
 `.env.local` del monorepo ya cubre esta app; asegúrate de tener:
 
 ```
-NEXT_PUBLIC_INSFORGE_URL=https://i65mdj5r.us-east.insforge.app
-NEXT_PUBLIC_INSFORGE_ANON_KEY=ik_9b2c36cbad3e9371fc147c22ade8386a
+NEXT_PUBLIC_INSFORGE_URL=https://253fnuce.us-east.insforge.app
+NEXT_PUBLIC_INSFORGE_ANON_KEY=anon_xxx...   # copia la anon key desde el proyecto InsForge
 ```
 
 ## Código compartido

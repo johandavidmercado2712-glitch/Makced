@@ -34,7 +34,7 @@
 }
 
 .login-close:hover {
-  color: var(--primary-mint);
+  color: var(--action-color);
 }
 
 .login-modal h2 {
@@ -95,20 +95,20 @@
 
 .login-field-header a {
   font-size: 13px;
-  color: var(--primary-mint);
+  color: var(--action-color);
   text-decoration: none;
   transition: color 0.2s;
 }
 
 .login-field-header a:hover {
-  color: var(--primary-turquoise);
+  color: var(--action-color-hover);
 }
 
 .login-submit {
   width: 100%;
   padding: 12px;
-  background: var(--primary-mint);
-  color: var(--text-primary);
+  background: var(--action-color);
+  color: var(--on-action);
   border: none;
   border-radius: var(--radius-sm);
   font-weight: 600;
@@ -120,7 +120,7 @@
 }
 
 .login-submit:hover {
-  background: var(--primary-turquoise);
+  background: var(--action-color-hover);
 }
 
 .login-divider {

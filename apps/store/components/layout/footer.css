@@ -48,7 +48,7 @@
 }
 
 .footer-social svg:hover {
-    color: var(--primary-mint);
+    color: var(--action-color);
 }
 
 .footer-bottom {

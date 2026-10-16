@@ -8,14 +8,17 @@ interface MarcasProps {
 }
 
 export default function Marcas({ initialMarcas }: MarcasProps) {
-  const marcasDuplicated = [...initialMarcas, ...initialMarcas]
+  const marcasDuplicated = [
+    ...initialMarcas.map((m) => ({ ...m, keyId: `${m.id}-a` })),
+    ...initialMarcas.map((m) => ({ ...m, keyId: `${m.id}-b` })),
+  ]
 
   return (
-    <div className="marcas">
+    <section className="marcas-destacadas" aria-label="Marcas destacadas">
       <div className="marcas-track">
-        {marcasDuplicated.map((marca, index) => (
+        {marcasDuplicated.map((marca) => (
           <Link
-            key={`${marca.id}-${index}`}
+            key={marca.keyId}
             href={`/marcasProductos?slug=${marca.nombre}`}
             className="marcas-card"
           >
@@ -29,6 +32,6 @@ export default function Marcas({ initialMarcas }: MarcasProps) {
           </Link>
         ))}
       </div>
-    </div>
+    </section>
   );
 }

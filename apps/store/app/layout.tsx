@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Figtree } from "next/font/google";
+import { Figtree, Poppins, Montserrat, Inter, Roboto } from "next/font/google";
 import "./globals.css";
 import Footer from "../components/layout/Footer";
 import Navbar from "../components/layout/Navbar"
@@ -7,14 +7,45 @@ import { Suspense, type CSSProperties } from "react"
 import { ThemeProvider } from "../components/auth/ThemeProvider"
 import { getConfigDiseno, getNavCategorias } from "./actions/store";
 import { CartProvider } from "../components/auth/CartContext"
-import { varsDesdeConfig } from "@makced/db/diseno";
-
-
+import { varsDesdeConfig, type Tipografia } from "@makced/db/diseno";
 
 const figtree = Figtree({
   variable: "--font-figtree",
   subsets: ["latin"],
 });
+
+const poppins = Poppins({
+  variable: "--font-poppins",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  preload: false,
+});
+
+const montserrat = Montserrat({
+  variable: "--font-montserrat",
+  subsets: ["latin"],
+  preload: false,
+});
+
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+  preload: false,
+});
+
+const roboto = Roboto({
+  variable: "--font-roboto",
+  subsets: ["latin"],
+  preload: false,
+});
+
+const FUENTES: Record<Tipografia, { variable: string }> = {
+  Figtree: figtree,
+  Poppins: poppins,
+  Montserrat: montserrat,
+  Inter: inter,
+  Roboto: roboto,
+};
 
 export const metadata: Metadata = {
   title: "MakcedStore - Tienda Online",
@@ -31,25 +62,29 @@ export default async function RootLayout({
     getConfigDiseno(),
   ]);
 
+  const fuenteActiva = FUENTES[config.tipografia] ?? figtree;
+  const vars = varsDesdeConfig(colorPrincipal, config);
+  if (config.tipografia !== "Figtree") {
+    vars["--font-figtree"] = `var(${fuenteActiva.variable})`;
+  }
+
   return (
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${figtree.variable} h-full antialiased`}
-      style={varsDesdeConfig(colorPrincipal, config) as CSSProperties}
+      className={`${fuenteActiva.variable} h-full antialiased`}
+      style={vars as CSSProperties}
     >
-      <head>
-        {config.tipografia !== "Figtree" && (
-          <link
-            rel="stylesheet"
-            precedence="default"
-            href={`https://fonts.googleapis.com/css2?family=${encodeURIComponent(
-              config.tipografia,
-            )}:wght@400;500;600;700&display=swap`}
-          />
-        )}
-      </head>
       <body>
+        {/* Aplica el tema ANTES del primer paint: lee localStorage y marca
+           <html class="dark"> sin esperar a React. Evita el flash
+           claro→oscuro al recargar (mismo patrón que next-themes). */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              '(function(){try{var t=localStorage.getItem("theme");if(t!=="light"&&t!=="dark"){t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}document.documentElement.classList.toggle("dark",t==="dark")}catch(e){}})()',
+          }}
+        />
         <ThemeProvider>
           <CartProvider showPrices={config.mostrar_precios ?? true}>
             <div className="layout-wrapper">

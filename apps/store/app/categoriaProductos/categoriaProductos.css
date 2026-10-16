@@ -17,7 +17,7 @@
 }
 
 .migaja-info a:hover {
-    color: var(--primary-mint);
+    color: var(--action-color);
 }
 
 .info-categoria{
