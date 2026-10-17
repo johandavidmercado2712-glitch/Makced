@@ -1,9 +1,16 @@
-import { proxy } from '@makced/db/proxy';
+import { crearProxy } from '@makced/db/proxy';
 
-export { proxy };
+export const proxy = crearProxy({ csp: 'nonce' });
 
 export const config = {
   matcher: [
-    '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',
+    {
+      source:
+        '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',
+      missing: [
+        { type: 'header', key: 'next-router-prefetch' },
+        { type: 'header', key: 'purpose', value: 'prefetch' },
+      ],
+    },
   ],
 };

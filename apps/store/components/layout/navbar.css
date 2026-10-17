@@ -1,127 +1,76 @@
-.nav-main{
+
+.nav-main {
   background-color: var(--bg-card);
   width: 100%;
   border-bottom: 1px solid var(--border-color);
   box-shadow: var(--shadow-sm);
   transition: background-color 0.3s, border-color 0.3s;
+  display: flex;
+  flex-direction: column;
 }
 
-.nav-icon{
-  padding: 20px;
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  column-gap: 20px;
+/* ── Fila superior: espacio, aire y jerarquía visual ── */
+.nav-row {
+  display: flex;
   align-items: center;
-  font-size: 40px;
-  color: var(--text-primary);
-  transition: color 0.3s;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 20px 20px;
 }
 
-.nav-icon > :first-child {
-  justify-self: start;
+/* ── Logo + nombre de la tienda (a la izquierda) ── */
+.nav-header {
+  min-width: 0;
 }
 
-.nav-icon > :last-child {
-  justify-self: end;
-}
-
-.nav-icon a{
-  display: flex;
-  gap:30px;
-  padding-top: 10px;
-  font-size: 40px;
-  color: var(--text-primary);
-}
-
-.nav-icons-right{
-  display: flex;
-  gap:30px;
-  padding-top: 10px;
-  font-size: 40px;
-  color: var(--text-primary);
-}
-
-.nav-brand{
-  font-weight: 600;
-  font-size: 40px;
-  color: var(--text-primary);
-}
-
-.nav-logo{
+.nav-logo {
+  display: block;
+  flex-shrink: 0;
   height: 44px;
   width: auto;
   max-width: 220px;
   object-fit: contain;
 }
 
-/* sessiones */
-.nav-sessiones{
-  background-color: var(--bg-card);
-  transition: background-color 0.3s;
+.nav-brand {
+  font-weight: 700;
+  font-size: 40px;
+  color: var(--text-primary);
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.nav-session{
+/* ── Iconos de navegación (buscador · carrito · tema) a la derecha ── */
+.nav-icons-right {
   display: flex;
+  align-items: center;
+  gap: 30px;
+  flex: 0 0 auto;
+}
+
+.nav-icons-right .nav-icon-btn {
+  background: none;
+  border: none;
+  padding: 8px 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
   justify-content: center;
-  gap:90px;
-  padding-bottom: 20px;
-}
-
-.nav-sessiones a{
-  font-size: 20px;
-  color: var(--text-secondary);
-  font-weight: 600;
-  border-bottom: 3px solid transparent;
-  transition: color 0.2s, border-color 0.2s;
-}
-
-.nav-sessiones a:hover{
-  color: var(--action-color);
-  border-bottom-color: var(--primary-mint);
-}
-
-.nav-sessiones a.active{
-  color: var(--action-color);
-  border-bottom-color: var(--primary-mint);
-}
-
-.theme-toggle{
-  transition: color 0.2s;
-}
-
-.theme-toggle:hover{
-  color: var(--action-color);
-}
-
-.nav-icon-btn:hover,
-.nav-user-btn:hover {
-  color: var(--action-color);
-}
-
-/* =========================================
-   RESPONSIVE - NAVBAR
-   ========================================= */
-.nav-user-btn {
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
   color: var(--text-primary);
 }
 
-.nav-icon-btn {
-  position: relative;
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  color: var(--text-primary);
+.nav-icons-right .nav-icon-btn:hover {
+  color: var(--action-color);
 }
 
+.nav-icons-right .nav-icon-btn:active {
+  opacity: 0.8;
+}
+
+/* botón del carrito */
 .cart-badge {
   position: absolute;
   top: -6px;
@@ -130,7 +79,7 @@
   height: 18px;
   padding: 0 5px;
   background: var(--primary-mint);
-  color: var(--bg-strong); /* dígitos del contador del carrito (11px es intencional en badges) */
+  color: var(--bg-strong);
   font-size: 11px;
   font-weight: 700;
   border-radius: 9999px;
@@ -141,28 +90,84 @@
   pointer-events: none;
 }
 
+/* ── Sesiones de navegación (centradas, como original) ── */
+.nav-sessiones {
+  background-color: var(--bg-card);
+  transition: background-color 0.3s;
+}
+
+.nav-session {
+  display: flex;
+  justify-content: center;
+  gap: 90px;
+  padding-bottom: 20px;
+}
+
+.nav-session a {
+  font-size: 20px;
+  color: var(--text-secondary);
+  font-weight: 600;
+  border-bottom: 3px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.nav-session a:hover {
+  color: var(--action-color);
+  border-bottom-color: var(--primary-mint);
+}
+
+.nav-session a.active {
+  color: var(--action-color);
+  border-bottom-color: var(--primary-mint);
+}
+
+.theme-toggle {
+  transition: color 0.2s;
+}
+
+.theme-toggle:hover {
+  color: var(--action-color);
+}
+
+/* ── RESPONSIVE ── */
 @media (max-width: 768px) {
-  .nav-icon { padding: 12px 16px; font-size: 26px; }
-  .nav-icon a, .nav-icons-right { gap: 12px; font-size: 26px; }
-  .nav-brand { font-size: 26px; }
-  .nav-logo { height: 30px; max-width: 160px; }
+  .nav-row {
+    padding: 12px 16px;
+  }
+  .nav-logo {
+    height: 30px;
+    max-width: 160px;
+  }
+  .nav-icons-right {
+    gap: 12px;
+    font-size: 26px;
+  }
+  .nav-brand {
+    font-size: 26px;
+  }
   .nav-session {
     justify-content: center;
     gap: clamp(12px, 4vw, 24px);
     padding: 0 12px 12px;
     overflow-x: visible;
   }
-  .nav-sessiones a { font-size: 14px; white-space: nowrap; }
-  .nav-hide-mobile { display: none !important; }
+  .nav-session a {
+    font-size: 14px;
+    white-space: nowrap;
+  }
+  .nav-hide-mobile {
+    display: none !important;
+  }
 }
 
 @media (max-width: 480px) {
-  .nav-icon {
-    grid-template-columns: 36px minmax(0, 1fr) auto;
-    column-gap: 8px;
+  .nav-row {
     padding: 8px 10px;
   }
-
+  .nav-logo {
+    height: 26px;
+    max-width: min(30vw, 130px);
+  }
   .nav-brand {
     min-width: 0;
     overflow: hidden;
@@ -170,19 +175,25 @@
     white-space: nowrap;
     font-size: clamp(16px, 5vw, 22px);
   }
-
-  .nav-icon a, .nav-icons-right { gap: 2px; font-size: 22px; }
-  .nav-icons-right { min-width: 0; }
-  .nav-icon-btn, .nav-user-btn {
+  .nav-icons-right {
+    gap: 2px;
+    font-size: 22px;
+    min-width: 0;
+  }
+  .nav-icon-btn {
     min-width: 36px;
     min-height: 40px;
     justify-content: center;
   }
-  .nav-icon-btn svg, .nav-user-btn svg { width: 22px; height: 22px; }
-  .nav-logo { height: 26px; max-width: min(30vw, 130px); }
-  .nav-session { gap: clamp(10px, 3vw, 16px); padding: 0 8px 8px; }
-  /* Targets táctiles ≥44px en las pestañas de sesión */
-  .nav-sessiones a {
+  .nav-icon-btn svg {
+    width: 22px;
+    height: 22px;
+  }
+  .nav-session {
+    gap: clamp(10px, 3vw, 16px);
+    padding: 0 8px 8px;
+  }
+  .nav-session a {
     font-size: 13px;
     display: inline-flex;
     align-items: center;

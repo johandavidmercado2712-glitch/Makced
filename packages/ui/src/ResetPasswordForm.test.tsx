@@ -30,7 +30,9 @@ describe("ResetPasswordForm", () => {
       screen.getByRole("button", { name: "Restablecer contraseña" }),
     );
 
-    expect(screen.getByText("La contraseña debe tener al menos 8 caracteres")).toBeInTheDocument();
+    expect(
+      await screen.findByText("La contraseña debe tener al menos 8 caracteres"),
+    ).toBeInTheDocument();
     expect(mockedReset).not.toHaveBeenCalled();
   });
 
@@ -44,7 +46,9 @@ describe("ResetPasswordForm", () => {
       screen.getByRole("button", { name: "Restablecer contraseña" }),
     );
 
-    expect(screen.getByText("Las contraseñas no coinciden")).toBeInTheDocument();
+    expect(
+      await screen.findByText("Las contraseñas no coinciden"),
+    ).toBeInTheDocument();
     expect(mockedReset).not.toHaveBeenCalled();
   });
 

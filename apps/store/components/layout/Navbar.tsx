@@ -1,12 +1,11 @@
 "use client"
 import { useState } from "react";
-import { User, Search, Heart, ShoppingCart, Sun, Moon } from "lucide-react";
+import { Search, ShoppingCart, Sun, Moon } from "lucide-react";
 import { useTheme } from "../auth/ThemeProvider";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import { useSyncExternalStore } from "react";
 import Link from "next/link";
 import SearchInput from "../ui/SearchInput";
-import Formulario from "../auth/formulario";
 import { useCart } from "../auth/CartContext";
 import "./navbar.css";
 
@@ -38,7 +37,6 @@ export default function Navbar({
   marca = "MAKCED",
 }: NavbarProps) {
   const [searchOpen, setSearchOpen] = useState(false);
-  const [showLogin, setShowLogin] = useState(false);
   const { theme, setTheme } = useTheme();
   const { totalItems } = useCart();
   const pathname = usePathname();
@@ -77,60 +75,67 @@ export default function Navbar({
 
   return (
     <div className="nav-main">
-      <div className="nav-icon">
-        <button type="button" className="nav-user-btn" onClick={() => setShowLogin(true)} aria-label="Iniciar sesión">
-          <i><User size={34} /></i>
-        </button>
+      <div className="nav-row">
+        <div className="nav-header">
         {logoUrl ? (
           <img className="nav-logo" src={logoUrl} alt={marca} />
         ) : (
           <span className="nav-brand">{marca}</span>
         )}
-        <div className="nav-icons-right">
-          {searchOpen ? (
-            <SearchInput onClose={() => setSearchOpen(false)} />
-          ) : (
-            <button type="button" className="nav-icon-btn" onClick={() => setSearchOpen(true)} aria-label="Buscar">
-              <Search size={34} />
-            </button>
-          )}
-          <button type="button" className="nav-icon-btn" onClick={() => router.push("/carrito")} aria-label={`Carrito (${totalItems} productos)`}>
-            <ShoppingCart size={34} />
-            {totalItems > 0 && (
-              <span className="cart-badge">{totalItems}</span>
-            )}
+      </div>
+    </div>
+
+      <div className="nav-icons-right">
+        {searchOpen ? (
+          <SearchInput onClose={() => setSearchOpen(false)} />
+        ) : (
+          <button
+            type="button"
+            className="nav-icon-btn"
+            onClick={() => setSearchOpen(true)}
+            aria-label="Buscar"
+          >
+            <Search size={34} />
           </button>
-          {mounted && (
-            <button 
-              type="button"
-              className="nav-icon-btn theme-toggle" 
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              aria-label="Cambiar tema"
-            >
-              {theme === "dark" ? <Sun size={34} /> : <Moon size={34} />}
-            </button>
+        )}
+        <button
+          type="button"
+          className="nav-icon-btn"
+          onClick={() => router.push("/carrito")}
+          aria-label={`Carrito (${totalItems} productos)`}
+        >
+          <ShoppingCart size={34} />
+          {totalItems > 0 && (
+            <span className="cart-badge">{totalItems}</span>
           )}
-        </div>
+        </button>
+        {mounted && (
+          <button
+            type="button"
+            className="nav-icon-btn theme-toggle"
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            aria-label="Cambiar tema"
+          >
+            {theme === "dark" ? <Sun size={34} /> : <Moon size={34} />}
+          </button>
+        )}
       </div>
 
       <nav className="nav-sessiones" aria-label="Navegación principal">
         <div className="nav-session">
           {links.map((link) => (
-            <Link 
+            <Link
               key={link.href + link.label}
               href={link.href}
-              className={`${isActive(link.href) ? "active" : ""}${link.hideOnMobile ? " nav-hide-mobile" : ""}`}
+              className={`${isActive(link.href) ? "active" : ""}${
+                link.hideOnMobile ? " nav-hide-mobile" : ""
+              }`}
             >
               {link.label}
             </Link>
           ))}
         </div>
       </nav>
-
-      
-
-      {showLogin && <Formulario onClose={() => setShowLogin(false)} />}
     </div>
-    
   );
 }
