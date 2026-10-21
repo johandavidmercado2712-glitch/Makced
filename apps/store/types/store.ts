@@ -1,10 +1,12 @@
-export interface ProductCardProps {
-  image: string
-  name: string
-  price: string
-  rating?: number
-  slug?: string
-};
+export interface ProductoCardData {
+  id: string;
+  nombre: string;
+  precio: number;
+  precio_descuento: number | null;
+  imagen_url: string | null;
+  slug: string | null;
+  marca: string | null;
+}
 
 export interface PanelInfoProps {
   image:string

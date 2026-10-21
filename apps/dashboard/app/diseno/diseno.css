@@ -624,6 +624,93 @@
   align-items: start;
 }
 
+/* Enlaces editables del pie */
+.de-enlaces {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 12px 0;
+}
+
+.de-enlace-fila {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr auto;
+  gap: 10px;
+  align-items: start;
+}
+
+.de-enlace-fila .db-field {
+  min-width: 0;
+}
+
+.de-enlace-quitar {
+  margin-top: 22px;
+  padding: 8px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #f87171;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.de-enlace-quitar:hover {
+  background: rgba(248, 113, 113, 0.12);
+}
+
+.de-enlaces-acciones {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.de-agregar-enlace {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 10px;
+  border: 1px dashed var(--db-border);
+  border-radius: var(--db-radius-sm);
+  background: transparent;
+  color: var(--db-text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.de-agregar-enlace:hover:not(:disabled) {
+  border-color: var(--db-btn-primary);
+  color: var(--db-btn-primary);
+}
+
+.de-agregar-enlace:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.de-enlace-error {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #f87171;
+  font-size: 11.5px;
+  line-height: 1.3;
+}
+
+@media (max-width: 600px) {
+  .de-enlace-fila {
+    grid-template-columns: 1fr;
+  }
+
+  .de-enlace-quitar {
+    margin-top: 0;
+    justify-self: start;
+  }
+}
+
 /* =========================================
    Ayuda
    ========================================= */
@@ -919,6 +1006,33 @@
 
 .de-prev-pie span {
   font-size: 11px;
+}
+
+.de-prev-pie-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 6px 0;
+}
+
+.de-prev-pie-cols em {
+  display: block;
+  margin-bottom: 2px;
+  color: #e2e8f0;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.de-prev-pie-cols span {
+  display: block;
+  color: #94a3b8;
+}
+
+.de-prev-pie-redes {
+  color: #94a3b8;
+  font-size: 10px;
 }
 
 .de-prev-pie-mensaje {

@@ -19,7 +19,7 @@ export default function Marcas({ initialMarcas }: MarcasProps) {
         {marcasDuplicated.map((marca) => (
           <Link
             key={marca.keyId}
-            href={`/marcasProductos?slug=${marca.nombre}`}
+            href={`/marcasProductos?slug=${encodeURIComponent(marca.nombre)}`}
             className="marcas-card"
           >
             <Image

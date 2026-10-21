@@ -1,4 +1,5 @@
-import { insforge } from "@/lib/insforge";
+import { cookies } from "next/headers";
+import { createServerClient } from "@insforge/sdk/ssr";
 
 export const slugify = (valor: string) =>
   valor
@@ -20,6 +21,7 @@ export async function generarSlugUnico(
 ): Promise<string> {
   const base = slugify(nombre) || basePorDefecto;
 
+  const insforge = createServerClient({ cookies: await cookies() });
   const { data } = await insforge.database
     .from(tabla)
     .select("slug")

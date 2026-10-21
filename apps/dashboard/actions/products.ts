@@ -2,7 +2,6 @@
 import { cookies } from "next/headers";
 import { createServerClient } from "@insforge/sdk/ssr";
 import { revalidatePath } from "next/cache";
-import { insforge } from "@/lib/insforge";
 import { borrarArchivoStorage, resolverImagen, texto } from "@/lib/imagenes";
 import { generarSlugUnico } from "@/lib/slug";
 import { PRODUCTOS_POR_PAGINA } from "@/lib/paginacion";
@@ -41,6 +40,7 @@ export async function getProductosPaginado(
   // Scoping por tienda del usuario (layout ya exige sesión).
   // Lectura: RLS permite SELECT público; el filtro tienda_id evita ver datos ajenos.
   const { tienda } = await requireAuth();
+  const insforge = createServerClient({ cookies: await cookies() });
   const tiendaId = tienda?.id;
   // total filtrado (mismos criterios que la página)
   let countQuery = insforge.database
@@ -99,6 +99,7 @@ export async function getProductosPaginado(
 
 export async function getProductosCount() {
   const { tienda } = await requireAuth();
+  const insforge = createServerClient({ cookies: await cookies() });
   let q = insforge.database
     .from("productos")
     .select("*", { count: "exact", head: true });

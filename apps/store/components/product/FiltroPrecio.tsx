@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useTransition } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
+import { formatCOP } from "../../lib/format"
 import "./FiltroPrecio.css"
 
 interface FiltroPrecioProps {
@@ -14,7 +15,11 @@ export default function FiltroPrecio({ maxPrice }: FiltroPrecioProps) {
   const [isPending, startTransition] = useTransition()
 
   const currentMax = searchParams.get("maxPrice")
-  const initialPrice = currentMax ? Number(currentMax) : maxPrice
+  const parsedMax = currentMax === null ? NaN : Number(currentMax)
+  const initialPrice =
+    Number.isFinite(parsedMax) && parsedMax >= 0
+      ? Math.min(parsedMax, maxPrice)
+      : maxPrice
 
   // Valor numérico para el label "hasta $X"
   const [price, setPrice] = useState(initialPrice)
@@ -77,7 +82,7 @@ export default function FiltroPrecio({ maxPrice }: FiltroPrecioProps) {
     <div className="div2">
       <div className="filtro-precio">
         <span className={`filtro-precio-texto ${isPending ? "filtro-precio-texto--pending" : ""}`}>
-          hasta ${price.toLocaleString("es-CO")}
+          hasta {formatCOP(price)}
         </span>
         <div className="filtro-precio-input-wrapper">
           <span className="filtro-precio-input-prefix">$</span>

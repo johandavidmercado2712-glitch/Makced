@@ -52,6 +52,28 @@ describe("ResetPasswordForm", () => {
     expect(mockedReset).not.toHaveBeenCalled();
   });
 
+  it("permite mostrar y ocultar ambas contraseñas", async () => {
+    const user = userEvent.setup();
+    render(<ResetPasswordForm token="tok-123" />);
+
+    const nueva = screen.getByLabelText("Nueva contraseña");
+    const confirmar = screen.getByLabelText("Confirmar contraseña");
+    expect(nueva).toHaveAttribute("type", "password");
+    expect(confirmar).toHaveAttribute("type", "password");
+
+    await user.click(
+      screen.getAllByRole("button", { name: "Mostrar contraseña" })[0],
+    );
+    expect(nueva).toHaveAttribute("type", "text");
+    expect(confirmar).toHaveAttribute("type", "password");
+
+    await user.click(
+      screen.getByRole("button", { name: "Ocultar contraseña" }),
+    );
+    expect(nueva).toHaveAttribute("type", "password");
+    expect(confirmar).toHaveAttribute("type", "password");
+  });
+
   it("envía el token y la contraseña, y muestra el error del servidor", async () => {
     mockedReset.mockResolvedValue({
       error: { message: "Código inválido o expirado" },

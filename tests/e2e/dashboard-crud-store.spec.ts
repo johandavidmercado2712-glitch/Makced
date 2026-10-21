@@ -51,7 +51,7 @@ async function iniciarSesion(page: Page): Promise<void> {
   await page.goto(`${DASH}/productos`);
   if (page.url().includes(":3001")) {
     await page.getByLabel("Correo electrónico").fill(EMAIL);
-    await page.getByLabel("Contraseña").fill(PASSWORD);
+    await page.getByLabel("Contraseña", { exact: true }).fill(PASSWORD);
     await page.getByRole("button", { name: "Iniciar sesión", exact: true }).click();
     await page.waitForURL(/:3002\/?$/);
   }
@@ -109,7 +109,7 @@ test("Productos: crear, reflejar en tienda, editar precio, quitar novedad y elim
   await page.goto(`${STORE}/novedades`);
   const tarjeta = page.locator(".Productos-card").filter({ hasText: nombre });
   await expect(tarjeta).toBeVisible();
-  await expect(tarjeta.locator(".product-precio")).toHaveText(/\$99\.000/);
+  await expect(tarjeta.locator(".product-precio")).toHaveText(/\$\s*99\.000/);
 
   const enlace = page.locator('a[href*="/verProducto?slug="]').filter({ hasText: nombre });
   const href = await enlace.first().getAttribute("href");
@@ -316,7 +316,7 @@ test("Toggle de precios: apagar y encender se refleja en el detalle de la tienda
   await page.goto(`${STORE}/verProducto?slug=${slug}`);
   await expect(page.locator(".producto-precio")).toBeVisible();
 
-  if (original) {
+  if (!original) {
     await page.goto(`${DASH}/productos`);
     await page.getByRole("switch", { name: "Mostrar precios en tienda" }).click();
     await expect(

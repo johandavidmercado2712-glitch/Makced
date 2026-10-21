@@ -3,7 +3,6 @@ import { useState } from "react";
 import { Search, ShoppingCart, Sun, Moon } from "lucide-react";
 import { useTheme } from "../auth/ThemeProvider";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
-import { useSyncExternalStore } from "react";
 import Link from "next/link";
 import SearchInput from "../ui/SearchInput";
 import { useCart } from "../auth/CartContext";
@@ -13,7 +12,7 @@ const fixedLinks = [
   { href: "/", label: "Inicio" },
   { href: "/novedades", label: "Novedades" },
   { href: "/marcas", label: "Marcas" },
-  { href: "/categoria", label: "Categorias" },
+  { href: "/categoria", label: "Categorías" },
 ];
 
 interface NavLink {
@@ -28,9 +27,6 @@ interface NavbarProps {
   marca?: string;
 }
 
-const emptySubscribe = () => () => {};
-const getServerSnapshot = () => false;
-
 export default function Navbar({
   initialCategories = [],
   logoUrl = null,
@@ -43,11 +39,6 @@ export default function Navbar({
   const searchParams = useSearchParams();
   const router = useRouter();
   const currentSlug = searchParams.get("slug");
-  const mounted = useSyncExternalStore(
-    emptySubscribe,
-    () => true,
-    getServerSnapshot
-  );
 
   const dynamicLinks: NavLink[] = initialCategories.map((cat) => ({
     href: `/categoriaProductos?slug=${cat.slug}`,
@@ -74,68 +65,71 @@ export default function Navbar({
   };
 
   return (
-    <div className="nav-main">
-      <div className="nav-row">
-        <div className="nav-header">
-        {logoUrl ? (
-          <img className="nav-logo" src={logoUrl} alt={marca} />
-        ) : (
-          <span className="nav-brand">{marca}</span>
-        )}
-      </div>
-    </div>
+    <header className="nav-main">
+      <div className="nav-inner">
+        <div className="nav-row">
+          <Link href="/" className="nav-header" aria-label={`${marca} - Inicio`}>
+            {logoUrl && <img className="nav-logo" src={logoUrl} alt="" />}
+            <span className="nav-brand">{marca}</span>
+          </Link>
 
-      <div className="nav-icons-right">
-        {searchOpen ? (
-          <SearchInput onClose={() => setSearchOpen(false)} />
-        ) : (
-          <button
-            type="button"
-            className="nav-icon-btn"
-            onClick={() => setSearchOpen(true)}
-            aria-label="Buscar"
+          <div
+            className={`nav-icons-right${searchOpen ? " is-searching" : ""}`}
           >
-            <Search size={34} />
-          </button>
-        )}
-        <button
-          type="button"
-          className="nav-icon-btn"
-          onClick={() => router.push("/carrito")}
-          aria-label={`Carrito (${totalItems} productos)`}
-        >
-          <ShoppingCart size={34} />
-          {totalItems > 0 && (
-            <span className="cart-badge">{totalItems}</span>
-          )}
-        </button>
-        {mounted && (
-          <button
-            type="button"
-            className="nav-icon-btn theme-toggle"
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            aria-label="Cambiar tema"
-          >
-            {theme === "dark" ? <Sun size={34} /> : <Moon size={34} />}
-          </button>
-        )}
-      </div>
+            {searchOpen ? (
+              <SearchInput onClose={() => setSearchOpen(false)} />
+            ) : (
+              <button
+                type="button"
+                className="nav-icon-btn"
+                onClick={() => setSearchOpen(true)}
+                aria-label="Buscar"
+              >
+                <Search size={24} />
+              </button>
+            )}
 
-      <nav className="nav-sessiones" aria-label="Navegación principal">
-        <div className="nav-session">
-          {links.map((link) => (
-            <Link
-              key={link.href + link.label}
-              href={link.href}
-              className={`${isActive(link.href) ? "active" : ""}${
-                link.hideOnMobile ? " nav-hide-mobile" : ""
-              }`}
+            <button
+              type="button"
+              className="nav-icon-btn"
+              onClick={() => router.push("/carrito")}
+              aria-label={`Carrito (${totalItems} productos)`}
             >
-              {link.label}
-            </Link>
-          ))}
+              <ShoppingCart size={24} />
+              {totalItems > 0 && (
+                <span className="cart-badge">{totalItems}</span>
+              )}
+            </button>
+
+            <button
+              type="button"
+              className="nav-icon-btn theme-toggle"
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              aria-label="Cambiar tema"
+            >
+              <Sun size={24} className="theme-icon theme-icon--sun" />
+              <Moon size={24} className="theme-icon theme-icon--moon" />
+            </button>
+          </div>
         </div>
-      </nav>
-    </div>
+
+        <nav className="nav-sessiones" aria-label="Navegación principal">
+          <div className="nav-session">
+            {links.map((link) => (
+              <Link
+                key={link.href + link.label}
+                href={link.href}
+                className={`${isActive(link.href) ? "active" : ""}${
+                  link.hideOnMobile ? " nav-hide-mobile" : ""
+                }`}
+                aria-current={isActive(link.href) ? "page" : undefined}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
+        </nav>
+      </div>
+    </header>
   );
 }

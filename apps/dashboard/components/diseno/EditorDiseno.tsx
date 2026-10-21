@@ -82,7 +82,7 @@ const TABS: TabMeta[] = [
     label: "Pie de página",
     icon: FileText,
     donde:
-      "El bloque final con tu marca, copyright y mensaje. Las categorías del pie se generan solas.",
+      "El bloque final con tu marca, redes, enlaces de información/ayuda y copyright. Las categorías se generan solas.",
   },
 ];
 
@@ -190,6 +190,9 @@ export default function EditorDiseno({ config, colorPrincipal, logoUrl }: Editor
     setCampo,
     setTitulos,
     setPie,
+    setEnlacePie,
+    agregarEnlacePie,
+    quitarEnlacePie,
     setSlide,
     setBanner,
     notificarImagen,
@@ -208,6 +211,9 @@ export default function EditorDiseno({ config, colorPrincipal, logoUrl }: Editor
     setCampo,
     setTitulos,
     setPie,
+    setEnlacePie,
+    agregarEnlacePie,
+    quitarEnlacePie,
     setSlide,
     setBanner,
     notificarImagen,

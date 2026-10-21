@@ -2,6 +2,10 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import FiltroPrecio from "./FiltroPrecio";
+import { formatCOP } from "../../lib/format";
+
+const etiqueta = (valor: number) =>
+  `hasta ${formatCOP(valor).replace(/\u00a0/g, " ")}`;
 
 const navegacion = vi.hoisted(() => ({
   replace: vi.fn(),
@@ -21,13 +25,19 @@ describe("FiltroPrecio", () => {
 
   it("muestra la etiqueta 'hasta $X' con el máximo por defecto", () => {
     render(<FiltroPrecio maxPrice={100000} />);
-    expect(screen.getByText("hasta $100.000")).toBeInTheDocument();
+    expect(screen.getByText(etiqueta(100000))).toBeInTheDocument();
   });
 
   it("parte del maxPrice de la URL si existe", () => {
     navegacion.params = new URLSearchParams("maxPrice=50000");
     render(<FiltroPrecio maxPrice={100000} />);
-    expect(screen.getByText("hasta $50.000")).toBeInTheDocument();
+    expect(screen.getByText(etiqueta(50000))).toBeInTheDocument();
+  });
+
+  it("ignora un maxPrice inválido de la URL", () => {
+    navegacion.params = new URLSearchParams("maxPrice=abc");
+    render(<FiltroPrecio maxPrice={100000} />);
+    expect(screen.getByText(etiqueta(100000))).toBeInTheDocument();
   });
 
   it("rechaza valores mayores al máximo y no navega", async () => {

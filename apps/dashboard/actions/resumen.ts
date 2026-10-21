@@ -1,9 +1,11 @@
 "use server";
-import { insforge } from "@/lib/insforge";
+import { cookies } from "next/headers";
+import { createServerClient } from "@insforge/sdk/ssr";
 import { requireAuth } from "./tienda";
 
 async function contar(tabla: string, filtrarDestacados = false): Promise<number> {
   const { tienda } = await requireAuth();
+  const insforge = createServerClient({ cookies: await cookies() });
   let query = insforge.database
     .from(tabla)
     .select("id", { count: "exact", head: true });
@@ -37,6 +39,7 @@ interface DestacadoFila {
 
 export async function getProductosDestacados(limite = 5): Promise<DestacadoFila[]> {
   const { tienda } = await requireAuth();
+  const insforge = createServerClient({ cookies: await cookies() });
   let query = insforge.database
     .from("productos")
     .select("id, nombre, precio, imagen_url")

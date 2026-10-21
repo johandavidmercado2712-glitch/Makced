@@ -1,14 +1,15 @@
 'use client';
 
 import { useState } from 'react';
-import { LockKeyhole } from 'lucide-react';
 
 import logoImg from './makced-logo.png';
+import PasswordField from './PasswordField';
 import { resetPassword } from '@makced/db/actions';
 
 import './LoginForm.css';
 
 const MIN_PASSWORD_LENGTH = 8;
+const MAX_PASSWORD_LENGTH = 64;
 
 const LOGIN_URL =
   process.env.NEXT_PUBLIC_LOGIN_URL ?? 'http://localhost:3001';
@@ -38,6 +39,8 @@ export default function ResetPasswordForm({
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   function validate(): string | null {
     if (password.length < MIN_PASSWORD_LENGTH) {
@@ -50,6 +53,8 @@ export default function ResetPasswordForm({
   }
 
   async function handleSubmit(formData: FormData) {
+    if (submitting) return;
+
     setMessage(null);
     setError(null);
 
@@ -60,25 +65,29 @@ export default function ResetPasswordForm({
     }
 
     setSubmitting(true);
-    const res = await resetPassword(formData);
-    setSubmitting(false);
+    try {
+      const res = await resetPassword(formData);
 
-    if (res?.error) {
-      setError(
-        res.error.message ??
-          'No se pudo restablecer la contraseña. Intenta de nuevo.'
+      if (res?.error) {
+        setError(
+          res.error.message ??
+            'No se pudo restablecer la contraseña. Inténtalo de nuevo.'
+        );
+        return;
+      }
+
+      setMessage(
+        'Tu contraseña se restableció correctamente. Te redirigimos al inicio de sesión.'
       );
-      return;
+      window.location.href = LOGIN_URL;
+    } catch {
+      setError(
+        'No se pudo restablecer la contraseña. Revisa tu conexión e inténtalo de nuevo.'
+      );
+    } finally {
+      setSubmitting(false);
     }
-
-    setMessage(
-      'Tu contraseña se restableció correctamente. Te redirigimos al inicio de sesión.'
-    );
-    window.location.href = LOGIN_URL;
   }
-
-  const inputClassName = (hasError: boolean) =>
-    `form-input ${hasError ? 'input-invalid' : ''}`;
 
   return (
     <main className="login-page">
@@ -108,59 +117,33 @@ export default function ResetPasswordForm({
               >
                 <input type="hidden" name="reset-token" value={token} />
 
-                <div className="input-group">
-                  <label htmlFor="newPassword">
-                    Nueva contraseña
-                  </label>
+                <PasswordField
+                  id="newPassword"
+                  name="newPassword"
+                  label="Nueva contraseña"
+                  value={password}
+                  onChange={setPassword}
+                  autoComplete="new-password"
+                  show={showPassword}
+                  onToggle={() => setShowPassword((visible) => !visible)}
+                  maxLength={MAX_PASSWORD_LENGTH}
+                  minLength={MIN_PASSWORD_LENGTH}
+                  invalid={password.length > 0 && password.length < MIN_PASSWORD_LENGTH}
+                />
 
-                  <div className="input-wrapper">
-                    <LockKeyhole
-                      className="input-icon"
-                      size={18}
-                    />
-
-                    <input
-                      id="newPassword"
-                      name="newPassword"
-                      type="password"
-                      placeholder="••••••••••••"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className={inputClassName(
-                        password.length > 0 &&
-                          password.length < MIN_PASSWORD_LENGTH
-                      )}
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div className="input-group">
-                  <label htmlFor="confirm-password">
-                    Confirmar contraseña
-                  </label>
-
-                  <div className="input-wrapper">
-                    <LockKeyhole
-                      className="input-icon"
-                      size={18}
-                    />
-
-                    <input
-                      id="confirm-password"
-                      name="confirm-password"
-                      type="password"
-                      placeholder="••••••••••••"
-                      value={confirm}
-                      onChange={(e) => setConfirm(e.target.value)}
-                      className={inputClassName(
-                        confirm.length > 0 &&
-                          confirm !== password
-                      )}
-                      required
-                    />
-                  </div>
-                </div>
+                <PasswordField
+                  id="confirm-password"
+                  name="confirm-password"
+                  label="Confirmar contraseña"
+                  value={confirm}
+                  onChange={setConfirm}
+                  autoComplete="new-password"
+                  show={showConfirm}
+                  onToggle={() => setShowConfirm((visible) => !visible)}
+                  maxLength={MAX_PASSWORD_LENGTH}
+                  minLength={MIN_PASSWORD_LENGTH}
+                  invalid={confirm.length > 0 && confirm !== password}
+                />
 
                 <button
                   type="submit"
@@ -174,13 +157,13 @@ export default function ResetPasswordForm({
               </form>
 
               {error && (
-                <p className="login-message message-error">
+                <p className="login-message message-error" role="alert">
                   {error}
                 </p>
               )}
 
               {message && (
-                <p className="login-message message-success">
+                <p className="login-message message-success" role="status">
                   {message}
                 </p>
               )}

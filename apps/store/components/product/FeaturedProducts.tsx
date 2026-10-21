@@ -15,15 +15,8 @@ export default async function FeaturedProducts({
         {productos.map((producto) => (
           <ScrollReveal key={producto.id}>
             <ProductCard
-              image={producto.imagen_url || "/producto.jpg"}
-              name={producto.nombre}
-              price={
-                mostrarPrecios
-                  ? `$${producto.precio.toLocaleString("es-CO")}`
-                  : undefined
-              }
-              rating={4.5}
-              slug={producto.slug || undefined}
+              producto={producto}
+              mostrarPrecios={mostrarPrecios}
             />
           </ScrollReveal>
         ))}

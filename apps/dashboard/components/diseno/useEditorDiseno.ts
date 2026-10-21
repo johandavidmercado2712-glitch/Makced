@@ -7,11 +7,13 @@ import { subirImagenEnForm } from "@/lib/imagenes";
 import { esFallo } from "@/components/modal/modal-utils";
 import {
   COLOR_PRINCIPAL_DEFECTO,
+  MAX_ENLACES_PIE,
   combinarDiseno,
   type ConfigDiseno,
   type SeccionDiseno,
 } from "@makced/db/diseno";
 import type { ImagenEstado } from "@/types/components";
+import type { CampoTextoPie, SeccionEnlacesPie } from "./paneles/comunes";
 import { PREFIJOS_POR_SECCION, seccionDesde, snapshotSeccion } from "./editor-interno";
 
 /**
@@ -90,8 +92,55 @@ export function useEditorEstado(config: ConfigDiseno, colorPrincipal: string, lo
     marcarCambio();
   };
 
-  const setPie = (campo: "marca" | "copyright" | "mensaje", valor: string) => {
+  const setPie = (campo: CampoTextoPie, valor: string) => {
     setBorrador((prev) => ({ ...prev, pie: { ...prev.pie, [campo]: valor } }));
+    marcarCambio();
+  };
+
+  const setEnlacePie = (
+    seccion: SeccionEnlacesPie,
+    indice: number,
+    campo: "etiqueta" | "url",
+    valor: string,
+  ) => {
+    setBorrador((prev) => {
+      const enlaces = prev.pie[seccion];
+      if (!enlaces[indice]) return prev;
+      return {
+        ...prev,
+        pie: {
+          ...prev.pie,
+          [seccion]: enlaces.map((enlace, i) =>
+            i === indice ? { ...enlace, [campo]: valor } : enlace,
+          ),
+        },
+      };
+    });
+    marcarCambio();
+  };
+
+  const agregarEnlacePie = (seccion: SeccionEnlacesPie) => {
+    setBorrador((prev) => {
+      if (prev.pie[seccion].length >= MAX_ENLACES_PIE) return prev;
+      return {
+        ...prev,
+        pie: {
+          ...prev.pie,
+          [seccion]: [...prev.pie[seccion], { etiqueta: "", url: "" }],
+        },
+      };
+    });
+    marcarCambio();
+  };
+
+  const quitarEnlacePie = (seccion: SeccionEnlacesPie, indice: number) => {
+    setBorrador((prev) => ({
+      ...prev,
+      pie: {
+        ...prev.pie,
+        [seccion]: prev.pie[seccion].filter((_, i) => i !== indice),
+      },
+    }));
     marcarCambio();
   };
 
@@ -160,6 +209,9 @@ export function useEditorEstado(config: ConfigDiseno, colorPrincipal: string, lo
     setCampo,
     setTitulos,
     setPie,
+    setEnlacePie,
+    agregarEnlacePie,
+    quitarEnlacePie,
     setSlide,
     setBanner,
     limpiarPrefijos,

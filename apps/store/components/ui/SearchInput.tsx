@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import { buscarProductos } from "@/app/actions/products";
 import { X } from "lucide-react";
+import { formatCOP, precioEfectivo } from "../../lib/format";
 import "./search-input.css";
 
 interface SearchResult {
@@ -28,14 +29,23 @@ export default function SearchInput({ onClose }: Props) {
   }, []);
 
   useEffect(() => {
-    if (query.length < 2) return;
+    const termino = query.trim();
+    if (termino.length < 2) return;
+
     const controller = new AbortController();
     const timer = setTimeout(async () => {
-      const data = await buscarProductos(query);
-      if (!controller.signal.aborted) {
-        setResults(data);
+      try {
+        const data = await buscarProductos(termino);
+        if (!controller.signal.aborted) {
+          setResults(data);
+        }
+      } catch {
+        if (!controller.signal.aborted) {
+          setResults([]);
+        }
       }
     }, 300);
+
     return () => {
       clearTimeout(timer);
       controller.abort();
@@ -69,7 +79,14 @@ export default function SearchInput({ onClose }: Props) {
           type="text"
           placeholder=" "
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={(e) => {
+            const value = e.target.value;
+            setQuery(value);
+            if (value.trim().length < 2) {
+              setResults([]);
+            }
+          }}
+          maxLength={40}
           className="search-input"
         />
         <label htmlFor="search-input" className="search-label">Buscar...</label>
@@ -83,14 +100,14 @@ export default function SearchInput({ onClose }: Props) {
           {results.map((p) => (
             <a
               key={p.id}
-              href={`/verProducto?slug=${p.slug}`}
+              href={p.slug ? `/verProducto?slug=${encodeURIComponent(p.slug)}` : "/"}
               className="search-result"
             >
-              <img src={p.imagen_url ?? ""} alt={p.nombre} />
+              <img src={p.imagen_url || "/producto.jpg"} alt={p.nombre} />
               <div>
                 <span className="search-result-name">{p.nombre}</span>
                 <span className="search-result-price">
-                  ${p.precio_descuento ?? p.precio}
+                  {formatCOP(precioEfectivo(p.precio, p.precio_descuento))}
                 </span>
               </div>
             </a>

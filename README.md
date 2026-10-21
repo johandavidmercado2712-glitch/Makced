@@ -62,6 +62,10 @@ npm run typecheck    # typecheck de todas las apps
 npm run test         # tests unitarios (Vitest) de todos los paquetes
 ```
 
+## Tareas pendientes
+
+- [ ] **Comprar el dominio de producción.** El subdominio será **solo para acceder a cada tienda** (por ejemplo, `mitienda.tiendas.dominio.com`); el dashboard y el login irán en dominios separados. La compra del dominio, la configuración DNS/Vercel y la implementación del enrutamiento multi-tienda quedan para después.
+
 ## Estados de carga (skeletons)
 
 Convención única para mostrar siluetas mientras el servidor resuelve datos.
@@ -158,6 +162,11 @@ Las tablas del catálogo (`categorias`, `marcas`, `productos`) ya usan RLS (`aut
 | Integridad del catálogo | `productos.categoria_id`, `productos.marca_id` | FKs con `ON DELETE SET NULL` (borrar una categoría/marca no rompe con un error crudo de FK) |
 
 - `(SELECT auth.uid())` va envuelto en subquery para que se evalúe **una vez** y no por fila (rendimiento).
+- **Lectura pública de `tiendas`** (advisor `rls-permissive`, corregido en `migrations/20261018213343_restringir-tiendas-select-anon.sql`): la tienda pública sí necesita la fila de la tienda activa (color, logo, diseño, WhatsApp), pero la policy anterior era `FOR SELECT USING (true) TO public` → cualquier `anon` leía la fila **completa**, incluidas columnas privadas (`usuario_id`, `propietario`, `plan_actual`, `created_at`, `updated_at`). Ahora `anon`: (1) solo ve la fila `activa = true`; (2) solo puede `SELECT` un subconjunto — `id, nombre_tienda, subdominio, plantilla_id, color_principal, logo_url, descripcion, activa, diseno, whatsapp_numero`. Pedir una columna privada como `anon` devuelve `42501 permission denied`.
+- El dashboard lee la fila completa (incluidas columnas privadas) con el **cliente de sesión** (`getTienda()` → `createServerClient({ cookies })`, RLS `tiendas_owner_write`), **nunca** con `anon`.
+- **Lectura pública del catálogo** (`marcas`, `productos`, `categorias`; advisor `rls-permissive`, corregido en `migrations/20261018233928_restringir-lectura-anon-catalogo.sql`): las policies eran `FOR SELECT USING (true) TO public` → `anon` leía todas las filas y columnas, incluidas las internas (`logo_key`/`imagen_key`, `tienda_id`, `created_at`, `updated_at`). Ahora `anon`: (1) solo ve los registros publicados (`activa = true` en `marcas`/`categorias`, `estado = true` en `productos`); (2) solo puede `SELECT` la proyección pública — `marcas(id, nombre, logo_url, imagen_url, activa)`, `categorias(id, nombre, slug, imagen_url, activa)`, `productos(id, nombre, descripcion, precio, precio_descuento, stock, imagen_url, slug, estado, es_nuevo, es_destacado, colores, referencia, categoria_id, marca_id)`. Pedir una columna interna como `anon` devuelve `42501 permission denied`.
+- El dashboard lee el catálogo completo (incluidas `logo_key`/`imagen_key`) con el **cliente de sesión** (`listarMarcas`, `listarCategorias`, `getProductosPaginado`, `getProductosCount`, `getResumenStats`, `getCategorias`/`getMarcas`, `generarSlugUnico`), **nunca** con `anon`.
+- **Las policies de owner aplican solo a `authenticated`** (`migrations/20261018234320_owner-policies-solo-authenticated.sql`): eran `FOR ALL TO public` y su subconsulta lee `tiendas.usuario_id`; tras revocar esa columna a `anon`, cualquier lectura anónima fallaba con `permission denied for table tiendas` cuando una fila no cumplía la policy pública. Ahora `anon` solo evalúa las `<tabla>_select_public`. Además `auth.uid()` va en subquery `(SELECT auth.uid())` para evaluarse una vez por consulta (`migrations/20261018234742_owner-write-auth-uid-subquery.sql`).
 - Regla: **toda tabla nueva nace con RLS** y sus policies usan `auth.uid()`; nunca confiar en el filtrado del cliente.
 - Las 3 apps usan la clave **`anon`** (en `.env.local`); la **API key / `service_role` nunca** debe ir al cliente.
 
@@ -215,6 +224,7 @@ En **producción** Next sirve el shell de error redactado (sin rutas ni devtools
 | Timestamp Unix en la respuesta | **Falso positivo** | Claims `exp`/`iat` del JWT + `Expires` de cookies (metadatos públicos) |
 | Redirección 307 con cuerpo HTML | **Solo-dev / aceptado** | Overlay de error de Next en dev; no ocurre en producción |
 | Tablas sin RLS expuestas a `anon` | **Resuelto** | `migrations/20261015225629_proteger-tablas-sin-rls.sql` (deny-all + owner-only) |
+| Lectura anónima permisiva (catálogo) | **Resuelto** | `migrations/20261018233928_restringir-lectura-anon-catalogo.sql` + `20261018234320_owner-policies-solo-authenticated.sql` + `20261018234742_owner-write-auth-uid-subquery.sql` (proyección pública + owner solo `authenticated`) |
 | `braces` DoS (GHSA-vfj7-8cjw-p6xm) | **Aceptado** | Cadena solo-dev sin parche; no usar `npm audit fix --force` |
 
 ## Estructura del monorepo

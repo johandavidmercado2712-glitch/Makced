@@ -42,24 +42,25 @@ export async function requireAuth(): Promise<{
   return { tienda: data as TiendaAutorizada, error: null };
 }
 
-// Lectura pública (store + dashboard resumen): mantiene cliente anónimo,
-// RLS permite SELECT público. Solo para lecturas no sensibles.
-export async function getTiendaPublica(): Promise<Tienda | null> {
-  const { insforge } = await import("@/lib/insforge");
+// Lectura de la tienda del usuario autenticado (layout ya exige sesión).
+// Usa el cliente de SESIÓN (RLS: tiendas_owner_write, auth.uid() = usuario_id)
+// y NUNCA el anónimo: la tienda pública solo puede leer la fila activa y un
+// subconjunto de columnas, así que columnas privadas (usuario_id, propietario,
+// plan_actual, created_at) jamás salen por anon.
+export async function getTienda(): Promise<Tienda | null> {
+  const user = await getCurrentUser();
+  if (!user) return null;
+
+  const insforge = createServerClient({ cookies: await cookies() });
   const { data } = await insforge.database
     .from("tiendas")
     .select(
       "id, usuario_id, nombre_tienda, propietario, subdominio, plan_actual, plantilla_id, color_principal, logo_url, descripcion, activa, created_at, diseno, whatsapp_numero",
     )
+    .eq("usuario_id", user.id)
     .eq("activa", true)
-    .single();
+    .maybeSingle();
   return (data ?? null) as Tienda | null;
-}
-
-// Alias legacy para lecturas de página (layout ya exige sesión).
-// Las acciones de ESCRITURA deben usar requireAuth().
-export async function getTienda(): Promise<Tienda | null> {
-  return getTiendaPublica();
 }
 
 // Datos de cuenta del dueño (email + nombre público).

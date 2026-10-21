@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import TablaSkeleton from "./TablaSkeleton";
 
@@ -34,6 +34,13 @@ describe("TablaSkeleton", () => {
     filas.forEach((fila) => {
       expect(fila.querySelectorAll("td")).toHaveLength(3);
     });
+  });
+
+  it("acepta columnas vacías o repetidas sin warnings de keys", () => {
+    const error = vi.spyOn(console, "error").mockImplementation(() => {});
+    render(<TablaSkeleton columnas={["", "", ""]} filas={2} avatar={false} />);
+    expect(error).not.toHaveBeenCalled();
+    error.mockRestore();
   });
 
   it("sin avatar no pinta el círculo, solo líneas", () => {

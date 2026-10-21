@@ -45,6 +45,11 @@ const cabecerasSeguridad = () => {
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  // Next 16 bloquea los requests cross-origin al dev server por defecto. Los
+  // e2e (y herramientas como ZAP) apuntan a 127.0.0.1, que no es el hostname
+  // por defecto (localhost) → sin esto la app no hidrata en esos tests.
+  // Solo aplica en desarrollo; en producción la opción se ignora.
+  allowedDevOrigins: ["127.0.0.1"],
   // En dev, el indicador circular de Next (dev tools) se confunde con un
   // skeleton/spinner de la tienda. No existe en producción.
   devIndicators: false,

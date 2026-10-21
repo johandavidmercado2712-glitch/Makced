@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-const fixedNavigationLabels = ["Inicio", "Novedades", "Marcas", "Categorias"];
+const fixedNavigationLabels = ["Inicio", "Novedades", "Marcas", "Categorías"];
 
 test("móvil muestra solo los cuatro enlaces principales y categorías en cuadrícula", async ({
   page,
@@ -22,9 +22,9 @@ test("móvil muestra solo los cuatro enlaces principales y categorías en cuadr�
   expect(mobileWidths.document).toBeLessThanOrEqual(mobileWidths.viewport);
   expect(mobileWidths.navigation).toBe(mobileWidths.navigationViewport);
 
-  await navigation.getByRole("link", { name: "Categorias" }).click();
+  await navigation.getByRole("link", { name: "Categorías" }).click();
   await expect(page).toHaveURL(/\/categoria$/);
-  await expect(page.getByRole("heading", { name: "Categorias" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Categorías" })).toBeVisible();
 
   const categoryGrid = page.locator(".categoria-cards");
   await expect(categoryGrid).toBeVisible();
@@ -32,6 +32,20 @@ test("móvil muestra solo los cuatro enlaces principales y categorías en cuadr�
     (element) => getComputedStyle(element).gridTemplateColumns.trim().split(/\s+/).length,
   );
   expect(columnCount).toBe(2);
+});
+
+test("un producto inexistente muestra una página amigable", async ({ page }) => {
+  await page.goto("/verProducto?slug=producto-inexistente-xyz");
+
+  await expect(
+    page.getByRole("heading", { name: "No encontramos esta página" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Volver al inicio" }),
+  ).toBeVisible();
+  await expect(
+    page.locator('meta[name="robots"]').first(),
+  ).toHaveAttribute("content", "noindex");
 });
 
 test("escritorio mantiene accesibles los enlaces de categorías dinámicas", async ({

@@ -1,6 +1,7 @@
 "use client";
 
 import { Image as ImageIcon } from "lucide-react";
+import { esEnlacePieVisible } from "@makced/db/diseno";
 import {
   SLIDES_BANNER,
   imagenVista,
@@ -126,13 +127,52 @@ export function PrevTitulos({ api }: { api: EditorDisenoApi }) {
 
 export function PrevPie({ api }: { api: EditorDisenoApi }) {
   const { borrador } = api;
+  const { pie } = borrador;
+  const informacion = pie.informacion.filter(esEnlacePieVisible);
+  const ayuda = pie.ayuda.filter(esEnlacePieVisible);
+  const redes = [
+    pie.web_url && "Sitio web",
+    pie.instagram_url && "Instagram",
+    pie.whatsapp_url && "WhatsApp",
+  ].filter(Boolean);
+
   return (
     <div className="de-prev-pie">
-      <strong>{borrador.pie.marca}</strong>
+      <strong>{pie.marca}</strong>
+
+      {(informacion.length > 0 || ayuda.length > 0) && (
+        <div className="de-prev-pie-cols">
+          {informacion.length > 0 && (
+            <div>
+              <em>{pie.titulo_informacion}</em>
+              {informacion.map((enlace) => (
+                <span key={`info-${enlace.etiqueta}-${enlace.url}`}>
+                  {enlace.etiqueta}
+                </span>
+              ))}
+            </div>
+          )}
+          {ayuda.length > 0 && (
+            <div>
+              <em>{pie.titulo_ayuda}</em>
+              {ayuda.map((enlace) => (
+                <span key={`ayuda-${enlace.etiqueta}-${enlace.url}`}>
+                  {enlace.etiqueta}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {redes.length > 0 && (
+        <div className="de-prev-pie-redes">{redes.join(" · ")}</div>
+      )}
+
       <span>
-        © {new Date().getFullYear()} {borrador.pie.marca}. {borrador.pie.copyright}
+        © {new Date().getFullYear()} {pie.marca}. {pie.copyright}
       </span>
-      <span className="de-prev-pie-mensaje">{borrador.pie.mensaje}</span>
+      <span className="de-prev-pie-mensaje">{pie.mensaje}</span>
     </div>
   );
 }

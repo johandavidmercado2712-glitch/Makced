@@ -2,7 +2,6 @@
 import { cookies } from "next/headers";
 import { createServerClient } from "@insforge/sdk/ssr";
 import { revalidatePath } from "next/cache";
-import { insforge } from "@/lib/insforge";
 import { borrarArchivoStorage, resolverImagen, texto } from "@/lib/imagenes";
 import { generarSlugUnico } from "@/lib/slug";
 import { requireAuth } from "./tienda";
@@ -19,6 +18,7 @@ function errorInesperado(err: unknown, mensaje: string): GuardadoResultado {
 
 export async function listarMarcas(): Promise<MarcaAdmin[]> {
   const { tienda } = await requireAuth();
+  const insforge = createServerClient({ cookies: await cookies() });
   let query = insforge.database
     .from("marcas")
     .select("id, nombre, logo_url, logo_key, activa, created_at")
@@ -32,6 +32,7 @@ export async function listarMarcas(): Promise<MarcaAdmin[]> {
 
 export async function listarCategorias(): Promise<CategoriaAdmin[]> {
   const { tienda } = await requireAuth();
+  const insforge = createServerClient({ cookies: await cookies() });
   let query = insforge.database
     .from("categorias")
     .select("id, nombre, slug, imagen_url, imagen_key, activa, created_at")

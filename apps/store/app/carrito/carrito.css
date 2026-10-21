@@ -328,14 +328,27 @@
     flex-shrink: 0;
 }
 
-.carrito-summary .login-submit,
-.carrito-summary .login-google {
+.carrito-whatsapp {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 8px;
-    padding: 12px 0;
     width: 100%;
+    margin-top: 12px;
+    padding: 12px 0;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: var(--action-color);
+    color: var(--on-action);
+    font-weight: 600;
+    font-size: var(--fs-md);
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.carrito-whatsapp:hover {
+    background: var(--action-color-hover);
 }
 
 @media (max-width: 768px) {

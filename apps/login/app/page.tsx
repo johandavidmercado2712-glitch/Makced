@@ -37,19 +37,23 @@ export default async function LoginPage({
   const initialMessage =
     authStatus === "success" && authType === "verify_email"
       ? "Correo verificado. Ya puedes iniciar sesión."
-      : error === "oauth_failed" || error === "exchange_failed"
-        ? "No se pudo completar el inicio de sesión. Inténtalo de nuevo."
-        : error === "missing_verifier"
-          ? "La sesión de inicio de sesión expiró. Inténtalo otra vez."
-          : authStatus === "error" && authError
-            ? "No se pudo verificar el correo. Solicita un nuevo enlace."
-            : null;
+      : null;
+
+  const initialError =
+    error === "oauth_failed" || error === "exchange_failed"
+      ? "No se pudo completar el inicio de sesión. Inténtalo de nuevo."
+      : error === "missing_verifier"
+        ? "La sesión de inicio de sesión expiró. Inténtalo otra vez."
+        : authStatus === "error" || authError
+          ? "No se pudo verificar el correo. Solicita un nuevo enlace."
+          : null;
 
   return (
     <main className="flex flex-col items-center justify-center flex-1 py-12 px-4">
       <LoginForm
         mode={initialMode}
         initialMessage={initialMessage}
+        initialError={initialError}
         resetToken={token}
       />
     </main>

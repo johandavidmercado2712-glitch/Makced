@@ -1,17 +1,10 @@
 import ScrollReveal from "../ui/ScrollReveal";
 import ProductCard from "./ProductCard";
 import { getConfigDiseno } from "../../app/actions/store";
-
-interface ProductoCard {
-  id: string;
-  nombre: string;
-  precio: number;
-  imagen_url: string | null;
-  slug: string | null;
-}
+import type { ProductoCardData } from "../../types/store";
 
 interface Props {
-  productos: ProductoCard[];
+  productos: ProductoCardData[];
 }
 
 export default async function ProductGrid({ productos }: Props) {
@@ -26,13 +19,8 @@ export default async function ProductGrid({ productos }: Props) {
           {productos.map((producto) => (
             <ScrollReveal key={producto.id}>
               <ProductCard
-                image={producto.imagen_url || "/producto.jpg"}
-                name={producto.nombre}
-                price={
-                  mostrarPrecios ? `$${producto.precio.toLocaleString("es-CO")}` : undefined
-                }
-                rating={4.5}
-                slug={producto.slug || undefined}
+                producto={producto}
+                mostrarPrecios={mostrarPrecios}
               />
             </ScrollReveal>
           ))}

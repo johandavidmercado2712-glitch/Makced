@@ -35,10 +35,31 @@
     gap: 8px;
 }
 
+.footer-info a {
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--text-secondary);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.2s;
+}
+
+.footer-info a:hover {
+    color: var(--action-color);
+}
+
 .footer-social {
     display: flex;
     gap: 15px;
     margin-top: 10px;
+}
+
+.footer-social a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .footer-social svg {
@@ -80,7 +101,8 @@
   .Footer { width: calc(100% - 32px); gap: 1.2rem; padding: 1.2rem 0; }
   .footer-columns { gap: 1.2rem 0.8rem; }
   .footer-info h2 { font-size: 18px; }
-  .footer-info span { font-size: 14px; }
+  .footer-info span,
+  .footer-info a { font-size: 14px; }
   .footer-bottom { flex-direction: column; text-align: center; gap: 6px; }
   .footer-social { gap: 18px; }
   .footer-social a, .footer-social button { min-width: 40px; min-height: 40px; }

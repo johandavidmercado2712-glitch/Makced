@@ -2,26 +2,9 @@
 
 import { cookies } from 'next/headers';
 import { createAuthActions, createServerClient } from '@insforge/sdk/ssr';
+import { formatAuthError } from './auth-errors';
 
 const LOGIN_URL = process.env.NEXT_PUBLIC_LOGIN_URL ?? 'http://localhost:3001';
-
-function FormatAuthError(error: { message?: string; statusCode?: number } | null) {
-  if (!error) return null;
-
-  const rawMessage = error.message ?? '';
-  let message = rawMessage;
-
-  if (rawMessage.includes('Invalid credentials')) {
-    message = 'Correo electrónico o contraseña incorrectos';
-  } else if (rawMessage.includes('Email verification required')) {
-    message = 'Se requiere verificar el correo electrónico antes de iniciar sesión';
-  } else if (rawMessage.includes('Service Temporarily Unavailable')) {
-    message = 'El servicio no está disponible temporalmente';
-  } else if (rawMessage.includes('Invalid or expired verification code')) {
-    message = 'El código es inválido o expiró';
-  }
-  return { ...error, message };
-}
 
 function formValue(formData: FormData, key: string, trim = true): string {
   const value = formData.get(key);
@@ -45,7 +28,7 @@ export async function signIn(formData: FormData) {
   if (error || !data?.user) {
     return {
       user: null,
-      error: FormatAuthError(error) ?? { message: 'No se pudo iniciar sesión' },
+      error: formatAuthError(error) ?? { message: 'No se pudo iniciar sesión' },
     };
   }
 
@@ -87,7 +70,7 @@ export async function signUp(formData: FormData) {
     user: data?.user ? { id: data.user.id, email: data.user.email } : null,
     requiresVerification: Boolean(data?.requireEmailVerification),
     verificationMethod,
-    error: FormatAuthError(error),
+    error: formatAuthError(error),
   };
 }
 
@@ -103,7 +86,7 @@ export async function verifyEmail(formData: FormData) {
   if (error || !data?.user) {
     return {
       user: null,
-      error: FormatAuthError(error) ?? { message: 'No se pudo verificar el correo' },
+      error: formatAuthError(error) ?? { message: 'No se pudo verificar el correo' },
     };
   }
   return {
@@ -124,7 +107,7 @@ export async function sendPasswordResetEmail(formData: FormData) {
     redirectTo: new URL('/?mode=reset-password', LOGIN_URL).toString(),
   });
 
-  return { error: FormatAuthError(error) };
+  return { error: formatAuthError(error) };
 }
 
 export async function sendResetPasswordEmail(formData: FormData) {
@@ -139,7 +122,7 @@ export async function sendResetPasswordEmail(formData: FormData) {
     redirectTo: new URL('/reset-password', LOGIN_URL).toString(),
   });
 
-  return { error: FormatAuthError(error) };
+  return { error: formatAuthError(error) };
 }
 
 export async function resetPassword(formData: FormData) {
@@ -166,14 +149,14 @@ export async function resetPassword(formData: FormData) {
       newPassword,
       otp: resetToken,
     });
-    return { error: FormatAuthError(error) };
+    return { error: formatAuthError(error) };
   }
 
   const { data, error: exchangeError } =
     await client.auth.exchangeResetPasswordToken({ email, code });
   if (exchangeError || !data?.token) {
     return {
-      error: FormatAuthError(exchangeError) ?? { message: 'No se pudo validar el código' },
+      error: formatAuthError(exchangeError) ?? { message: 'No se pudo validar el código' },
     };
   }
 
@@ -181,13 +164,13 @@ export async function resetPassword(formData: FormData) {
     newPassword,
     otp: data.token,
   });
-  return { error: FormatAuthError(error) };
+  return { error: formatAuthError(error) };
 }
 
 export async function signOut() {
   const auth = createAuthActions({ cookies: await cookies() });
   const { error } = await auth.signOut();
-  return { error: FormatAuthError(error) };
+  return { error: formatAuthError(error) };
 }
 
 export async function initiateOAuth(provider: string) {
@@ -205,7 +188,7 @@ export async function initiateOAuth(provider: string) {
   if (error || !data?.url || !data.codeVerifier) {
     return {
       url: null,
-      error: FormatAuthError(error) ?? { message: 'No se pudo iniciar sesión con el proveedor' },
+      error: formatAuthError(error) ?? { message: 'No se pudo iniciar sesión con el proveedor' },
     };
   }
 

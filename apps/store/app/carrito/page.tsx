@@ -12,15 +12,8 @@ import {
   Truck,
 } from "lucide-react";
 import { useCart } from "../../components/auth/CartContext";
+import { formatCOP } from "../../lib/format";
 import { insforge } from "../../lib/insforge";
-
-const formatter = new Intl.NumberFormat("es-CO", {
-  style: "currency",
-  currency: "COP",
-  maximumFractionDigits: 0,
-});
-
-const formatPrice = (value: number) => formatter.format(value);
 
 const FREE_SHIPPING_THRESHOLD = 200000;
 const SHIPPING_COST = 15000;
@@ -80,13 +73,20 @@ export default function Page() {
           items
             .map(
               (i) =>
-                `- ${i.nombre} x${i.cantidad} ${formatPrice(i.precio * i.cantidad)}`
+                `- ${i.nombre}${i.talla ? ` (Talla ${i.talla})` : ""}${
+                  i.color ? ` (${i.color})` : ""
+                } x${i.cantidad} ${formatCOP(i.precio * i.cantidad)}`
             )
             .join("\n") +
-          `\n\nTotal: ${formatPrice(total)}`
+          `\n\nTotal: ${formatCOP(total)}`
       : `Hola, quiero consultar el precio de estos productos:\n` +
           items
-            .map((i) => `- ${i.nombre} x${i.cantidad}`)
+            .map(
+              (i) =>
+                `- ${i.nombre}${i.talla ? ` (Talla ${i.talla})` : ""}${
+                  i.color ? ` (${i.color})` : ""
+                } x${i.cantidad}`
+            )
             .join("\n") +
           "\n\nPor favor, confírmame los precios y el costo de envío."
   );
@@ -168,7 +168,7 @@ export default function Page() {
             <div className="carrito-product-right">
               {showPrices && (
                 <span className="carrito-product-precio">
-                  {formatPrice(item.precio * item.cantidad)}
+                  {formatCOP(item.precio * item.cantidad)}
                 </span>
               )}
               <button
@@ -190,7 +190,7 @@ export default function Page() {
           <div className="carrito-envio-banner">
             <div className="carrito-envio-text">
               <Truck size={20} />
-              <h1>Distruta Tu Pedido!</h1>
+              <h1>¡Disfruta tu pedido!</h1>
             </div>
           </div>
 
@@ -203,7 +203,7 @@ export default function Page() {
                   <span className="carrito-linea-label">
                     Subtotal ({totalItems} {totalItems === 1 ? "producto" : "productos"})
                   </span>
-                  <span className="carrito-linea-valor">{formatPrice(subtotal)}</span>
+                  <span className="carrito-linea-valor">{formatCOP(subtotal)}</span>
                 </div>
 
                 <div className="carrito-linea">
@@ -211,7 +211,7 @@ export default function Page() {
                   <span
                     className={`carrito-linea-valor ${freeShipping ? "carrito-linea-valor--gratis" : ""}`}
                   >
-                    {freeShipping ? "Gratis" : formatPrice(shipping)}
+                    {freeShipping ? "Gratis" : formatCOP(shipping)}
                   </span>
                 </div>
 
@@ -219,7 +219,7 @@ export default function Page() {
 
                 <div className="carrito-total">
                   <span className="carrito-total-label">Total</span>
-                  <span className="carrito-total-valor">{formatPrice(total)}</span>
+                  <span className="carrito-total-valor">{formatCOP(total)}</span>
                 </div>
               </>
             ) : (
@@ -233,8 +233,7 @@ export default function Page() {
               href={`https://wa.me/${whatsappNumero ?? ""}?text=${whatsappMessage}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="login-submit"
-              style={{ marginTop: "12px" }}
+              className="carrito-whatsapp"
             >
               <MessageCircle size={20} /> Pedir por WhatsApp
             </a>

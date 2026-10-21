@@ -1,4 +1,5 @@
 import "./novedades.css";
+import type { Metadata } from "next";
 import ProductCard from "../../components/product/ProductCard"
 import ScrollReveal from "../../components/ui/ScrollReveal"
 import { getProductosNuevos } from "../actions/products";
@@ -6,6 +7,11 @@ import { getConfigDiseno } from "../actions/store";
 import Link from "next/link";
 
 export const revalidate = 30;
+
+export const metadata: Metadata = {
+  title: "Novedades",
+  description: "Descubre lo último que llegó a nuestra tienda. Estilo y tendencia para ti.",
+};
 
 export default async function Page() {
   const [productos, { config }] = await Promise.all([
@@ -58,7 +64,7 @@ export default async function Page() {
               <div className="novedades-info">
                   <div className="novedades-detalle">
                       <h2>Novedades</h2>
-                      <p>Descubre lo ultimo que llego a nuestra tienda. Estilo y tendencia para ti.</p>
+                      <p>Descubre lo último que llegó a nuestra tienda. Estilo y tendencia para ti.</p>
                   </div>
               </div>
             </ScrollReveal>
@@ -69,21 +75,11 @@ export default async function Page() {
             {productos.length > 0 ? (
               productos.map((producto) => (
                 <ScrollReveal key={producto.id}>
-                <ProductCard
-                    image={producto.imagen_url || "/producto.jpg"}
-                    name={producto.nombre}
-                    price={
-                      mostrarPrecios
-                        ? `$${producto.precio.toLocaleString("es-CO")}`
-                        : undefined
-                    }
-                    rating={4.5}
-                    slug={producto.slug || undefined}
-                />
+                <ProductCard producto={producto} mostrarPrecios={mostrarPrecios} />
                 </ScrollReveal>
               ))
             ) : (
-              <p className="novedades-vacio">Proximamente habra novedades.</p>
+              <p className="novedades-vacio">Próximamente habrá novedades.</p>
             )}
             </div>
           </ScrollReveal>

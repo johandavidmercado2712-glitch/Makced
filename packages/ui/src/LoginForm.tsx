@@ -6,7 +6,6 @@ import {
   ArrowLeft,
   KeyRound,
   LoaderCircle,
-  LockKeyhole,
   Mail,
   UserRound,
 } from 'lucide-react';
@@ -18,6 +17,7 @@ import {
   signUp,
   verifyEmail,
 } from '@makced/db/actions';
+import PasswordField from './PasswordField';
 import './LoginForm.css';
 
 type Step = 'signin' | 'signup' | 'verify' | 'forgot-password' | 'reset-password';
@@ -25,10 +25,14 @@ type Step = 'signin' | 'signup' | 'verify' | 'forgot-password' | 'reset-password
 const DASHBOARD_URL =
   process.env.NEXT_PUBLIC_DASHBOARD_URL ?? 'http://localhost:3002';
 const MIN_PASSWORD_LENGTH = 8;
+const MAX_EMAIL_LENGTH = 100;
+const MAX_NAME_LENGTH = 60;
+const MAX_PASSWORD_LENGTH = 64;
 
 interface LoginFormProps {
   mode?: 'signin' | 'signup';
   initialMessage?: string | null;
+  initialError?: string | null;
   resetToken?: string | null;
 }
 
@@ -136,17 +140,20 @@ function FacebookIcon() {
 export default function LoginForm({
   mode = 'signin',
   initialMessage = null,
+  initialError = null,
   resetToken = null,
 }: LoginFormProps) {
   const [step, setStep] = useState<Step>(resetToken ? 'reset-password' : mode);
   const [message, setMessage] = useState<string | null>(initialMessage);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(initialError);
   const [pending, setPending] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
   const [otp, setOtp] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const clearFeedback = () => {
     setMessage(null);
@@ -154,6 +161,7 @@ export default function LoginForm({
   };
 
   async function handleSubmit(formData: FormData) {
+    if (pending) return;
     clearFeedback();
 
     if (!email.includes('@') && !(step === 'reset-password' && resetToken)) {
@@ -257,14 +265,18 @@ export default function LoginForm({
       } else {
         const result = await signIn(formData);
         if (result.error) {
-          setError(result.error.message ?? 'Error de autenticación');
+          setError(result.error.message ?? 'Error al iniciar sesión. Inténtalo de nuevo.');
           return;
         }
       }
 
       window.location.assign(DASHBOARD_URL);
     } catch {
-      setError('No se pudo completar la solicitud. Inténtalo de nuevo.');
+      setError(
+        step === 'signin'
+          ? 'Error al iniciar sesión. Inténtalo de nuevo.'
+          : 'No se pudo completar la solicitud. Inténtalo de nuevo.',
+      );
     } finally {
       setPending(false);
     }
@@ -322,6 +334,7 @@ export default function LoginForm({
                         name="email"
                         type="email"
                         autoComplete="email"
+                        maxLength={MAX_EMAIL_LENGTH}
                         placeholder="tu@email.com"
                         value={email}
                         onChange={(event) => setEmail(event.target.value)}
@@ -342,6 +355,7 @@ export default function LoginForm({
                         name="name"
                         type="text"
                         autoComplete="name"
+                        maxLength={MAX_NAME_LENGTH}
                         placeholder="Tu nombre"
                         value={name}
                         onChange={(event) => setName(event.target.value)}
@@ -353,43 +367,33 @@ export default function LoginForm({
                 )}
 
                 {showCredentials && (
-                  <div className="input-group">
-                    <label htmlFor="password">Contraseña</label>
-                    <div className="input-wrapper">
-                      <LockKeyhole className="input-icon" size={18} aria-hidden="true" />
-                      <input
-                        id="password"
-                        name="password"
-                        type="password"
-                        autoComplete={isSignup ? 'new-password' : 'current-password'}
-                        placeholder="••••••••••••"
-                        value={password}
-                        onChange={(event) => setPassword(event.target.value)}
-                        className="form-input"
-                        required
-                      />
-                    </div>
-                  </div>
+                  <PasswordField
+                    id="password"
+                    name="password"
+                    label="Contraseña"
+                    value={password}
+                    onChange={setPassword}
+                    autoComplete={isSignup ? 'new-password' : 'current-password'}
+                    show={showPassword}
+                    onToggle={() => setShowPassword((visible) => !visible)}
+                    maxLength={MAX_PASSWORD_LENGTH}
+                    minLength={isSignup ? MIN_PASSWORD_LENGTH : undefined}
+                  />
                 )}
 
                 {isSignup && (
-                  <div className="input-group">
-                    <label htmlFor="confirm-password">Confirmar contraseña</label>
-                    <div className="input-wrapper">
-                      <LockKeyhole className="input-icon" size={18} aria-hidden="true" />
-                      <input
-                        id="confirm-password"
-                        name="confirm-password"
-                        type="password"
-                        autoComplete="new-password"
-                        placeholder="••••••••••••"
-                        value={confirm}
-                        onChange={(event) => setConfirm(event.target.value)}
-                        className="form-input"
-                        required
-                      />
-                    </div>
-                  </div>
+                  <PasswordField
+                    id="confirm-password"
+                    name="confirm-password"
+                    label="Confirmar contraseña"
+                    value={confirm}
+                    onChange={setConfirm}
+                    autoComplete="new-password"
+                    show={showConfirm}
+                    onToggle={() => setShowConfirm((visible) => !visible)}
+                    maxLength={MAX_PASSWORD_LENGTH}
+                    minLength={MIN_PASSWORD_LENGTH}
+                  />
                 )}
 
                 {step === 'signin' && (
@@ -467,38 +471,30 @@ export default function LoginForm({
                         </div>
                       </>
                     )}
-                    <div className="input-group">
-                      <label htmlFor="new-password">Nueva contraseña</label>
-                      <div className="input-wrapper">
-                        <LockKeyhole className="input-icon" size={18} aria-hidden="true" />
-                        <input
-                          id="new-password"
-                          name="newPassword"
-                          type="password"
-                          autoComplete="new-password"
-                          value={password}
-                          onChange={(event) => setPassword(event.target.value)}
-                          className="form-input"
-                          required
-                        />
-                      </div>
-                    </div>
-                    <div className="input-group">
-                      <label htmlFor="confirm-reset-password">Confirmar contraseña</label>
-                      <div className="input-wrapper">
-                        <LockKeyhole className="input-icon" size={18} aria-hidden="true" />
-                        <input
-                          id="confirm-reset-password"
-                          name="confirm-password"
-                          type="password"
-                          autoComplete="new-password"
-                          value={confirm}
-                          onChange={(event) => setConfirm(event.target.value)}
-                          className="form-input"
-                          required
-                        />
-                      </div>
-                    </div>
+                    <PasswordField
+                      id="new-password"
+                      name="newPassword"
+                      label="Nueva contraseña"
+                      value={password}
+                      onChange={setPassword}
+                      autoComplete="new-password"
+                      show={showPassword}
+                      onToggle={() => setShowPassword((visible) => !visible)}
+                      maxLength={MAX_PASSWORD_LENGTH}
+                      minLength={MIN_PASSWORD_LENGTH}
+                    />
+                    <PasswordField
+                      id="confirm-reset-password"
+                      name="confirm-password"
+                      label="Confirmar contraseña"
+                      value={confirm}
+                      onChange={setConfirm}
+                      autoComplete="new-password"
+                      show={showConfirm}
+                      onToggle={() => setShowConfirm((visible) => !visible)}
+                      maxLength={MAX_PASSWORD_LENGTH}
+                      minLength={MIN_PASSWORD_LENGTH}
+                    />
                   </>
                 )}
 

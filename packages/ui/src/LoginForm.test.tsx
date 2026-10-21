@@ -73,6 +73,60 @@ describe("LoginForm (signin)", () => {
   });
 });
 
+describe("LoginForm (contraseña visible y límites)", () => {
+  it("alterna entre ocultar y mostrar la contraseña", async () => {
+    const user = userEvent.setup();
+    render(<LoginForm />);
+
+    const input = screen.getByLabelText("Contraseña");
+    expect(input).toHaveAttribute("type", "password");
+
+    const mostrar = screen.getByRole("button", { name: "Mostrar contraseña" });
+    expect(mostrar).toHaveAttribute("aria-pressed", "false");
+
+    await user.click(mostrar);
+    expect(input).toHaveAttribute("type", "text");
+
+    const ocultar = screen.getByRole("button", { name: "Ocultar contraseña" });
+    expect(ocultar).toHaveAttribute("aria-pressed", "true");
+
+    await user.click(ocultar);
+    expect(input).toHaveAttribute("type", "password");
+  });
+
+  it("aplica los límites de caracteres", async () => {
+    const user = userEvent.setup();
+    render(<LoginForm />);
+
+    expect(screen.getByLabelText("Correo electrónico")).toHaveAttribute(
+      "maxLength",
+      "100",
+    );
+    expect(screen.getByLabelText("Contraseña")).toHaveAttribute(
+      "maxLength",
+      "64",
+    );
+
+    await user.click(screen.getByRole("button", { name: "Crea tu cuenta" }));
+
+    expect(screen.getByLabelText("Nombre completo")).toHaveAttribute(
+      "maxLength",
+      "60",
+    );
+  });
+
+  it("muestra el error inicial como error y no como éxito", () => {
+    render(
+      <LoginForm initialError="No se pudo completar el inicio de sesión." />,
+    );
+
+    expect(screen.getByRole("alert")).toHaveTextContent(
+      "No se pudo completar el inicio de sesión.",
+    );
+    expect(screen.queryByRole("status")).not.toBeInTheDocument();
+  });
+});
+
 describe("LoginForm (signup)", () => {
   it("valida contraseña corta y contraseñas que no coinciden", async () => {
     const user = userEvent.setup();

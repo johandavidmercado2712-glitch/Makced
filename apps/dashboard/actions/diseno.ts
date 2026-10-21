@@ -6,9 +6,14 @@ import { borrarArchivoStorage, resolverImagen } from "@/lib/imagenes";
 import { requireAuth } from "./tienda";
 import {
   COLOR_PRINCIPAL_DEFECTO,
+  MAX_ETIQUETA_PIE,
+  MAX_URL_PIE,
   TIPOGRAFIAS,
   combinarDiseno,
+  esUrlPieValida,
+  normalizarEnlacesPie,
   type ConfigDiseno,
+  type EnlacePie,
   type SeccionDiseno,
   type Tipografia,
 } from "@makced/db/diseno";
@@ -45,6 +50,21 @@ function leerImagen(
   }
   const res = resolverImagen(formData, prefijo);
   return { imagen: res.imagen_url ?? "", imagen_key: res.imagen_key };
+}
+
+function validarEnlacesPie(
+  enlaces: EnlacePie[],
+  seccion: "información" | "ayuda",
+): string | null {
+  for (const [indice, enlace] of enlaces.entries()) {
+    if (!enlace.etiqueta) {
+      return `El enlace ${indice + 1} de ${seccion} necesita una etiqueta`;
+    }
+    if (enlace.url && !esUrlPieValida(enlace.url)) {
+      return `La URL de "${enlace.etiqueta}" en ${seccion} no es válida`;
+    }
+  }
+  return null;
 }
 
 /**
@@ -179,13 +199,80 @@ export async function guardarDiseno(
       }
 
       case "pie": {
-        const marca = String(formData.get("pie-marca") ?? "").trim();
-        const copyright = String(formData.get("pie-copyright") ?? "").trim();
-        const mensaje = String(formData.get("pie-mensaje") ?? "").trim();
+        const leer = (campo: string, anterior: string, max: number): string => {
+          const crudo = formData.has(campo)
+            ? String(formData.get(campo) ?? "")
+            : anterior;
+          return crudo.trim().slice(0, max);
+        };
+
+        const marca = leer("pie-marca", actual.pie.marca, 40).trim();
+        const copyright = leer("pie-copyright", actual.pie.copyright, 80);
+        const mensaje = leer("pie-mensaje", actual.pie.mensaje, 120);
+        const titulo_informacion = leer(
+          "pie-titulo_informacion",
+          actual.pie.titulo_informacion,
+          MAX_ETIQUETA_PIE,
+        );
+        const titulo_ayuda = leer(
+          "pie-titulo_ayuda",
+          actual.pie.titulo_ayuda,
+          MAX_ETIQUETA_PIE,
+        );
+        const web_url = leer("pie-web_url", actual.pie.web_url, MAX_URL_PIE);
+        const instagram_url = leer(
+          "pie-instagram_url",
+          actual.pie.instagram_url,
+          MAX_URL_PIE,
+        );
+        const whatsapp_url = leer(
+          "pie-whatsapp_url",
+          actual.pie.whatsapp_url,
+          MAX_URL_PIE,
+        );
+
         if (!marca) {
           return { ok: false, error: "El nombre de marca del pie es obligatorio" };
         }
-        cambios = { pie: { marca, copyright, mensaje } };
+
+        for (const [etiqueta, url] of [
+          ["Sitio web", web_url],
+          ["Instagram", instagram_url],
+          ["WhatsApp", whatsapp_url],
+        ] as const) {
+          if (url && !esUrlPieValida(url)) {
+            return { ok: false, error: `La URL de ${etiqueta} no es válida` };
+          }
+        }
+
+        const informacion = formData.has("pie-informacion")
+          ? normalizarEnlacesPie(formData.get("pie-informacion"))
+          : actual.pie.informacion;
+        const ayuda = formData.has("pie-ayuda")
+          ? normalizarEnlacesPie(formData.get("pie-ayuda"))
+          : actual.pie.ayuda;
+
+        const errorEnlaces =
+          validarEnlacesPie(informacion, "información") ??
+          validarEnlacesPie(ayuda, "ayuda");
+        if (errorEnlaces) {
+          return { ok: false, error: errorEnlaces };
+        }
+
+        cambios = {
+          pie: {
+            marca,
+            copyright,
+            mensaje,
+            titulo_informacion,
+            titulo_ayuda,
+            web_url,
+            instagram_url,
+            whatsapp_url,
+            informacion,
+            ayuda,
+          },
+        };
         break;
       }
     }

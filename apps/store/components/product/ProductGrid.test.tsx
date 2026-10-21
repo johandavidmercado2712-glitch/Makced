@@ -3,7 +3,11 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import ProductGrid from "./ProductGrid";
 import { getConfigDiseno } from "../../app/actions/store";
+import { formatCOP } from "../../lib/format";
 import { combinarDiseno } from "@makced/db/diseno";
+
+const textoCOP = (valor: number) =>
+  formatCOP(valor).replace(/\u00a0/g, " ");
 
 vi.mock("../../app/actions/store", () => ({
   getConfigDiseno: vi.fn(),
@@ -37,15 +41,19 @@ const productos = [
     id: "p1",
     nombre: "Nike Revolution 7",
     precio: 95000,
+    precio_descuento: null,
     imagen_url: "/hombre.jpg",
     slug: "nike-revolution-7",
+    marca: "Nike",
   },
   {
     id: "p2",
     nombre: "Adidas Runner",
     precio: 120000,
+    precio_descuento: null,
     imagen_url: null,
     slug: "adidas-runner",
+    marca: "Adidas",
   },
 ];
 
@@ -81,8 +89,10 @@ describe("integración: ProductGrid → ProductCard según config de la tienda",
     const arbol = await ProductGrid({ productos });
     render(arbol);
 
-    expect(screen.getByText("$95.000")).toBeInTheDocument();
-    expect(screen.getByText("$120.000")).toBeInTheDocument();
+    expect(screen.getByText(textoCOP(95000))).toBeInTheDocument();
+    expect(screen.getByText(textoCOP(120000))).toBeInTheDocument();
+    expect(screen.getByText("Nike")).toBeInTheDocument();
+    expect(screen.getByText("Adidas")).toBeInTheDocument();
     expect(mockedConfig).toHaveBeenCalledTimes(1);
   });
 });

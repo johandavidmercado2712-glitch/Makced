@@ -1,5 +1,6 @@
 "use server";
-import { insforge } from "@/lib/insforge";
+import { cookies } from "next/headers";
+import { createServerClient } from "@insforge/sdk/ssr";
 import { requireAuth } from "./tienda";
 
 async function tiendaIdActual(): Promise<string | null> {
@@ -9,6 +10,7 @@ async function tiendaIdActual(): Promise<string | null> {
 
 export async function getCategorias() {
   const tiendaId = await tiendaIdActual();
+  const insforge = createServerClient({ cookies: await cookies() });
   let query = insforge.database.from("categorias").select("id, nombre, slug").eq("activa", true);
   if (tiendaId) {
     query = query.eq("tienda_id", tiendaId);
@@ -19,6 +21,7 @@ export async function getCategorias() {
 
 export async function getMarcas() {
   const tiendaId = await tiendaIdActual();
+  const insforge = createServerClient({ cookies: await cookies() });
   let query = insforge.database.from("marcas").select("id, nombre").eq("activa", true);
   if (tiendaId) {
     query = query.eq("tienda_id", tiendaId);

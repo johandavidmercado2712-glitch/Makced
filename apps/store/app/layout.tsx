@@ -47,10 +47,19 @@ const FUENTES: Record<Tipografia, { variable: string }> = {
   Roboto: roboto,
 };
 
-export const metadata: Metadata = {
-  title: "MakcedStore - Tienda Online",
-  description: "Tu tienda de calzado y ropa deportiva favorita",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { config } = await getConfigDiseno();
+  const marca = config.pie.marca || "MakcedStore";
+
+  return {
+    title: {
+      default: `${marca} - Tienda Online`,
+      template: `%s | ${marca}`,
+    },
+    description:
+      "Calzado y ropa deportiva. Envíos a todo el país y atención personalizada.",
+  };
+}
 
 export default async function RootLayout({
   children,
@@ -70,7 +79,7 @@ export default async function RootLayout({
 
   return (
     <html
-      lang="en"
+      lang="es"
       suppressHydrationWarning
       className={`${fuenteActiva.variable} h-full antialiased`}
       style={vars as CSSProperties}

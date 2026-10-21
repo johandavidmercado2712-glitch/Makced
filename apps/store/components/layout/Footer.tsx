@@ -1,6 +1,11 @@
-import { Globe, Camera, MessageCircle, Mail, Phone, MapPin } from "lucide-react";
+import { Globe, Camera, MessageCircle } from "lucide-react";
 import Link from "next/link";
-import type { ConfigDiseno } from "@makced/db/diseno";
+import {
+  esEnlacePieVisible,
+  esUrlPieValida,
+  type ConfigDiseno,
+  type EnlacePie,
+} from "@makced/db/diseno";
 import "./footer.css";
 
 interface FooterProps {
@@ -8,52 +13,101 @@ interface FooterProps {
   pie: ConfigDiseno["pie"];
 }
 
-function Footer ({ categorias = [], pie }: FooterProps) {
-    return(
-        <div className="Footer">
-            <div className="footer-columns">
-                <div className="footer-info">
-                    <h2>{pie.marca}</h2>
-                    <span className="footer-divider"></span>
-                    <div className="footer-social">
-                        <Globe size={20} />
-                        <Camera size={20} />
-                        <MessageCircle size={20} />
-                    </div>
-                </div>
+function EnlaceFooter({ enlace }: { enlace: EnlacePie }) {
+  if (enlace.url.startsWith("/")) {
+    return <Link href={enlace.url}>{enlace.etiqueta}</Link>;
+  }
 
-                <div className="footer-info">
-                    <h2>Categoria</h2>
-                    {categorias.map((cat) => (
-                        <Link
-                            key={cat.id}
-                            href={`/categoriaProductos?slug=${cat.slug}`}
-                        >
-                            {cat.nombre}
-                        </Link>
-                    ))}
-                </div>
-
-                <div className="footer-info">
-                    <h2>INFORMACION</h2>
-                    <Link href="#">Nosotros</Link>
-                    <Link href="#">Terminos y Condiciones</Link>
-                    <Link href="#">Politica</Link>
-                </div>
-
-                <div className="footer-info">
-                    <h2>AYUDA</h2>
-                    <Link href="#"><Mail size={14} /> Contacto</Link>
-                    <Link href="#"><Phone size={14} /> Envios</Link>
-                    <Link href="#"><MapPin size={14} /> Metodos de Pago</Link>
-                </div>
-            </div>
-
-            <div className="footer-bottom">
-                <span>&copy; {new Date().getFullYear()} {pie.marca}. {pie.copyright}</span>
-                <span>{pie.mensaje}</span>
-            </div>
-        </div>
-    )
+  const externo = /^https?:/i.test(enlace.url);
+  return (
+    <a
+      href={enlace.url}
+      {...(externo ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+    >
+      {enlace.etiqueta}
+    </a>
+  );
 }
-export default Footer
+
+function Footer({ categorias = [], pie }: FooterProps) {
+  const informacion = pie.informacion.filter(esEnlacePieVisible);
+  const ayuda = pie.ayuda.filter(esEnlacePieVisible);
+
+  const redes = [
+    { url: pie.web_url, label: "Sitio web", Icono: Globe },
+    { url: pie.instagram_url, label: "Instagram", Icono: Camera },
+    { url: pie.whatsapp_url, label: "WhatsApp", Icono: MessageCircle },
+  ].filter((red) => esUrlPieValida(red.url));
+
+  return (
+    <div className="Footer">
+      <div className="footer-columns">
+        <div className="footer-info">
+          <h2>{pie.marca}</h2>
+          <span className="footer-divider"></span>
+          {redes.length > 0 && (
+            <div className="footer-social">
+              {redes.map(({ url, label, Icono }) => (
+                <a
+                  key={label}
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                >
+                  <Icono size={20} />
+                </a>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="footer-info">
+          <h2>Categoría</h2>
+          {categorias.map((cat) => (
+            <Link
+              key={cat.id}
+              href={`/categoriaProductos?slug=${encodeURIComponent(cat.slug)}`}
+            >
+              {cat.nombre}
+            </Link>
+          ))}
+        </div>
+
+        {informacion.length > 0 && (
+          <div className="footer-info">
+            <h2>{pie.titulo_informacion}</h2>
+            {informacion.map((enlace) => (
+              <EnlaceFooter
+                key={`${enlace.etiqueta}-${enlace.url}`}
+                enlace={enlace}
+              />
+            ))}
+          </div>
+        )}
+
+        {ayuda.length > 0 && (
+          <div className="footer-info">
+            <h2>{pie.titulo_ayuda}</h2>
+            {ayuda.map((enlace) => (
+              <EnlaceFooter
+                key={`${enlace.etiqueta}-${enlace.url}`}
+                enlace={enlace}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div className="footer-bottom">
+        <span>
+          &copy; {new Date().getFullYear()} {pie.marca}
+          {pie.copyright ? `. ${pie.copyright}` : ""}
+        </span>
+        <span>{pie.mensaje}</span>
+      </div>
+    </div>
+  );
+}
+
+export default Footer;

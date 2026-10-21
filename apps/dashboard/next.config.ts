@@ -24,6 +24,10 @@ const cabecerasSeguridad = () => {
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  // Next 16 bloquea los requests cross-origin al dev server por defecto. Los
+  // e2e apuntan a 127.0.0.1, que no es el hostname por defecto (localhost) →
+  // sin esto la app no hidrata en esos tests. Solo aplica en desarrollo.
+  allowedDevOrigins: ["127.0.0.1"],
   async headers() {
     return [{ source: "/(.*)", headers: cabecerasSeguridad() }];
   },

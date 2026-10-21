@@ -66,8 +66,9 @@
 
 .product-precio-fila {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .product-precio {
@@ -77,62 +78,44 @@
   margin: 0;
 }
 
+.product-precio-original {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
 /* =========================================
-   Heart Rating - Tooltip
+   Quick add to cart
    ========================================= */
-.product-rating {
+.product-cart-btn {
   position: absolute;
   top: 10px;
   right: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 4px;
   z-index: 2;
-}
-
-.heart-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 8px;
+  border: none;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
   cursor: pointer;
-  color: rgba(255, 255, 255, 0.9);
-  transition: color 0.2s, transform 0.2s;
-  background: rgba(0, 0, 0, 0.3);
-  padding: 6px;
-  border-radius: 50%;
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
+  transition: background 0.2s, color 0.2s, transform 0.2s;
 }
 
-.heart-icon:hover {
-  color: #ef4444;
-  transform: scale(1.15);
-  background: rgba(0, 0, 0, 0.5);
-}
-
-.heart-tooltip {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  margin-top: 4px;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(8px);
-  transition: opacity 0.2s, transform 0.2s, visibility 0.2s;
+.product-cart-btn:hover {
   background: var(--action-color);
   color: var(--on-action);
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: 600;
-  white-space: nowrap;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  pointer-events: none;
+  transform: scale(1.06);
 }
 
-.heart-icon:hover ~ .heart-tooltip,
-.product-rating:hover .heart-tooltip {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
+.product-cart-btn--added {
+  background: var(--action-color);
+  color: var(--on-action);
 }
 
 /* =========================================
@@ -143,7 +126,7 @@
   .product-content { padding: 12px; }
   .product-nombre { font-size: 14px; }
   .product-precio { font-size: 14px; }
-  .heart-icon { width: 32px; height: 32px; padding: 6px; }
+  .product-cart-btn { width: 36px; height: 36px; padding: 7px; }
 }
 
 @media (max-width: 480px) {
@@ -151,8 +134,8 @@
   .product-marca { font-size: 10px; }
   .product-nombre { font-size: 12px; line-height: 1.35; }
   .product-precio { font-size: 13px; }
-  .product-rating { top: 6px; right: 6px; }
-  .heart-icon { width: 30px; height: 30px; }
+  .product-precio-original { font-size: 11px; }
+  .product-cart-btn { top: 6px; right: 6px; width: 32px; height: 32px; padding: 6px; }
 }
 
 /* =========================================

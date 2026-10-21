@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { ShoppingBag, Check } from "lucide-react"
 import { useCart } from "../auth/CartContext"
 import { ProductoCart } from "@/types/cart"
@@ -15,11 +15,16 @@ export default function AddToCartButton({ producto, talla, color, disabled }: Pr
   const { addItem } = useCart()
   const [added, setAdded] = useState(false)
 
+  useEffect(() => {
+    if (!added) return
+    const timer = setTimeout(() => setAdded(false), 2000)
+    return () => clearTimeout(timer)
+  }, [added])
+
   const handleAdd = () => {
     if (disabled) return
     addItem(producto, talla ?? undefined, color ?? undefined)
     setAdded(true)
-    setTimeout(() => setAdded(false), 2000)
   }
 
   return (

@@ -27,8 +27,8 @@ export default function TablaSkeleton({
       <table className="db-table">
         <thead>
           <tr>
-            {columnas.map((columna) => (
-              <th key={columna} scope="col">
+            {columnas.map((columna, indice) => (
+              <th key={indice} scope="col">
                 {columna}
               </th>
             ))}
@@ -38,7 +38,7 @@ export default function TablaSkeleton({
           {Array.from({ length: filas }).map((_, fila) => (
             <tr key={fila} aria-hidden="true">
               {columnas.map((columna, celda) => (
-                <td key={columna}>
+                <td key={celda}>
                   {avatar && celda === 0 ? (
                     <div className="db-product-cell">
                       <span className="db-skeleton db-skeleton-avatar" />

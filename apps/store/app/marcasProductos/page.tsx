@@ -1,4 +1,5 @@
 import "./marcasProductos.css";
+import type { Metadata } from "next";
 import { Suspense } from "react"
 import ScrollReveal from "../../components/ui/ScrollReveal"
 import FiltroPrecio from "../../components/product/FiltroPrecio"
@@ -6,8 +7,7 @@ import Breadcrumbs from "../../components/ui/Breadcrumbs"
 import ProductGridSkeleton from "../../components/product/ProductGridSkeleton"
 import ProductGrid from "../../components/product/ProductGrid"
 import { getProductosPorMarca, getMaxPrice } from "../actions/products";
-import { getConfigDiseno } from "../actions/store";
-import Link from "next/link";
+import { getConfigDiseno, getMarcaPorNombre } from "../actions/store";
 
 export const revalidate = 30;
 
@@ -16,17 +16,40 @@ async function ProductosPorMarca({ slug, maxPrice }: { slug: string; maxPrice?: 
   return <ProductGrid productos={productos} />
 }
 
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ slug?: string }>;
+}): Promise<Metadata> {
+  const { slug } = await searchParams;
+  const marcaSlug = slug || "Nike";
+  const marca = await getMarcaPorNombre(marcaSlug);
+  const nombre = marca?.nombre ?? marcaSlug;
+
+  return {
+    title: nombre,
+    description: `Descubre todos los productos de ${nombre}. Encuentra tu estilo favorito.`,
+  };
+}
+
 export default async function Page({
   searchParams,
 }: {
   searchParams: Promise<{ slug?: string; maxPrice?: string }>;
 }) {
   const { slug, maxPrice } = await searchParams;
-  const marcaNombre = slug || "Nike";
-  const maxPriceNum = maxPrice ? Number(maxPrice) : undefined;
+  const marcaSlug = slug || "Nike";
+  const marca = await getMarcaPorNombre(marcaSlug);
+  const marcaNombre = marca?.nombre ?? marcaSlug;
   const { config } = await getConfigDiseno();
   const mostrarPrecios = Boolean(config.mostrar_precios ?? true);
   const maxPriceDB = mostrarPrecios ? await getMaxPrice() : undefined;
+
+  const parsedMaxPrice = maxPrice ? Number(maxPrice) : NaN;
+  const maxPriceNum =
+    mostrarPrecios && Number.isFinite(parsedMaxPrice) && parsedMaxPrice >= 0
+      ? Math.min(parsedMaxPrice, maxPriceDB ?? parsedMaxPrice)
+      : undefined;
 
   return (
     <>

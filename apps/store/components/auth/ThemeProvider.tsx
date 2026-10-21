@@ -22,6 +22,8 @@ const STORAGE_KEY = "theme"
 // ═════════════════════════════════════════════════════════════
 
 let listeners: Array<() => void> = []
+// Fallback cuando localStorage está bloqueado (modo privado, permisos).
+let memoria: Theme | null = null
 
 function emitChange() {
   listeners.forEach((l) => l())
@@ -37,20 +39,39 @@ function subscribe(listener: () => void) {
 // Cliente: tema guardado o preferencia del sistema
 // (strings = primitivos → Object.is compara por valor → no necesita cache)
 function getSnapshot(): Theme {
-  const stored = localStorage.getItem(STORAGE_KEY)
-  if (stored === "light" || stored === "dark") return stored
-  return window.matchMedia("(prefers-color-scheme: dark)").matches
-    ? "dark"
-    : "light"
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY)
+    if (stored === "light" || stored === "dark") {
+      memoria = stored
+      return stored
+    }
+  } catch {
+    // Storage bloqueado: usar la última elección en memoria o el sistema.
+  }
+
+  if (memoria) return memoria
+
+  try {
+    return window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light"
+  } catch {
+    return "light"
+  }
 }
 
-// SSR/hydración: light (coincide con el HTML del servidor)
+// SSR/hidración: light (coincide con el HTML del servidor)
 function getServerSnapshot(): Theme {
   return "light"
 }
 
 function writeTheme(t: Theme) {
-  localStorage.setItem(STORAGE_KEY, t)
+  memoria = t
+  try {
+    localStorage.setItem(STORAGE_KEY, t)
+  } catch {
+    // Sin persistencia: el tema sigue activo en memoria.
+  }
   emitChange()
 }
 

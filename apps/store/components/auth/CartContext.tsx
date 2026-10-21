@@ -9,6 +9,7 @@ import {
   ReactNode,
 } from "react"
 import { CartItem, CartContextValue, ProductoCart } from "../../types/cart"
+import { precioEfectivo } from "../../lib/format"
 
 const STORAGE_KEY = "makced-cart"
 const EMPTY: CartItem[] = []
@@ -25,6 +26,23 @@ function emitChange() {
   listeners.forEach((l) => l())
 }
 
+function esCartItem(value: unknown): value is CartItem {
+  if (!value || typeof value !== "object") return false
+  const item = value as Record<string, unknown>
+  return (
+    typeof item.id === "string" &&
+    typeof item.slug === "string" &&
+    typeof item.nombre === "string" &&
+    typeof item.imagen_url === "string" &&
+    typeof item.precio === "number" &&
+    Number.isFinite(item.precio) &&
+    item.precio >= 0 &&
+    typeof item.cantidad === "number" &&
+    Number.isInteger(item.cantidad) &&
+    item.cantidad > 0
+  )
+}
+
 // React llama esto para suscribirse a cambios del store
 function subscribe(listener: () => void) {
   listeners.push(listener)
@@ -35,14 +53,24 @@ function subscribe(listener: () => void) {
 
 // Cliente: leer localStorage con cache (misma referencia si no cambió)
 function getSnapshot(): CartItem[] {
-  const raw = localStorage.getItem(STORAGE_KEY)
+  let raw: string | null
+  try {
+    raw = localStorage.getItem(STORAGE_KEY)
+  } catch {
+    // Storage bloqueado (modo privado, permisos): usar lo que haya en memoria.
+    return cache
+  }
+
   if (raw !== cacheRaw) {
     cacheRaw = raw
+    if (!raw) {
+      cache = EMPTY
+      return cache
+    }
     try {
-      cache = raw ? JSON.parse(raw) : EMPTY
+      const parsed: unknown = JSON.parse(raw)
+      cache = Array.isArray(parsed) ? parsed.filter(esCartItem) : EMPTY
     } catch {
-      localStorage.removeItem(STORAGE_KEY)
-      cacheRaw = null
       cache = EMPTY
     }
   }
@@ -57,8 +85,20 @@ function getServerSnapshot(): CartItem[] {
 // Escribir: cache + localStorage + notificar a React
 function write(next: CartItem[]) {
   cache = next
-  cacheRaw = JSON.stringify(next)
-  localStorage.setItem(STORAGE_KEY, cacheRaw)
+  const serialized = JSON.stringify(next)
+  cacheRaw = serialized
+
+  try {
+    localStorage.setItem(STORAGE_KEY, serialized)
+  } catch {
+    // Sin persistencia (cuota/permisos): el carrito sigue en memoria.
+    try {
+      cacheRaw = localStorage.getItem(STORAGE_KEY)
+    } catch {
+      // Storage inaccesible: getSnapshot devuelve el cache en memoria.
+    }
+  }
+
   emitChange()
 }
 
@@ -127,14 +167,14 @@ export function CartProvider({
         return
       }
 
+      const precio = precioEfectivo(product.precio, product.precio_descuento)
+      if (!Number.isFinite(precio) || precio < 0) return
+
       const newItem: CartItem = {
         id: product.id,
         slug: product.slug || "",
         nombre: product.nombre,
-        precio:
-          product.precio_descuento && product.precio_descuento < product.precio
-            ? product.precio_descuento
-            : product.precio,
+        precio,
         imagen_url: product.imagen_url || "/producto.jpg",
         cantidad: 1,
         talla,
@@ -159,14 +199,15 @@ export function CartProvider({
 
   const updateQty = useCallback(
     (id: string, qty: number, talla?: number, color?: string) => {
-      if (qty <= 0) {
+      const cantidad = Math.floor(qty)
+      if (!Number.isFinite(qty) || cantidad <= 0) {
         removeItem(id, talla, color)
         return
       }
       write(
         getSnapshot().map((item) =>
           item.id === id && item.talla === talla && item.color === color
-            ? { ...item, cantidad: qty }
+            ? { ...item, cantidad }
             : item
         )
       )

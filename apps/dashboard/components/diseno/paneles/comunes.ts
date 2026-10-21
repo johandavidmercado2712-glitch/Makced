@@ -38,6 +38,18 @@ export const imagenVista = (
   return guardada;
 };
 
+export type CampoTextoPie =
+  | "marca"
+  | "copyright"
+  | "mensaje"
+  | "titulo_informacion"
+  | "titulo_ayuda"
+  | "web_url"
+  | "instagram_url"
+  | "whatsapp_url";
+
+export type SeccionEnlacesPie = "informacion" | "ayuda";
+
 /** Estado y setters compartidos por todos los paneles de formulario y preview. */
 export interface EditorDisenoApi {
   config: ConfigDiseno;
@@ -50,7 +62,15 @@ export interface EditorDisenoApi {
   marcarCambio: () => void;
   setCampo: <K extends keyof ConfigDiseno>(clave: K, valor: ConfigDiseno[K]) => void;
   setTitulos: (campo: "categorias" | "productos", valor: string) => void;
-  setPie: (campo: "marca" | "copyright" | "mensaje", valor: string) => void;
+  setPie: (campo: CampoTextoPie, valor: string) => void;
+  setEnlacePie: (
+    seccion: SeccionEnlacesPie,
+    indice: number,
+    campo: "etiqueta" | "url",
+    valor: string,
+  ) => void;
+  agregarEnlacePie: (seccion: SeccionEnlacesPie) => void;
+  quitarEnlacePie: (seccion: SeccionEnlacesPie, indice: number) => void;
   setSlide: (indice: number, campo: "palabra" | "parrafo", valor: string) => void;
   setBanner: (
     seccion: "promo" | "newsletter",

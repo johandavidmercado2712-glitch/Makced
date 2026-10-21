@@ -1,23 +1,45 @@
 import ProductCard from "../../components/product/ProductCard"
 import ScrollReveal from "../../components/ui/ScrollReveal"
 import "./verProducto.css"
+import type { Metadata } from "next";
 import { getProductoPorSlug, getProductosDestacados } from "../actions/products";
 import { getConfigDiseno } from "../actions/store";
 import ProductoSelector from "../../components/product/ProductoSelector"
+import { formatCOP } from "../../lib/format";
+import { notFound } from "next/navigation";
 
 
 export const revalidate = 15;
 
-// Helper para formato COP (pesos colombianos) — formatter a module scope (1 sola vez)
-const copFormatter = new Intl.NumberFormat("es-CO", {
-  style: "currency",
-  currency: "COP",
-  minimumFractionDigits: 0,
-  maximumFractionDigits: 0,
-  currencyDisplay: "symbol",
-});
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ slug?: string }>;
+}): Promise<Metadata> {
+  const { slug } = await searchParams;
+  const productoSlug = slug || "zapatillas-nike-air-max-270";
+  const producto = await getProductoPorSlug(productoSlug);
 
-const formatCOP = (value: number) => copFormatter.format(value);
+  if (!producto) {
+    return { title: "Producto no encontrado" };
+  }
+
+  const descripcion =
+    (producto.descripcion || "").trim().slice(0, 160) ||
+    `Comprá ${producto.nombre} en nuestra tienda.`;
+
+  return {
+    title: producto.nombre,
+    description: descripcion,
+    openGraph: {
+      title: producto.nombre,
+      description: descripcion,
+      images: producto.imagen_url
+        ? [{ url: producto.imagen_url, alt: producto.nombre }]
+        : undefined,
+    },
+  };
+}
 
 export default async function Page({
   searchParams,
@@ -32,6 +54,11 @@ export default async function Page({
     getProductosDestacados(),
     getConfigDiseno(),
   ]);
+
+  if (!producto) {
+    notFound();
+  }
+
   const mostrarPrecios = Boolean(config.mostrar_precios ?? true);
 
   return (
@@ -68,7 +95,9 @@ export default async function Page({
               {/* TÍTULO: Marca + Categoría + Modelo */}
               <div className="producto-header">
                 <span className="producto-marca-categoria">
-                  {producto?.marca?.[0]?.nombre} {producto?.categoria?.[0]?.nombre}
+                  {[producto?.marca, producto?.categoria]
+                    .filter(Boolean)
+                    .join(" ")}
                 </span>
                 <h1 className="producto-titulo">
                   {producto?.nombre || "Producto no encontrado"}
@@ -96,7 +125,7 @@ export default async function Page({
               )}
 
               {/* COLOR + TALLA + CTA (Client Component con estado) */}
-              <ProductoSelector producto={producto!} />
+              <ProductoSelector producto={producto} />
 
             </div>
           </div>
@@ -112,13 +141,7 @@ export default async function Page({
           <div className="vp-productos-cards">
             {recomendados.map((rec) => (
               <ScrollReveal key={rec.id}>
-                <ProductCard
-                  image={rec.imagen_url || "/producto.jpg"}
-                  name={rec.nombre}
-                  price={mostrarPrecios ? formatCOP(rec.precio) : undefined}
-                  rating={4.5}
-                  slug={rec.slug || undefined}
-                />
+                <ProductCard producto={rec} mostrarPrecios={mostrarPrecios} />
               </ScrollReveal>
             ))}
           </div>

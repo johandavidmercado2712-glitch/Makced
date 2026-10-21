@@ -1,9 +1,14 @@
 import Link from "next/link"
+import type { Metadata } from "next";
 import "./marcas.css";
 import ScrollReveal from "../../components/ui/ScrollReveal"
 export const revalidate = 300;
 import { getMarcas } from "../actions/store";
 
+export const metadata: Metadata = {
+  title: "Marcas",
+  description: "Descubre las marcas que tenemos para ti. Encuentra tu estilo favorito.",
+};
 
 export default async function Page(){
   const marcas = await getMarcas();

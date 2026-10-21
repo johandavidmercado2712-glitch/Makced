@@ -1,3 +1,4 @@
+import Link from "next/link"
 import { PanelInfoProps } from "../../types/store"
 import "./Panel-info.css"
 
@@ -6,6 +7,10 @@ interface PanelInfoExtendedProps extends PanelInfoProps {
 }
 
 export default function PanelInfo({ titulo, descripcion, link, image, button }: PanelInfoExtendedProps) {
+  const enlace = link?.trim()
+  const mostrarCta = Boolean(enlace && enlace !== "#")
+  const esExterno = Boolean(enlace && /^https?:/i.test(enlace))
+
   return (
     <section
       className="panel-info"
@@ -15,7 +20,22 @@ export default function PanelInfo({ titulo, descripcion, link, image, button }: 
       <div className="panel-info-detalle">
         <h2>{titulo}</h2>
         <p>{descripcion}</p>
-        <a className="panel-info-cta" href={link}>{button}</a>
+        {mostrarCta &&
+          (enlace!.startsWith("/") ? (
+            <Link className="panel-info-cta" href={enlace!}>
+              {button}
+            </Link>
+          ) : (
+            <a
+              className="panel-info-cta"
+              href={enlace!}
+              {...(esExterno
+                ? { target: "_blank", rel: "noopener noreferrer" }
+                : {})}
+            >
+              {button}
+            </a>
+          ))}
       </div>
     </section>
   )

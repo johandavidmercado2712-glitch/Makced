@@ -20,6 +20,22 @@ export const COLOR_PRINCIPAL_DEFECTO = "#4CE1AC";
 export const COLOR_SECUNDARIO_DEFECTO = "#00E599";
 export const RADIO_DEFECTO = 12;
 
+export const MAX_ENLACES_PIE = 8;
+export const MAX_ETIQUETA_PIE = 40;
+export const MAX_URL_PIE = 200;
+
+export const ENLACES_INFORMACION_DEFECTO: readonly EnlacePie[] = [
+  { etiqueta: "Nosotros", url: "" },
+  { etiqueta: "Términos y Condiciones", url: "" },
+  { etiqueta: "Política de Privacidad", url: "" },
+];
+
+export const ENLACES_AYUDA_DEFECTO: readonly EnlacePie[] = [
+  { etiqueta: "Contacto", url: "" },
+  { etiqueta: "Envíos", url: "" },
+  { etiqueta: "Métodos de Pago", url: "" },
+];
+
 export interface SlideConfig {
   palabra: string;
   parrafo: string;
@@ -36,6 +52,24 @@ export interface BannerPromoConfig {
   link: string;
 }
 
+export interface EnlacePie {
+  etiqueta: string;
+  url: string;
+}
+
+export interface PieConfig {
+  marca: string;
+  copyright: string;
+  mensaje: string;
+  titulo_informacion: string;
+  titulo_ayuda: string;
+  web_url: string;
+  instagram_url: string;
+  whatsapp_url: string;
+  informacion: EnlacePie[];
+  ayuda: EnlacePie[];
+}
+
 export interface ConfigDiseno {
   color_secundario: string;
   radio: number;
@@ -45,7 +79,7 @@ export interface ConfigDiseno {
   promo: BannerPromoConfig;
   newsletter: BannerPromoConfig;
   titulos: { categorias: string; productos: string };
-  pie: { marca: string; copyright: string; mensaje: string };
+  pie: PieConfig;
   // Nueva opción: mostrar o ocultar precios en la tienda pública
   mostrar_precios?: boolean;
 }
@@ -106,6 +140,13 @@ export const DEFAULT_DISENO: ConfigDiseno = {
     marca: "MAKCED",
     copyright: "Todos los derechos reservados.",
     mensaje: "Hecho con 💚 para los amantes del calzado.",
+    titulo_informacion: "INFORMACIÓN",
+    titulo_ayuda: "AYUDA",
+    web_url: "",
+    instagram_url: "",
+    whatsapp_url: "",
+    informacion: ENLACES_INFORMACION_DEFECTO.map((enlace) => ({ ...enlace })),
+    ayuda: ENLACES_AYUDA_DEFECTO.map((enlace) => ({ ...enlace })),
   },
   // por defecto se muestran los precios
   mostrar_precios: true,
@@ -113,6 +154,55 @@ export const DEFAULT_DISENO: ConfigDiseno = {
 
 function esObjeto(valor: unknown): valor is Record<string, unknown> {
   return typeof valor === "object" && valor !== null && !Array.isArray(valor);
+}
+
+/**
+ * URLs permitidas en el pie: rutas internas, http(s), mailto y tel.
+ * Se rechazan los enlaces vacíos (no se publican) y esquemas peligrosos.
+ */
+export function esUrlPieValida(url: string): boolean {
+  const valor = url.trim();
+  if (!valor) return false;
+  if (valor.startsWith("/") && !valor.startsWith("//")) return true;
+  if (/^https?:\/\/[^\s]+$/i.test(valor)) return true;
+  if (/^mailto:[^\s@]+@[^\s@]+\.[^\s@]+$/i.test(valor)) return true;
+  if (/^tel:\+?[0-9][0-9\s().-]{5,}$/i.test(valor)) return true;
+  return false;
+}
+
+export function esEnlacePieVisible(enlace: EnlacePie): boolean {
+  return enlace.etiqueta.trim().length > 0 && esUrlPieValida(enlace.url);
+}
+
+/**
+ * Normaliza las filas del pie sin perder borradores: conserva filas con
+ * etiqueta o URL a medio completar, recorta longitudes y limita la cantidad.
+ */
+export function normalizarEnlacesPie(valor: unknown): EnlacePie[] {
+  let lista: unknown = valor;
+  if (typeof valor === "string") {
+    try {
+      lista = JSON.parse(valor);
+    } catch {
+      return [];
+    }
+  }
+  if (!Array.isArray(lista)) return [];
+
+  const salida: EnlacePie[] = [];
+  for (const item of lista) {
+    if (!esObjeto(item)) continue;
+    const etiqueta = String(item.etiqueta ?? "")
+      .trim()
+      .slice(0, MAX_ETIQUETA_PIE);
+    const url = String(item.url ?? "")
+      .trim()
+      .slice(0, MAX_URL_PIE);
+    if (!etiqueta && !url) continue;
+    salida.push({ etiqueta, url });
+    if (salida.length >= MAX_ENLACES_PIE) break;
+  }
+  return salida;
 }
 
 function mergeProfundo(
@@ -207,6 +297,43 @@ export function combinarDiseno(guardado: unknown): ConfigDiseno {
     combinado.color_secundario,
     COLOR_SECUNDARIO_DEFECTO
   );
+
+  const pieGuardado: Record<string, unknown> = esObjeto(combinado.pie)
+    ? combinado.pie
+    : {};
+  const pieDefecto = DEFAULT_DISENO.pie;
+  const textoPie = (valor: unknown, max: number, defecto: string): string => {
+    if (typeof valor !== "string") return defecto;
+    return valor.trim().slice(0, max);
+  };
+  const copiarEnlaces = (enlaces: readonly EnlacePie[]): EnlacePie[] =>
+    enlaces.map((enlace) => ({ ...enlace }));
+
+  combinado.pie = {
+    marca:
+      textoPie(pieGuardado.marca, 40, pieDefecto.marca) || pieDefecto.marca,
+    copyright: textoPie(pieGuardado.copyright, 80, pieDefecto.copyright),
+    mensaje: textoPie(pieGuardado.mensaje, 120, pieDefecto.mensaje),
+    titulo_informacion: textoPie(
+      pieGuardado.titulo_informacion,
+      40,
+      pieDefecto.titulo_informacion
+    ),
+    titulo_ayuda: textoPie(
+      pieGuardado.titulo_ayuda,
+      40,
+      pieDefecto.titulo_ayuda
+    ),
+    web_url: textoPie(pieGuardado.web_url, MAX_URL_PIE, ""),
+    instagram_url: textoPie(pieGuardado.instagram_url, MAX_URL_PIE, ""),
+    whatsapp_url: textoPie(pieGuardado.whatsapp_url, MAX_URL_PIE, ""),
+    informacion: Array.isArray(pieGuardado.informacion)
+      ? normalizarEnlacesPie(pieGuardado.informacion)
+      : copiarEnlaces(pieDefecto.informacion),
+    ayuda: Array.isArray(pieGuardado.ayuda)
+      ? normalizarEnlacesPie(pieGuardado.ayuda)
+      : copiarEnlaces(pieDefecto.ayuda),
+  };
 
   return combinado;
 }
