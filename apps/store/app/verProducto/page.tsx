@@ -1,5 +1,6 @@
 import ProductCard from "../../components/product/ProductCard"
 import ScrollReveal from "../../components/ui/ScrollReveal"
+import ProductoGaleria from "../../components/product/ProductoGaleria"
 import "./verProducto.css"
 import type { Metadata } from "next";
 import { getProductoPorSlug, getProductosDestacados } from "../actions/products";
@@ -9,7 +10,7 @@ import { formatCOP } from "../../lib/format";
 import { notFound } from "next/navigation";
 
 
-export const revalidate = 15;
+import { requerirTienda } from "../../lib/tenant";
 
 export async function generateMetadata({
   searchParams,
@@ -17,8 +18,9 @@ export async function generateMetadata({
   searchParams: Promise<{ slug?: string }>;
 }): Promise<Metadata> {
   const { slug } = await searchParams;
+  const tienda = await requerirTienda();
   const productoSlug = slug || "zapatillas-nike-air-max-270";
-  const producto = await getProductoPorSlug(productoSlug);
+  const producto = await getProductoPorSlug(productoSlug, tienda?.id);
 
   if (!producto) {
     return { title: "Producto no encontrado" };
@@ -47,12 +49,13 @@ export default async function Page({
   searchParams: Promise<{ slug?: string }>;
 }) {
   const { slug } = await searchParams;
+  const tienda = await requerirTienda();
   const productoSlug = slug || "zapatillas-nike-air-max-270";
 
   const [producto, recomendados, { config }] = await Promise.all([
-    getProductoPorSlug(productoSlug),
-    getProductosDestacados(),
-    getConfigDiseno(),
+    getProductoPorSlug(productoSlug, tienda?.id),
+    getProductosDestacados(tienda?.id),
+    getConfigDiseno(tienda?.subdominio),
   ]);
 
   if (!producto) {
@@ -63,30 +66,31 @@ export default async function Page({
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Product",
+            name: producto?.nombre,
+            image: producto?.imagen_url,
+            offers: {
+              "@type": "Offer",
+              priceCurrency: "COP",
+              price: producto?.precio_descuento || producto?.precio,
+            },
+          }).replace(/</g, "\u003c"),
+        }}
+      />
       {/* ===== PRODUCTO PRINCIPAL ===== */}
       <ScrollReveal>
         <div className="ver-Producto">
           {/* --- GALERÍA IZQUIERDA --- */}
-          <div className="Producto-img">
-            {/* Imagen principal */}
-            <img
-              src={producto?.imagen_url || "/producto.jpg"}
-              alt={producto?.nombre || ""}
-              className="producto-imagen-principal"
-            />
-
-            {/* Miniaturas (4) desde producto.referencia [JSONB array] */}
-            <div className="producto-galeria">
-              {producto?.referencia?.map((url: string, i: number) => (
-                <img
-                  key={url}
-                  src={url}
-                  alt={`Vista ${i + 1}`}
-                  className="producto-miniatura"
-                />
-              ))}
-            </div>
-          </div>
+          <ProductoGaleria
+            principal={producto?.imagen_url || "/producto.jpg"}
+            referencias={(producto?.referencia as string[]) || []}
+            nombre={producto?.nombre || ""}
+          />
 
           {/* --- INFO DERECHA --- */}
           <div className="Producto-espeficacion">
@@ -125,7 +129,7 @@ export default async function Page({
               )}
 
               {/* COLOR + TALLA + CTA (Client Component con estado) */}
-              <ProductoSelector producto={producto} />
+              <ProductoSelector producto={producto as unknown as import("@/types/cart").ProductoCart & { colores?: { nombre: string; hex: string }[] }} />
 
             </div>
           </div>
@@ -136,7 +140,7 @@ export default async function Page({
       <ScrollReveal>
         <div className="vp-productos">
           <div className="vp-productos-titulo">
-            <h1>Recomendados Para Ti</h1>
+            <h2>Recomendados Para Ti</h2>
           </div>
           <div className="vp-productos-cards">
             {recomendados.map((rec) => (

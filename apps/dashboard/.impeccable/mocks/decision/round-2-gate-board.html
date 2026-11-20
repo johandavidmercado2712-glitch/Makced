@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Estado que no se pierde</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;width:1440px;height:900px;overflow:hidden;font:14px/1.45 Arial,sans-serif;color:#102e85;background:#f7f9fc}.app{display:flex;height:100%}
+aside{width:230px;background:#102e85;color:#fff;padding:28px 18px}.brand{font-size:18px;font-weight:800;letter-spacing:.12em;margin:5px 9px 38px}.nav a{display:block;color:#fff;text-decoration:none;padding:12px;margin:3px 0}.nav .active{background:#00d2b4;color:#102e85;font-weight:bold}.foot{margin-top:340px;font-size:12px;padding:12px}
+main{flex:1;padding:40px 48px}.head{display:flex;justify-content:space-between;align-items:end;margin-bottom:22px}.head h1{font-size:30px;margin:5px 0}.head p{color:#667997;margin:0}.eyebrow{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#8190af;font-weight:bold}.btn{background:#00d2b4;color:#102e85;border:0;padding:12px 17px;font-weight:bold}
+.metrics{display:flex;gap:12px;margin-bottom:22px}.metric{flex:1;background:white;border:1px solid #dfe6ef;padding:15px;border-left:4px solid #00d2b4}.metric small{color:#8190af}.metric b{display:block;font-size:23px;margin-top:4px}
+.table{background:white;border:1px solid #dfe6ef}.headrow,.row{display:grid;grid-template-columns:2fr 1fr 1fr .8fr 1fr;align-items:center;gap:12px;padding:17px 18px}.headrow{background:#e9f1f8;font-size:10px;font-weight:bold;letter-spacing:.1em}.row{border-top:1px solid #e0e5ed;min-height:72px}.product b{display:block}.product small{font-size:11px;color:#8190af}.state{display:inline-block;background:#d9f8f2;padding:5px 8px;font-size:11px;font-weight:bold}.state.alert{background:#e1e8f5;color:#102e85;border-left:3px solid #00d2b4}.sample{font-size:10px;color:#8190af;text-align:right;padding:12px}
+</style>
+</head>
+<body><div class="app"><aside><div class="brand">MAKCED</div><nav class="nav"><a href="#">Resumen</a><a class="active" href="#">Productos</a><a href="#">Marcas y categorías</a><a href="#">Diseño</a><a href="#">Mi tienda</a></nav><div class="foot">Catálogo<br><br>Cerrar sesión</div></aside>
+<main><header class="head"><div><div class="eyebrow">Catálogo / estado</div><h1>Productos</h1><p>Los estados permanecen junto al registro que describen.</p></div><button class="btn">+ Nuevo producto</button></header>
+<section class="metrics"><div class="metric"><small>PRODUCTOS</small><b>48</b></div><div class="metric"><small>DESTACADOS</small><b>8</b></div><div class="metric"><small>CATEGORÍAS</small><b>7</b></div></section>
+<section class="table"><div class="headrow"><span>PRODUCTO</span><span>CATEGORÍA</span><span>PRECIO</span><span>STOCK</span><span>ESTADO</span></div><div class="row"><div class="product"><b>Tenis urbano Lino</b><small>Marca local</small></div><span>Casual</span><span>$184.900</span><span>12</span><span class="state">Activo</span></div><div class="row"><div class="product"><b>Bota clásica Siena</b><small>Marca local</small></div><span>Botas</span><span>$229.000</span><span>4</span><span class="state">Destacado</span></div><div class="row"><div class="product"><b>Sandalia Brisa</b><small>Marca local</small></div><span>Sandalias</span><span>$119.900</span><span>0</span><span class="state alert">Inactivo</span></div></section>
+<div class="sample">Muestra visual · datos de ejemplo</div></main></div></body></html>

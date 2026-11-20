@@ -43,8 +43,7 @@ export default function Error({
           className="mt-3 text-sm leading-6"
           style={{ color: "var(--text-secondary)" }}
         >
-          Inténtalo de nuevo. Si el problema continúa, vuelve al inicio en unos
-          minutos.
+          Inténtalo de nuevo. Si el problema persiste, vuelve al inicio.
         </p>
 
         <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useId, useRef, type FormEvent, type ReactNode } from "react";
-import { X } from "lucide-react";
+import { X, Loader2 } from "lucide-react";
 import "./modalProduct.css";
 
 export interface ModalProps {
@@ -47,6 +47,21 @@ export function Modal({
     }
   }, [isOpen]);
 
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
+        e.preventDefault();
+        const form = dialogRef.current?.querySelector("form");
+        if (form && !ocupado) {
+          form.requestSubmit();
+        }
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, ocupado]);
+
   return (
     <dialog
       ref={dialogRef}
@@ -77,28 +92,31 @@ export function Modal({
             {body}
           </div>
 
-          <div className="db-modal-footer">
-            {errorGuardado && (
-              <p className="db-modal-error" role="alert">
-                {errorGuardado}
-              </p>
-            )}
-            <button
-              type="button"
-              className="db-modal-btn db-modal-btn-secondary"
-              onClick={onClose}
-              disabled={ocupado}
-            >
-              Cancelar
-            </button>
-            <button
-              type="submit"
-              className="db-modal-btn db-modal-btn-primary"
-              disabled={ocupado}
-            >
-              {submitLabel}
-            </button>
-          </div>
+          {submitLabel && (
+            <div className="db-modal-footer">
+              {errorGuardado && (
+                <p className="db-modal-error" role="alert">
+                  {errorGuardado}
+                </p>
+              )}
+              <button
+                type="button"
+                className="db-modal-btn db-modal-btn-secondary"
+                onClick={onClose}
+                disabled={ocupado}
+              >
+                Cancelar
+              </button>
+              <button
+                type="submit"
+                className="db-modal-btn db-modal-btn-primary"
+                disabled={ocupado}
+              >
+                {ocupado && <Loader2 size={16} className="db-spinner" />}
+                {submitLabel}
+              </button>
+            </div>
+          )}
         </form>
       )}
     </dialog>

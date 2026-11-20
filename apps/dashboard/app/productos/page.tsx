@@ -1,10 +1,6 @@
 
 import { Suspense } from "react";
-import Link from "next/link";
-import {
-  Star,
-  SlidersHorizontal,
-} from "lucide-react";
+import { SlidersHorizontal } from "lucide-react";
 import "./productos.css";
 import {
   getProductosPaginado,
@@ -13,117 +9,20 @@ import {
   eliminarProducto,
 } from "@/actions/products";
 import { PRODUCTOS_POR_PAGINA } from "@/lib/paginacion";
-import { urlImagen } from "@/lib/imagenes";
 import { getCategorias, getMarcas } from "@/actions/categoria";
 import SearchInput from "@/components/SearchInput";
 import FilterSelect from "@/components/FilterSelect";
 import Pagination from "@/components/Pagination";
-import { ModalProduct } from "@/components/modal/modalProduct";
 import ProductosActions from "@/components/ProductosActions";
 import ToggleShowPrices from "@/components/ToggleShowPrices";
+import { ProductTableWithUndo } from "@/components/ProductTableWithUndo";
 import { getTienda } from "@/actions/tienda";
-import type { ProductoLista, RefSimple } from "@/types/database";
+import type { RefSimple } from "@/types/database";
 
 const paginaDesdeParam = (page?: string): number =>
   page && Number.isFinite(Number(page)) && Number(page) >= 1
     ? Math.floor(Number(page))
     : 1;
-
-function ProductoFila({
-  producto: p,
-  marcas,
-  categorias,
-}: {
-  producto: ProductoLista;
-  marcas: RefSimple[];
-  categorias: RefSimple[];
-}) {
-  return (
-    <tr>
-      <td>
-        <div className="db-product-cell">
-          <div
-            className="db-product-avatar"
-            style={
-              p.imagen_url
-                ? undefined
-                : { background: "rgba(148, 163, 184, 0.15)", color: "var(--db-text-muted)" }
-            }
-          >
-            {p.imagen_url ? (
-              <img src={urlImagen(p.imagen_url)} alt={p.nombre} />
-            ) : (
-              p.marca?.nombre?.[0] || "?"
-            )}
-          </div>
-          <div>
-            <p className="db-product-name">{p.nombre}</p>
-            <p className="db-product-brand">{p.marca?.nombre}</p>
-          </div>
-        </div>
-      </td>
-      <td><span className="db-category">{p.categoria?.nombre}</span></td>
-      <td>
-        <div className="db-price-cell">
-          <span className="db-price">${p.precio.toLocaleString("es-CO")}</span>
-          {p.precio_descuento && (
-            <span className="db-price-original">${p.precio_descuento.toLocaleString("es-CO")}</span>
-          )}
-        </div>
-      </td>
-      <td>
-        <div className="db-tags">
-          {p.es_destacado && (
-            <span className="db-tag db-tag-green">
-              <Star size={10} /> destacado
-            </span>
-          )}
-          {p.es_nuevo && (
-            <span className="db-tag db-tag-purple">nuevo</span>
-          )}
-          {!p.es_destacado && !p.es_nuevo && (
-            <span className="db-tag-dash">—</span>
-          )}
-        </div>
-      </td>
-      <td>
-        <ModalProduct
-          producto={p}
-          marcas={marcas}
-          categorias={categorias}
-          onSave={guardarProducto}
-          onDelete={eliminarProducto}
-        />
-      </td>
-    </tr>
-  );
-}
-
-function ProductosVacios({ hayFiltros, search }: { hayFiltros: boolean; search?: string }) {
-  return (
-    <div className="db-empty">
-      {hayFiltros ? (
-        <>
-          <p className="db-empty-titulo">No hay resultados</p>
-          <p className="db-empty-texto">
-            Ningún producto coincide con
-            {search ? ` “${search}”` : " los filtros aplicados"}.
-          </p>
-          <Link className="db-empty-cta" href="/productos">
-            Limpiar filtros
-          </Link>
-        </>
-      ) : (
-        <>
-          <p className="db-empty-titulo">Tu catálogo está vacío</p>
-          <p className="db-empty-texto">
-            Crea tu primer producto con el botón “Nuevo producto” de arriba.
-          </p>
-        </>
-      )}
-    </div>
-  );
-}
 
 function ResumenFiltros({
   total,
@@ -169,21 +68,20 @@ export default async function ProductosPage({
   const { search, marca, categoria, page } = await searchParams;
   const pagina = paginaDesdeParam(page);
 
-  const [resultado, totalCatalogo, marcas, categorias] = await Promise.all([
+  const [resultado, totalCatalogo, marcas, categorias, tienda] = await Promise.all([
     getProductosPaginado(search, marca, categoria, pagina),
     getProductosCount(),
     getMarcas(),
     getCategorias(),
+    getTienda(),
   ]);
 
-  const tienda = await getTienda();
   const diseno = (tienda?.diseno ?? {}) as { mostrar_precios?: unknown };
   const mostrarPrecios = Boolean(diseno.mostrar_precios ?? true);
-  const { productos: products, total, totalPaginas, page: paginaActual } = resultado;
-  const hayFiltros = Boolean(search || marca || categoria);
+  const { productos, total, totalPaginas, page: paginaActual } = resultado;
 
   const desde = total === 0 ? 0 : (paginaActual - 1) * PRODUCTOS_POR_PAGINA + 1;
-  const hasta = total === 0 ? 0 : desde + products.length - 1;
+  const hasta = total === 0 ? 0 : desde + productos.length - 1;
 
   return (
     <div className="dashboard">
@@ -242,38 +140,21 @@ export default async function ProductosPage({
         />
       </div>
 
-      <div className="db-panel db-table-panel">
-        <table className="db-table">
-          <thead>
-            <tr>
-              <th>PRODUCTO</th>
-              <th>CATEGORÍA</th>
-              <th>PRECIO</th>
-              <th>ESTADO</th>
-              <th>ACCIONES</th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.length === 0 ? (
-              <tr>
-                <td colSpan={5}>
-                  <ProductosVacios hayFiltros={hayFiltros} search={search} />
-                </td>
-              </tr>
-            ) : (
-              products.map((p) => (
-                <ProductoFila key={p.id} producto={p} marcas={marcas} categorias={categorias} />
-              ))
-            )}
-          </tbody>
-        </table>
-        <Suspense>
-          <Pagination
-            currentPage={paginaActual}
-            totalPages={totalPaginas}
-          />
-        </Suspense>
-      </div>
+      <ProductTableWithUndo
+        productos={productos}
+        marcas={marcas}
+        categorias={categorias}
+        onSave={guardarProducto}
+        onDelete={eliminarProducto}
+        esPrimerProducto={totalCatalogo === 1}
+      />
+
+      <Suspense>
+        <Pagination
+          currentPage={paginaActual}
+          totalPages={totalPaginas}
+        />
+      </Suspense>
     </div>
   );
 }

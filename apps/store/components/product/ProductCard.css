@@ -10,14 +10,14 @@
   text-align: left;
   padding: 0;
   position: relative;
-  transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   margin: 0 auto;
 }
 
 .Productos-card:hover {
   box-shadow: var(--shadow-card);
   border-color: var(--primary-mint);
-  transform: translateY(-3px);
+  transform: translateY(-2px);
 }
 
 /* =========================================
@@ -57,7 +57,7 @@
 }
 
 .product-nombre {
-  font-size: 15px;
+  font-size: var(--fs-15);
   font-weight: 700;
   color: var(--text-primary);
   margin: 0 0 8px 0;
@@ -72,14 +72,14 @@
 }
 
 .product-precio {
-  font-size: 16px;
+  font-size: var(--fs-md);
   font-weight: 700;
   color: var(--action-color);
   margin: 0;
 }
 
 .product-precio-original {
-  font-size: 13px;
+  font-size: var(--fs-sm);
   color: var(--text-secondary);
 }
 
@@ -124,18 +124,18 @@
 @media (max-width: 768px) {
   .Productos-card { max-width: none; }
   .product-content { padding: 12px; }
-  .product-nombre { font-size: 14px; }
-  .product-precio { font-size: 14px; }
+  .product-nombre { font-size: var(--fs-base); }
+  .product-precio { font-size: var(--fs-base); }
   .product-cart-btn { width: 36px; height: 36px; padding: 7px; }
 }
 
 @media (max-width: 480px) {
   .product-content { padding: 9px; }
-  .product-marca { font-size: 10px; }
-  .product-nombre { font-size: 12px; line-height: 1.35; }
-  .product-precio { font-size: 13px; }
-  .product-precio-original { font-size: 11px; }
-  .product-cart-btn { top: 6px; right: 6px; width: 32px; height: 32px; padding: 6px; }
+  .product-marca { font-size: var(--fs-2xs); }
+  .product-nombre { font-size: var(--fs-xs); line-height: 1.35; }
+  .product-precio { font-size: var(--fs-sm); }
+  .product-precio-original { font-size: var(--fs-2xs-11); }
+  .product-cart-btn { top: 6px; right: 6px; width: 36px; height: 36px; padding: 6px; }
 }
 
 /* =========================================

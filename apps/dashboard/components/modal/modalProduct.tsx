@@ -1,17 +1,13 @@
 "use client";
 
-import type { ModalProductProps } from "@/types/components";
+import type { ModalProductProps, ProductoModalData, GuardadoResultado } from "@/types/components";
 import { ImagenSelector } from "./ImagenSelector";
 import { Modal } from "./Modal";
 import { ModalAcciones } from "./ModalAcciones";
+import { Tooltip } from "@/components/Tooltip";
 import { etiquetaSubmit } from "./modal-utils";
 import { useModalCrud } from "./useModalCrud";
-
-export type {
-  ModalProductProps,
-  ProductoModalData,
-  GuardadoResultado,
-} from "@/types/components";
+import { ConfirmModal } from "./ConfirmModal";
 
 const pick = <T,>(value: T | T[] | null | undefined): T | undefined =>
   Array.isArray(value) ? value[0] : (value ?? undefined);
@@ -60,6 +56,7 @@ export function ModalProduct({
   onSave,
   onDelete,
   trigger,
+  triggerId,
 }: ModalProductProps) {
   const {
     isOpen,
@@ -74,6 +71,9 @@ export function ModalProduct({
     cerrar,
     handleSubmit,
     handleEliminar,
+    handleConfirmEliminar,
+    handleCancelEliminar,
+    mostrarConfirmEliminar,
     setErrorGuardado,
   } = useModalCrud({
     entidad: producto,
@@ -97,6 +97,7 @@ export function ModalProduct({
     <>
       <ModalAcciones
         trigger={trigger}
+        triggerId={triggerId}
         onAbrir={abrir}
         onEliminar={handleEliminar}
         puedeEliminar={Boolean(onDelete && id)}
@@ -116,9 +117,10 @@ export function ModalProduct({
         }
         body={
           <>
+
             <div className="db-field db-field-full">
               <label className="db-label" htmlFor="pm-nombre">
-                Nombre del producto
+                Nombre del producto<span className="db-label-required" aria-label="obligatorio">*</span>
               </label>
               <input
                 id="pm-nombre"
@@ -127,7 +129,7 @@ export function ModalProduct({
                 type="text"
                 required
                 defaultValue={producto?.nombre ?? ""}
-                placeholder="Ej. Zapatillas Nike Air Max 270"
+                placeholder="Ej: Tenis Nike Air Max 270"
               />
             </div>
 
@@ -161,7 +163,8 @@ export function ModalProduct({
 
             <div className="db-field">
               <label className="db-label" htmlFor="pm-precio">
-                Precio
+                Precio<span className="db-label-required" aria-label="obligatorio">*</span>
+                <Tooltip contenido="El precio se muestra en la tienda. Usa numeros enteros, sin decimales." />
               </label>
               <input
                 id="pm-precio"
@@ -210,6 +213,7 @@ export function ModalProduct({
             <div className="db-field">
               <label className="db-label" htmlFor="pm-estado">
                 Estado
+                <Tooltip contenido="Los productos activos se muestran en la tienda. Los inactivos solo aparecen en el panel." />
               </label>
               <select
                 id="pm-estado"
@@ -245,6 +249,7 @@ export function ModalProduct({
                 />
                 <span className="db-switch-track" />
                 Destacado
+                <Tooltip contenido="Aparece en la portada de la tienda y en el carrusel principal." />
               </label>
               <label className="db-switch">
                 <input
@@ -255,6 +260,7 @@ export function ModalProduct({
                 />
                 <span className="db-switch-track" />
                 Nuevo
+                <Tooltip contenido="Muestra la etiqueta 'Nuevo' en la tarjeta del producto." />
               </label>
             </div>
           </>
@@ -265,8 +271,17 @@ export function ModalProduct({
         onSubmit={handleSubmit}
         idValue={id ?? ""}
       />
+
+      {/* Modal de confirmación de eliminación */}
+      <ConfirmModal
+        titulo="Eliminar producto"
+        mensaje={`¿Estás seguro de que quieres eliminar el producto "${nombre}"?`}
+        onConfirm={handleConfirmEliminar}
+        onCancel={handleCancelEliminar}
+        mostrar={mostrarConfirmEliminar}
+      />
     </>
   );
 }
 
-export default ModalProduct;
+export type { ModalProductProps, ProductoModalData, GuardadoResultado };

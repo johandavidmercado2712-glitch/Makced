@@ -1,7 +1,7 @@
 "use server";
 import { cookies } from "next/headers";
 import { createServerClient } from "@insforge/sdk/ssr";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { borrarArchivoStorage, resolverImagen } from "@/lib/imagenes";
 import { requireAuth } from "./tienda";
 import {
@@ -289,7 +289,30 @@ export async function guardarDiseno(
     }
 
     revalidatePath("/", "layout");
+    // Invalidar la caché de la tienda (que usa unstable_cache con tags)
+    revalidateTag("diseno", "max");
+    revalidateTag("tiendas", "max");
     await limpiarClaves(clavesReemplazadas);
+    
+    // Invalidar caché de la tienda (aplicación separada en puerto 3000)
+    const storeUrl = process.env.NEXT_PUBLIC_TIENDA_URL ?? "http://localhost:3000";
+    const secret = process.env.REVALIDATE_SECRET;
+    if (secret) {
+      try {
+        await fetch(`${storeUrl}/api/revalidate`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-revalidate-secret": secret,
+          },
+          body: JSON.stringify({ tags: ["diseno", "tiendas"], tienda_id: tienda.id }),
+        });
+      } catch (error) {
+        console.error("No se pudo invalidar caché de la tienda:", error);
+        // No fallar el guardado si solo falla la invalidación de caché
+      }
+    }
+    
     return { ok: true };
   } catch (err) {
     return errorInesperado(err, "No se pudieron guardar los cambios");
@@ -324,12 +347,34 @@ export async function restaurarDiseno(): Promise<GuardadoResultado> {
     }
 
     revalidatePath("/", "layout");
+    revalidateTag("diseno", "max");
+    revalidateTag("tiendas", "max");
     await limpiarClaves([
       actual.logo_key,
       ...actual.banner.slides.map((s) => s.imagen_key),
       actual.promo.imagen_key,
       actual.newsletter.imagen_key,
     ]);
+    
+    // Invalidar caché de la tienda (aplicación separada en puerto 3000)
+    const storeUrl = process.env.NEXT_PUBLIC_TIENDA_URL ?? "http://localhost:3000";
+    const secret = process.env.REVALIDATE_SECRET;
+    if (secret) {
+      try {
+        await fetch(`${storeUrl}/api/revalidate`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-revalidate-secret": secret,
+          },
+          body: JSON.stringify({ tags: ["diseno", "tiendas"], tienda_id: tienda.id }),
+        });
+      } catch (error) {
+        console.error("No se pudo invalidar caché de la tienda:", error);
+        // No fallar el guardado si solo falla la invalidación de caché
+      }
+    }
+    
     return { ok: true };
   } catch (err) {
     return errorInesperado(err, "No se pudo restaurar el diseño");

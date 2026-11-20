@@ -8,6 +8,7 @@ import ProductGridSkeleton from "../../components/product/ProductGridSkeleton"
 import ProductGrid from "../../components/product/ProductGrid"
 import { getProductosPorCategoria, getMaxPrice } from "../actions/products";
 import { getCategoriaPorSlug, getConfigDiseno } from "../actions/store";
+import { rutaTienda } from "../../lib/rutas";
 
 export const revalidate = 30;
 
@@ -17,9 +18,11 @@ function humanizar(slug: string) {
     .replace(/\b\w/g, (letra) => letra.toUpperCase());
 }
 
-async function ProductosPorCategoria({ slug, maxPrice }: { slug: string; maxPrice?: number }) {
-  const productos = await getProductosPorCategoria(slug, maxPrice)
-  return <ProductGrid productos={productos} />
+import { requerirTienda } from "../../lib/tenant";
+
+async function ProductosPorCategoria({ slug, maxPrice, tiendaId, mostrarPrecios ,emptyMessage }: { slug: string; maxPrice?: number; tiendaId?: string | null; mostrarPrecios: boolean; emptyMessage?: string }) {
+  const productos = await getProductosPorCategoria(slug, maxPrice, tiendaId) 
+  return <ProductGrid productos={productos} mostrarPrecios={mostrarPrecios} emptyMessage={emptyMessage} />
 }
 
 export async function generateMetadata({
@@ -28,8 +31,9 @@ export async function generateMetadata({
   searchParams: Promise<{ slug?: string }>;
 }): Promise<Metadata> {
   const { slug } = await searchParams;
+  const tienda = await requerirTienda();
   const categoriaSlug = slug || "deportivo";
-  const categoria = await getCategoriaPorSlug(categoriaSlug);
+  const categoria = await getCategoriaPorSlug(categoriaSlug, tienda?.id);
   const nombre = categoria?.nombre ?? humanizar(categoriaSlug);
 
   return {
@@ -44,12 +48,13 @@ export default async function Page({
     searchParams: Promise<{ slug?: string; maxPrice?: string }>;
 }) {
   const { slug, maxPrice } = await searchParams;
+  const tienda = await requerirTienda();
   const categoriaSlug = slug || "deportivo";
-  const categoria = await getCategoriaPorSlug(categoriaSlug);
+  const categoria = await getCategoriaPorSlug(categoriaSlug, tienda?.id);
   const categoriaNombre = categoria?.nombre ?? humanizar(categoriaSlug);
-  const { config } = await getConfigDiseno();
+  const { config } = await getConfigDiseno(tienda?.subdominio);
   const mostrarPrecios = Boolean(config.mostrar_precios ?? true);
-  const maxPriceDB = mostrarPrecios ? await getMaxPrice() : undefined;
+  const maxPriceDB = mostrarPrecios ? await getMaxPrice(tienda?.id) : undefined;
 
   const parsedMaxPrice = maxPrice ? Number(maxPrice) : NaN;
   const maxPriceNum =
@@ -62,8 +67,8 @@ export default async function Page({
     <div className="parent">
         <div className="migaja">
             <Breadcrumbs items={[
-              { label: "Inicio", href: "/" },
-              { label: "Categoría", href: "/categoria" },
+              { label: "Inicio", href: rutaTienda(tienda?.subdominio, "/") },
+              { label: "Categor�a", href: rutaTienda(tienda?.subdominio, "/categoria") },
               { label: categoriaNombre },
             ]} />
             <ScrollReveal>
@@ -79,7 +84,7 @@ export default async function Page({
           <FiltroPrecio maxPrice={maxPriceDB} />
         )}
         <Suspense fallback={<ProductGridSkeleton count={4} />}>
-          <ProductosPorCategoria slug={categoriaSlug} maxPrice={maxPriceNum} />
+          <ProductosPorCategoria slug={categoriaSlug} maxPrice={maxPriceNum}  mostrarPrecios={mostrarPrecios} tiendaId={tienda?.id} emptyMessage={`No hay productos disponibles en ${categoriaNombre} por ahora.`} />
         </Suspense>
     </div>
     </>

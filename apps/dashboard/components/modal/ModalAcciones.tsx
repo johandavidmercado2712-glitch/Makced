@@ -6,6 +6,7 @@ import { Pencil, Trash2 } from "lucide-react";
 interface ModalAccionesProps {
   /** Nodo del botón de apertura cuando el modal se usa como "nuevo X" (sin acciones de fila) */
   trigger?: ReactNode;
+  triggerId?: string;
   onAbrir: () => void;
   onEliminar: () => void;
   /** onDeleteProvided && entidad con id */
@@ -18,6 +19,7 @@ interface ModalAccionesProps {
 /** Bloque de acciones de fila (editar/eliminar) o trigger de "nuevo", compartido por los modales CRUD. */
 export function ModalAcciones({
   trigger,
+  triggerId,
   onAbrir,
   onEliminar,
   puedeEliminar,
@@ -27,7 +29,12 @@ export function ModalAcciones({
 }: ModalAccionesProps) {
   if (trigger) {
     return (
-      <button type="button" className="db-btn-primary db-modal-trigger" onClick={onAbrir}>
+      <button
+        type="button"
+        id={triggerId}
+        className="db-btn-primary db-modal-trigger"
+        onClick={onAbrir}
+      >
         {trigger}
       </button>
     );

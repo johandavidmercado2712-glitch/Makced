@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Inventario en espejo</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;width:1440px;height:900px;overflow:hidden;font:15px/1.45 Arial,sans-serif;background:#f7f9fc;color:#102e85}.app{display:flex;height:100%}
+aside{width:230px;background:#102e85;color:#fff;padding:28px 18px}.brand{font-size:18px;font-weight:800;letter-spacing:.12em;padding:5px 9px 38px}.brand small{display:block;font-size:10px;letter-spacing:.14em;color:#b9c7e7;margin-top:6px}
+nav a{display:block;color:#e7ecf8;text-decoration:none;padding:12px;margin:3px 0;border-radius:4px}nav a.active{background:#00d2b4;color:#102e85;font-weight:700}.foot{margin-top:350px;font-size:12px;color:#d5def1;padding:10px}
+main{flex:1;padding:42px 52px}.top{display:flex;justify-content:space-between;align-items:end;margin-bottom:24px}.eyebrow{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#8190af;font-weight:bold}.top h1{font-size:31px;margin:7px 0}.top p{margin:0;color:#687995}.btn{background:#00d2b4;color:#102e85;border:0;padding:13px 17px;font-weight:bold;border-radius:4px}
+.sample{font-size:10px;color:#8190af;text-align:right;margin-bottom:10px}.stats{display:flex;gap:12px;margin-bottom:22px}.stat{flex:1;background:#fff;border:1px solid #e0e5ed;padding:15px}.stat small{color:#8190af}.stat strong{display:block;font-size:23px;margin-top:4px}
+.table{background:white;border:1px solid #dce3ed}.head,.row{display:grid;grid-template-columns:2fr 1.1fr 1fr 1fr .8fr;gap:14px;align-items:center;padding:14px 18px}.head{background:#eafaf7;color:#102e85;font-size:10px;font-weight:bold;letter-spacing:.1em}.row{border-top:1px solid #e8edf2;min-height:94px}.product{display:flex;align-items:center;gap:14px}.thumb{width:62px;height:62px;background:#e2e9f4;border-radius:50% 50% 42% 42%}.data{border-left:2px solid #00d2b4;padding-left:12px}.data b{display:block}.data small{font-size:11px;color:#8190af}.pill{background:#d9f8f2;padding:5px 8px;font-size:11px;font-weight:bold}
+</style>
+</head>
+<body><div class="app"><aside><div class="brand">MAKCED<small>CATÁLOGO DE TIENDA</small></div><nav><a href="#">Resumen</a><a class="active" href="#">Productos</a><a href="#">Marcas y categorías</a><a href="#">Diseño</a><a href="#">Mi tienda</a></nav><div class="foot">Administración<br><br>Cerrar sesión</div></aside>
+<main><header class="top"><div><div class="eyebrow">Catálogo · productos</div><h1>Productos</h1><p>Identidad a un lado; precio, existencia y estado siempre alineados.</p></div><button class="btn">+ Nuevo producto</button></header>
+<div class="sample">Muestra visual · datos de ejemplo</div><section class="stats"><div class="stat"><small>Productos</small><strong>48</strong></div><div class="stat"><small>Marcas</small><strong>12</strong></div><div class="stat"><small>Categorías</small><strong>7</strong></div></section>
+<section class="table"><div class="head"><span>PRODUCTO</span><span>CATEGORÍA</span><span>PRECIO</span><span>STOCK</span><span>ESTADO</span></div>
+<div class="row"><div class="product"><div class="thumb"></div><div><b>Tenis urbano Lino</b><small>Marca local</small></div></div><div>Casual</div><div class="data"><b>$184.900</b><small>Precio actual</small></div><div class="data"><b>12</b><small>unidades</small></div><div><span class="pill">Activo</span></div></div>
+<div class="row"><div class="product"><div class="thumb" style="background:#d8ebe8"></div><div><b>Bota clásica Siena</b><small>Marca local</small></div></div><div>Botas</div><div class="data"><b>$229.000</b><small>Precio actual</small></div><div class="data"><b>4</b><small>unidades</small></div><div><span class="pill">Destacado</span></div></div>
+<div class="row"><div class="product"><div class="thumb" style="background:#d9dff1"></div><div><b>Sandalia Brisa</b><small>Marca local</small></div></div><div>Sandalias</div><div class="data"><b>$119.900</b><small>Precio actual</small></div><div class="data"><b>0</b><small>unidades</small></div><div><span class="pill">Inactivo</span></div></div>
+</section></main></div></body></html>

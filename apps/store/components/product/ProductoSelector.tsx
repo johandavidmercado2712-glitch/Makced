@@ -54,7 +54,7 @@ export default function ProductoSelector({ producto }: Props) {
         </div>
         {/* Feedback si no seleccionó talla */}
         {!selectedTalla && (
-          <span className="producto-talla-requerida">Selecciona una talla</span>
+          <span className="producto-talla-requerida" aria-live="polite">Selecciona una talla</span>
         )}
       </div>
 

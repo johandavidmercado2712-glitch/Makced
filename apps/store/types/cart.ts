@@ -18,6 +18,7 @@ export interface CartContextValue {
   removeItem: (id: string, talla?: number, color?: string) => void;
   updateQty: (id: string, qty: number, talla?: number, color?: string) => void;
   clearCart: () => void;
+  restoreCart: (items: CartItem[]) => void;
 }
 
 export interface ProductoCart {

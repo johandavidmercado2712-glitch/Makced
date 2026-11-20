@@ -2,16 +2,10 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import ProductGrid from "./ProductGrid";
-import { getConfigDiseno } from "../../app/actions/store";
 import { formatCOP } from "../../lib/format";
-import { combinarDiseno } from "@makced/db/diseno";
 
 const textoCOP = (valor: number) =>
   formatCOP(valor).replace(/\u00a0/g, " ");
-
-vi.mock("../../app/actions/store", () => ({
-  getConfigDiseno: vi.fn(),
-}));
 
 // ScrollReveal usa IntersectionObserver (no existe en jsdom)
 vi.mock("../ui/ScrollReveal", () => ({
@@ -33,8 +27,6 @@ vi.mock("next/link", () => ({
     children: React.ReactNode;
   }) => <a href={href}>{children}</a>,
 }));
-
-const mockedConfig = vi.mocked(getConfigDiseno);
 
 const productos = [
   {
@@ -63,14 +55,7 @@ beforeEach(() => {
 
 describe("integración: ProductGrid → ProductCard según config de la tienda", () => {
   it("sin precios cuando mostrar_precios=false (regresión del toggle)", async () => {
-    mockedConfig.mockResolvedValue({
-      id: null,
-      colorPrincipal: "#4CE1AC",
-      logoUrl: null,
-      config: combinarDiseno({ mostrar_precios: false }),
-    });
-
-    const arbol = await ProductGrid({ productos });
+    const arbol = await ProductGrid({ productos, mostrarPrecios: false });
     render(arbol);
 
     expect(document.querySelectorAll(".product-precio")).toHaveLength(0);
@@ -79,20 +64,12 @@ describe("integración: ProductGrid → ProductCard según config de la tienda",
   });
 
   it("precios en formato es-CO cuando mostrar_precios=true", async () => {
-    mockedConfig.mockResolvedValue({
-      id: null,
-      colorPrincipal: "#4CE1AC",
-      logoUrl: null,
-      config: combinarDiseno({ mostrar_precios: true }),
-    });
-
-    const arbol = await ProductGrid({ productos });
+    const arbol = await ProductGrid({ productos, mostrarPrecios: true });
     render(arbol);
 
     expect(screen.getByText(textoCOP(95000))).toBeInTheDocument();
     expect(screen.getByText(textoCOP(120000))).toBeInTheDocument();
     expect(screen.getByText("Nike")).toBeInTheDocument();
     expect(screen.getByText("Adidas")).toBeInTheDocument();
-    expect(mockedConfig).toHaveBeenCalledTimes(1);
   });
 });

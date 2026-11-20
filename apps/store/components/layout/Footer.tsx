@@ -1,5 +1,6 @@
 import { Globe, Camera, MessageCircle } from "lucide-react";
 import Link from "next/link";
+import { rutaTienda } from "../../lib/rutas"
 import {
   esEnlacePieVisible,
   esUrlPieValida,
@@ -11,6 +12,7 @@ import "./footer.css";
 interface FooterProps {
   categorias?: { id: string; nombre: string; slug: string }[];
   pie: ConfigDiseno["pie"];
+  subdominio?: string | null; 
 }
 
 function EnlaceFooter({ enlace }: { enlace: EnlacePie }) {
@@ -29,7 +31,7 @@ function EnlaceFooter({ enlace }: { enlace: EnlacePie }) {
   );
 }
 
-function Footer({ categorias = [], pie }: FooterProps) {
+function Footer({ categorias = [], pie , subdominio}: FooterProps) {
   const informacion = pie.informacion.filter(esEnlacePieVisible);
   const ayuda = pie.ayuda.filter(esEnlacePieVisible);
 
@@ -67,7 +69,7 @@ function Footer({ categorias = [], pie }: FooterProps) {
           {categorias.map((cat) => (
             <Link
               key={cat.id}
-              href={`/categoriaProductos?slug=${encodeURIComponent(cat.slug)}`}
+              href={rutaTienda(subdominio, `/categoriaProductos?slug=${encodeURIComponent(cat.slug)}`)}
             >
               {cat.nombre}
             </Link>

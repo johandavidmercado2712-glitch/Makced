@@ -5,9 +5,9 @@ import SearchInput from "./SearchInput";
 
 const buscarProductos = vi.hoisted(() => vi.fn());
 
-vi.mock("@/app/actions/products", () => ({
-  buscarProductos,
-}));
+
+vi.mock("@/app/actions/search", () =>
+   ({ buscarEnTienda: buscarProductos }));
 
 const resultado = {
   id: "p1",

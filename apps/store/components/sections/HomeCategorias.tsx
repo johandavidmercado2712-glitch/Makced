@@ -2,13 +2,17 @@ import Image from "next/image"
 import Link from "next/link"
 import ScrollReveal from "../ui/ScrollReveal"
 import { getCategorias } from "../../app/actions/store"
+import { rutaTienda } from "../../lib/rutas"
 
 /**
  * Sección de categorías del home: fetch interno para poder ir en
  * <Suspense> con su skeleton (CategoriaSkeleton) sin bloquear la página.
  */
+import { requerirTienda } from "../../lib/tenant";
+
 export default async function HomeCategorias({ titulo }: { titulo: string }) {
-  const categorias = await getCategorias()
+  const tienda = await requerirTienda();
+  const categorias = await getCategorias(tienda.id)
 
   return (
     <section className="categoria" aria-labelledby="categorias-heading">
@@ -17,12 +21,12 @@ export default async function HomeCategorias({ titulo }: { titulo: string }) {
           <div className="categoria-titulo-texto">
             <h2 id="categorias-heading">{titulo}</h2>
           </div>
-          <Link href="/categoria">Ver Todas</Link>
+          <Link href={rutaTienda(tienda.subdominio, "/categoria")}>Ver Todas ({categorias.length})</Link>
         </header>
         <div className="categoria-cards">
           {categorias.slice(0, 4).map((cat, index) => (
             <ScrollReveal key={cat.id} delay={(index + 1) * 100}>
-              <Link href={`/categoriaProductos?slug=${cat.slug}`}>
+              <Link href={rutaTienda(tienda.subdominio, `/categoriaProductos?slug=${cat.slug}`)}>
                 <div className="categoria-card">
                   <Image
                     src={cat.imagen_url || "/placeholder-categoria.jpg"}

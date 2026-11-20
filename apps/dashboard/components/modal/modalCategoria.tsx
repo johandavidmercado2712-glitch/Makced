@@ -6,6 +6,7 @@ import { Modal } from "./Modal";
 import { ModalAcciones } from "./ModalAcciones";
 import { etiquetaSubmit } from "./modal-utils";
 import { useModalCrud } from "./useModalCrud";
+import { ConfirmModal } from "./ConfirmModal";
 
 export function ModalCategoria({
   entidad: categoria,
@@ -26,6 +27,9 @@ export function ModalCategoria({
     cerrar,
     handleSubmit,
     handleEliminar,
+    handleConfirmEliminar,
+    handleCancelEliminar,
+    mostrarConfirmEliminar,
     setErrorGuardado,
   } = useModalCrud<CategoriaModalData>({
     entidad: categoria,
@@ -114,6 +118,15 @@ export function ModalCategoria({
         submitLabel={etiquetaSubmit(fase, esCrear, "categoría")}
         onSubmit={handleSubmit}
         idValue={id ?? ""}
+      />
+
+      {/* Modal de confirmación de eliminación */}
+      <ConfirmModal
+        titulo="Eliminar categoría"
+        mensaje={`¿Estás seguro de que quieres eliminar la categoría "${nombre}"?`}
+        onConfirm={handleConfirmEliminar}
+        onCancel={handleCancelEliminar}
+        mostrar={mostrarConfirmEliminar}
       />
     </>
   );

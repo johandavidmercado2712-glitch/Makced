@@ -6,6 +6,13 @@ export interface ProductoCardData {
   imagen_url: string | null;
   slug: string | null;
   marca: string | null;
+  descripcion?: string | null;
+  stock?: number | null;
+  es_nuevo?: boolean | null;
+  es_destacado?: boolean | null;
+  referencia?: unknown;
+  categoria?: string | null;
+  colores?: unknown;
 }
 
 export interface PanelInfoProps {

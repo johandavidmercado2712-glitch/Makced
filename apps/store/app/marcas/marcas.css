@@ -5,7 +5,7 @@
 }
 
 .marcas-info h1 {
-  font-size: 28px;
+  font-size: var(--fs-28);
   font-weight: 700;
   color: var(--text-primary);
   margin-bottom: 10px;
@@ -14,7 +14,7 @@
 }
 
 .marcas-info p {
-  font-size: 16px;
+  font-size: var(--fs-md);
   color: var(--text-secondary);
   margin-bottom: 30px;
 }
@@ -63,20 +63,20 @@
 }
 
 .card-info-text h2 {
-  font-size: 18px;
+  font-size: var(--fs-lg);
   font-weight: 600;
   color: var(--text-primary);
   margin: 0 0 5px 0;
 }
 
 .card-info-text span {
-  font-size: 14px;
+  font-size: var(--fs-base);
   color: var(--text-secondary);
 }
 
 .card-info a {
   color: var(--action-color);
-  font-size: 14px;
+  font-size: var(--fs-base);
   font-weight: 600;
   text-decoration: none;
   white-space: nowrap;
@@ -120,15 +120,15 @@
     padding: 22px 12px;
   }
 
-  .marcas-info h1 { font-size: 24px; }
-  .marcas-info p { font-size: 14px; margin-bottom: 20px; }
+  .marcas-info h1 { font-size: var(--fs-2xl); }
+  .marcas-info p { font-size: var(--fs-base); margin-bottom: 20px; }
   .card-image img { height: 130px; }
   .card-info {
     align-items: flex-start;
     flex-direction: column;
     padding: 10px;
   }
-  .card-info-text h2 { font-size: 14px; overflow-wrap: anywhere; }
-  .card-info-text span { font-size: 12px; }
-  .card-info a { font-size: 12px; }
+  .card-info-text h2 { font-size: var(--fs-base); overflow-wrap: anywhere; }
+  .card-info-text span { font-size: var(--fs-xs); }
+  .card-info a { font-size: var(--fs-xs); }
 }

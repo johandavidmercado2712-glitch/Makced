@@ -1,6 +1,6 @@
 "use client";
 
-import type { FC } from "react";
+import type { FC, KeyboardEvent as ReactKeyboardEvent } from "react";
 import {
   CheckCircle2,
   ExternalLink,
@@ -19,7 +19,11 @@ import {
   type SeccionDiseno,
 } from "@makced/db/diseno";
 import { useEditorEstado, useEditorGuardar, useEditorSeccion } from "./useEditorDiseno";
-import { URL_TIENDA, type EditorDisenoApi } from "./paneles/comunes";
+import {
+  URL_TIENDA,
+  type EditorDisenoApi,
+  type ProductoVistaPrevia,
+} from "./paneles/comunes";
 import { PanelEstilo } from "./paneles/PanelEstilo";
 import { PanelLogo } from "./paneles/PanelLogo";
 import { PanelBanner } from "./paneles/PanelBanner";
@@ -167,9 +171,15 @@ interface EditorDisenoProps {
   config: ConfigDiseno;
   colorPrincipal: string;
   logoUrl: string | null;
+  productoVistaPrevia: ProductoVistaPrevia | null;
 }
 
-export default function EditorDiseno({ config, colorPrincipal, logoUrl }: EditorDisenoProps) {
+export default function EditorDiseno({
+  config,
+  colorPrincipal,
+  logoUrl,
+  productoVistaPrevia,
+}: EditorDisenoProps) {
   const estado = useEditorEstado(config, colorPrincipal, logoUrl);
   const seccion = useEditorSeccion(estado, config, colorPrincipal, logoUrl);
   const { guardar, restaurar } = useEditorGuardar(estado, estado.tab, estado.sucio);
@@ -203,6 +213,7 @@ export default function EditorDiseno({ config, colorPrincipal, logoUrl }: Editor
     config,
     borrador,
     colorP,
+    productoVistaPrevia,
     imagenes,
     logoUrl,
     version,
@@ -225,6 +236,33 @@ export default function EditorDiseno({ config, colorPrincipal, logoUrl }: Editor
   const pila = estadoPila(ocupado, fase, exito, sucio);
   const PanelActivo = PANELES[tab];
   const PrevActiva = PREVIEWS[tab];
+
+  const handleTabKeyDown = (
+    event: ReactKeyboardEvent<HTMLButtonElement>,
+    currentTab: SeccionDiseno,
+  ) => {
+    const currentIndex = TABS.findIndex((item) => item.id === currentTab);
+    let nextIndex = currentIndex;
+
+    if (event.key === "ArrowRight") {
+      nextIndex = (currentIndex + 1) % TABS.length;
+    } else if (event.key === "ArrowLeft") {
+      nextIndex = (currentIndex - 1 + TABS.length) % TABS.length;
+    } else if (event.key === "Home") {
+      nextIndex = 0;
+    } else if (event.key === "End") {
+      nextIndex = TABS.length - 1;
+    } else {
+      return;
+    }
+
+    event.preventDefault();
+    const nextTab = TABS[nextIndex];
+    if (!nextTab) return;
+
+    document.getElementById(`diseno-tab-${nextTab.id}`)?.focus();
+    seccion.cambiarTab(nextTab.id);
+  };
 
   return (
     <>
@@ -264,20 +302,30 @@ export default function EditorDiseno({ config, colorPrincipal, logoUrl }: Editor
         {TABS.map((t) => (
           <button
             key={t.id}
+            id={`diseno-tab-${t.id}`}
             type="button"
             role="tab"
             aria-selected={tab === t.id}
+            aria-controls="diseno-tabpanel"
+            tabIndex={tab === t.id ? 0 : -1}
             className={tab === t.id ? "de-tab de-tab-active" : "de-tab"}
+            onKeyDown={(event) => handleTabKeyDown(event, t.id)}
             onClick={() => seccion.cambiarTab(t.id)}
           >
-            <t.icon size={15} />
+            <t.icon size={15} aria-hidden="true" />
             {t.label}
           </button>
         ))}
       </div>
 
       <div className="de-content">
-        <form className="de-left" onSubmit={guardar}>
+        <form
+          className="de-left"
+          id="diseno-tabpanel"
+          role="tabpanel"
+          aria-labelledby={`diseno-tab-${tab}`}
+          onSubmit={guardar}
+        >
           <div className="db-panel de-form-panel">
             <div className="de-form-body">
               <div className="de-section-header">

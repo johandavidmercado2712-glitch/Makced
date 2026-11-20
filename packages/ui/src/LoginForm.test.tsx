@@ -139,9 +139,9 @@ describe("LoginForm (signup)", () => {
     await user.type(screen.getByLabelText("Confirmar contraseña"), "123");
     await user.click(screen.getByRole("button", { name: "Crear cuenta" }));
 
-    expect(await screen.findByRole("alert")).toHaveTextContent(
-      "La contraseña debe tener al menos 8 caracteres",
-    );
+    expect(
+      await screen.findByText("La contraseña debe tener al menos 8 caracteres"),
+    ).toBeInTheDocument();
 
     await user.clear(screen.getByLabelText("Contraseña"));
     await user.clear(screen.getByLabelText("Confirmar contraseña"));
@@ -149,9 +149,12 @@ describe("LoginForm (signup)", () => {
     await user.type(screen.getByLabelText("Confirmar contraseña"), "12345679");
     await user.click(screen.getByRole("button", { name: "Crear cuenta" }));
 
-    expect(await screen.findByRole("alert")).toHaveTextContent(
-      "Las contraseñas no coinciden",
-    );
+    // Especificar el TEXTO, no solo el rol: al primer envío ya quedó en el DOM
+    // un <p role="alert"> con "…8 caracteres". findByRole("alert") lo devolvería
+    // de inmediato (stale) si React aún no re-renderizó con el nuevo error.
+    expect(
+      await screen.findByText("Las contraseñas no coinciden"),
+    ).toBeInTheDocument();
     expect(mockedSignUp).not.toHaveBeenCalled();
   });
 

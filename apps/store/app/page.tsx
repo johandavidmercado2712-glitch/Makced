@@ -8,12 +8,25 @@ import HomeMarcas from "../components/sections/HomeMarcas"
 import HomeCategorias from "../components/sections/HomeCategorias"
 import CategoriaSkeleton from "../components/ui/CategoriaSkeleton"
 import { getConfigDiseno } from "./actions/store";
+import { resolverTienda, listarTiendasActivas, subdominioSolicitado } from "@/lib/tenant";
+import { redirect, notFound } from "next/navigation";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 export default async function Page(){
+  const tienda = await resolverTienda();
+  const requestedSub = await subdominioSolicitado();
+  if (requestedSub && !tienda) {
+    notFound();
+  }
+  if (!tienda) {
+    const tiendas = await listarTiendasActivas();
+    if (tiendas.length > 0) {
+      redirect(`/s/${tiendas[0].subdominio}`);
+    }
+  }
 
-  const { config } = await getConfigDiseno();
+  const { config } = await getConfigDiseno(tienda?.subdominio);
   return(
     <>
       <CarouselNav slides={config.banner.slides} />

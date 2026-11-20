@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fichas de caja y referencia</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;width:1440px;height:900px;overflow:hidden;font:15px/1.45 Arial,sans-serif;color:#18334a;background:#f4ecdd}
+.shell{display:flex;height:100%}.rail{width:230px;background:#153b5b;color:#fff;padding:28px 18px;display:flex;flex-direction:column}
+.brand{font-size:18px;font-weight:800;letter-spacing:.1em;padding:5px 9px 36px}.brand small{display:block;font-size:10px;letter-spacing:.16em;color:#c8d8e3;margin-top:7px}
+.nav-label{font-size:10px;text-transform:uppercase;letter-spacing:.14em;color:#a9bfce;padding:8px 10px}
+.nav a{display:block;padding:12px 12px;margin:3px 0;color:#dce8ee;text-decoration:none;border-radius:4px}.nav a.active{background:#f06a3c;color:#fff;font-weight:700}.bottom{margin-top:auto;color:#dce8ee;font-size:12px;padding:12px}
+main{flex:1;padding:42px 54px 40px;overflow:hidden}.eyebrow{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#587184}
+.head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:26px}.head h1{font-size:32px;line-height:1.1;margin:8px 0 7px;letter-spacing:-.04em}.head p{margin:0;color:#5e6a6f}
+button{border:0;background:#f06a3c;color:white;padding:13px 18px;font-weight:700;font-size:14px;border-radius:3px}
+.sample{font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:#8a6e58;margin-bottom:14px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:23px}.stat{background:#fffaf0;border:1px solid #d9cdb9;padding:15px 18px}.stat span{font-size:12px;color:#61717a}.stat strong{display:block;font-size:24px;margin-top:4px}
+.table{background:#fffaf0;border:1px solid #d9cdb9}.table-head,.row{display:grid;grid-template-columns:2.2fr 1.05fr .9fr .8fr .8fr;align-items:center;gap:16px;padding:14px 18px}
+.table-head{background:#e8dfce;color:#56636a;font-size:10px;font-weight:700;letter-spacing:.11em;text-transform:uppercase}
+.row{min-height:100px;border-top:1px solid #e7dece}.product{display:flex;align-items:center;gap:14px}.photo{width:68px;height:68px;background:#d7c9b3;display:grid;place-items:center;color:#fff;font-size:11px;text-align:center}
+.photo.b{background:#bc936c}.photo.c{background:#788b8a}.product strong{display:block;font-size:15px}.product small{color:#68777b}.field strong{display:block;font-size:14px}.field small{color:#69777c;font-size:11px}
+.tag{display:inline-block;background:#f6d9cb;color:#963c22;padding:5px 8px;font-size:11px;font-weight:700;border-left:3px solid #f06a3c}
+.footer{font-size:12px;color:#68777c;padding:14px 18px;background:#f8f1e4;border-top:1px solid #e7dece}
+</style>
+</head>
+<body>
+<div class="shell">
+<aside class="rail"><div class="brand">MAKCED<small>ADMINISTRACIÓN</small></div><div class="nav-label">TIENDA</div><nav class="nav"><a href="#">Resumen</a><a class="active" href="#">Productos</a><a href="#">Marcas y categorías</a><a href="#">Diseño</a><a href="#">Mi tienda</a></nav><div class="bottom">Administración de catálogo<br><br>Cerrar sesión</div></aside>
+<main>
+<div class="head"><div><div class="eyebrow">Catálogo / registros</div><h1>Productos</h1><p>Precio, stock y estado en una ficha fácil de revisar.</p></div><button>+ Nuevo producto</button></div>
+<div class="sample">Muestra visual · datos de ejemplo</div>
+<section class="stats"><div class="stat"><span>Productos en catálogo</span><strong>48</strong></div><div class="stat"><span>Marcas</span><strong>12</strong></div><div class="stat"><span>Categorías activas</span><strong>7</strong></div></section>
+<section class="table"><div class="table-head"><span>Producto</span><span>Categoría</span><span>Precio</span><span>Stock</span><span>Estado</span></div>
+<div class="row"><div class="product"><div class="photo">IMAGEN<br>PRODUCTO</div><div><strong>Tenis urbano Lino</strong><small>Marca local</small></div></div><div class="field"><strong>Casual</strong></div><div class="field"><strong>$184.900</strong></div><div class="field"><strong>12</strong><small>unidades</small></div><div><span class="tag">Destacado</span></div></div>
+<div class="row"><div class="product"><div class="photo b">IMAGEN<br>PRODUCTO</div><div><strong>Bota clásica Siena</strong><small>Marca local</small></div></div><div class="field"><strong>Botas</strong></div><div class="field"><strong>$229.000</strong></div><div class="field"><strong>4</strong><small>unidades</small></div><div><span class="tag">Activo</span></div></div>
+<div class="row"><div class="product"><div class="photo c">IMAGEN<br>PRODUCTO</div><div><strong>Sandalia Brisa</strong><small>Marca local</small></div></div><div class="field"><strong>Sandalias</strong></div><div class="field"><strong>$119.900</strong></div><div class="field"><strong>0</strong><small>unidades</small></div><div><span class="tag">Revisar</span></div></div>
+<div class="footer">48 productos · Las etiquetas naranjas destacan estados y acciones, no decoración.</div></section>
+</main>
+</div>
+</body>
+</html>

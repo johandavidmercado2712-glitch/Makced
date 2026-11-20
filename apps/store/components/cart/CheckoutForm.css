@@ -1,0 +1,86 @@
+/* Checkout Form - Estilos con tokens del design system */
+
+.checkout-form {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  margin-top: 24px;
+}
+
+.checkout-form-title {
+  font-size: var(--fs-xl);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 4px 0;
+}
+
+.checkout-form-subtitle {
+  font-size: var(--fs-sm);
+  color: var(--text-secondary);
+  margin: 0 0 20px 0;
+  line-height: 1.5;
+}
+
+.checkout-field {
+  margin-bottom: 16px;
+}
+
+.checkout-label {
+  display: block;
+  font-size: var(--fs-base);
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.checkout-required {
+  color: var(--text-danger);
+  margin-left: 2px;
+}
+
+.checkout-input {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: var(--fs-base);
+  font-family: inherit;
+  color: var(--text-primary);
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  resize: vertical;
+}
+
+.checkout-input:focus {
+  outline: none;
+  border-color: var(--primary-mint);
+  box-shadow: 0 0 0 3px var(--primary-mint-light);
+}
+
+.checkout-input--error {
+  border-color: var(--text-danger);
+}
+
+.checkout-input--error:focus {
+  border-color: var(--text-danger);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.checkout-textarea {
+  min-height: 60px;
+}
+
+.checkout-error {
+  display: block;
+  font-size: var(--fs-xs);
+  color: var(--text-danger);
+  margin-top: 4px;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .checkout-form {
+    padding: 16px;
+  }
+}

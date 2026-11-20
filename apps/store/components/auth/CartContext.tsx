@@ -122,6 +122,7 @@ const CartContext = createContext<CartContextValue>({
   removeItem: () => {},
   updateQty: () => {},
   clearCart: () => {},
+  restoreCart: () => {},
 })
 
 // ═════════════════════════════════════════════════════════════
@@ -215,6 +216,7 @@ export function CartProvider({
     [removeItem]
   )
 
+  const restoreCart = useCallback((items: CartItem[]) => write(items), [])
   const clearCart = useCallback(() => write([]), [])
 
   const value = useMemo(
@@ -227,8 +229,9 @@ export function CartProvider({
       removeItem,
       updateQty,
       clearCart,
+      restoreCart,
     }),
-    [items, totalItems, subtotal, showPrices, addItem, removeItem, updateQty, clearCart]
+    [items, totalItems, subtotal, showPrices, addItem, removeItem, updateQty, clearCart, restoreCart]
   )
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>
@@ -243,3 +246,4 @@ export function useCart(): CartContextValue {
   if (!ctx) throw new Error("useCart debe usarse dentro de CartProvider")
   return ctx
 }
+

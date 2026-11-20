@@ -43,7 +43,6 @@ export function PanelEstilo({ api }: { api: EditorDisenoApi }) {
           <div className="de-color-input">
             <label
               className="de-color-swatch"
-              style={{ background: HEX.test(colorP) ? colorP : "#94A3B8" }}
             >
               <input
                 type="color"
@@ -53,6 +52,11 @@ export function PanelEstilo({ api }: { api: EditorDisenoApi }) {
                   marcarCambio();
                 }}
                 aria-label="Elegir color principal"
+              />
+              <span
+                className="de-color-swatch-color"
+                aria-hidden="true"
+                style={{ background: HEX.test(colorP) ? colorP : "#94A3B8" }}
               />
             </label>
             <input
@@ -79,11 +83,6 @@ export function PanelEstilo({ api }: { api: EditorDisenoApi }) {
           <div className="de-color-input">
             <label
               className="de-color-swatch"
-              style={{
-                background: HEX.test(borrador.color_secundario)
-                  ? borrador.color_secundario
-                  : "#94A3B8",
-              }}
             >
               <input
                 type="color"
@@ -96,6 +95,15 @@ export function PanelEstilo({ api }: { api: EditorDisenoApi }) {
                   setCampo("color_secundario", e.target.value)
                 }
                 aria-label="Elegir color secundario"
+              />
+              <span
+                className="de-color-swatch-color"
+                aria-hidden="true"
+                style={{
+                  background: HEX.test(borrador.color_secundario)
+                    ? borrador.color_secundario
+                    : "#94A3B8",
+                }}
               />
             </label>
             <input

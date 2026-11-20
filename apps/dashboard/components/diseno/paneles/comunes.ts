@@ -50,11 +50,18 @@ export type CampoTextoPie =
 
 export type SeccionEnlacesPie = "informacion" | "ayuda";
 
+export interface ProductoVistaPrevia {
+  nombre: string;
+  precio: number;
+  imagenUrl: string | null;
+}
+
 /** Estado y setters compartidos por todos los paneles de formulario y preview. */
 export interface EditorDisenoApi {
   config: ConfigDiseno;
   borrador: ConfigDiseno;
   colorP: string;
+  productoVistaPrevia: ProductoVistaPrevia | null;
   imagenes: Record<string, ImagenEstado>;
   logoUrl: string | null;
   version: number;

@@ -5,16 +5,20 @@ import type { NextConfig } from "next";
 // script-src mantiene 'unsafe-inline' (Next necesita hidratar sin nonce); el
 // resto de la politica si queda en enforce. Login y dashboard usan CSP con
 // nonce desde proxy.ts.
+// Dev-only allowance so impeccable live mode can load. Guarded by NODE_ENV.
+const __impeccableLiveDev =
+  process.env.NODE_ENV === "development" ? " http://localhost:8400" : "";
+
 const cabecerasSeguridad = () => {
   const esDev = process.env.NODE_ENV === "development";
 
   const csp = [
     "default-src 'self'",
-    `script-src 'self' 'unsafe-inline'${esDev ? " 'unsafe-eval'" : ""}`,
+    `script-src 'self' 'unsafe-inline'${esDev ? " 'unsafe-eval'" : ""}${__impeccableLiveDev}`,
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-    "img-src 'self' data: blob: https://upload.wikimedia.org https://253fnuce.us-east.insforge.app https://cdn.insforge.dev https://worldvectorlogo.com",
+    "img-src 'self' data: blob: https://upload.wikimedia.org https://253fnuce.us-east.insforge.app https://cdn.insforge.dev https://insforge-storage.s3.us-east-2.amazonaws.com https://worldvectorlogo.com https://images.unsplash.com",
     "font-src 'self' data: https://fonts.gstatic.com",
-    "connect-src 'self' https://253fnuce.us-east.insforge.app https://cdn.insforge.dev",
+    `connect-src 'self' https://253fnuce.us-east.insforge.app https://cdn.insforge.dev https://insforge-storage.s3.us-east-2.amazonaws.com${__impeccableLiveDev}`,
     "frame-ancestors 'none'",
     "object-src 'none'",
     "base-uri 'self'",
@@ -54,6 +58,8 @@ const nextConfig: NextConfig = {
   // skeleton/spinner de la tienda. No existe en producción.
   devIndicators: false,
   images: {
+    formats: ["image/avif", "image/webp"],
+    minimumCacheTTL: 31536000, // 1 año
     remotePatterns: [
       {
         protocol: "https",
@@ -62,6 +68,18 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "253fnuce.us-east.insforge.app",
+      },
+      {
+        protocol: "https",
+        hostname: "cdn.insforge.dev",
+      },
+      {
+        protocol: "https",
+        hostname: "insforge-storage.s3.us-east-2.amazonaws.com",
+      },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
       },
     ],
   },

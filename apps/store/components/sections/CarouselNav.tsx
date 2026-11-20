@@ -1,5 +1,6 @@
 "use client"
 import "./carouselNav.css"
+import Image from "next/image"
 import { DEFAULT_DISENO } from "@makced/db/diseno"
 
 interface Slide {
@@ -46,11 +47,14 @@ export default function CarouselNav({
 
       <div className="carousel-nav-image" aria-hidden="true">
         {lista.map((slide, i) => (
-          <img
+          <Image
             key={slide.palabra}
             src={slide.imagen || DEFAULT_DISENO.banner.slides[i].imagen}
             alt=""
+            width={800}
+            height={600}
             style={{ animationDelay: `${i * 4}s` }}
+            loading="lazy"
           />
         ))}
       </div>

@@ -1,25 +1,42 @@
 /* =========================================
    Mi tienda — paneles de información
    ========================================= */
+.mt-dashboard {
+  container-type: inline-size;
+}
+
+.mt-dashboard > .db-header {
+  align-items: flex-end;
+  margin-bottom: 28px;
+}
+
+.mt-dashboard .db-header-actions {
+  flex: 0 0 auto;
+}
+
 .mt-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  align-items: start;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 24px;
+  align-items: stretch;
 }
 
 .mt-col {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 24px;
   min-width: 0;
+}
+
+.mt-col > .db-panel {
+  padding: 28px;
 }
 
 .mt-head {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 16px;
+  gap: 12px;
+  margin-bottom: 20px;
 }
 
 .mt-head-icon {
@@ -31,7 +48,7 @@
   justify-content: center;
   border-radius: var(--db-radius-sm, 8px);
   background: var(--db-bg-card-hover);
-  color: var(--db-btn-primary);
+  color: var(--db-text-primary);
 }
 
 .mt-head h2 {
@@ -39,7 +56,7 @@
   align-items: center;
   gap: 8px;
   margin: 0;
-  font-size: 15px;
+  font-size: var(--db-fs-body-lg);
   font-weight: 600;
   color: var(--db-text-primary);
 }
@@ -49,8 +66,8 @@
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  gap: 16px;
-  padding: 11px 0;
+  gap: 20px;
+  padding: 14px 0;
   border-bottom: 1px solid var(--db-border);
 }
 
@@ -65,7 +82,7 @@
 
 .mt-fila dt {
   flex-shrink: 0;
-  font-size: 13px;
+  font-size: var(--db-fs-body-sm);
   color: var(--db-text-secondary);
 }
 
@@ -88,15 +105,15 @@
   font-weight: 700;
   letter-spacing: 0.03em;
   text-transform: capitalize;
-  background: rgba(14, 165, 233, 0.12);
-  color: var(--db-btn-primary);
-  border: 1px solid rgba(14, 165, 233, 0.3);
+  background: color-mix(in srgb, var(--db-btn-primary) 18%, var(--db-bg-card));
+  color: var(--db-btn-primary-fg);
+  border: 1px solid color-mix(in srgb, var(--db-btn-primary) 45%, var(--db-border));
 }
 
 .mt-badge-activa {
-  background: rgba(16, 185, 129, 0.12);
-  color: #10b981;
-  border-color: rgba(16, 185, 129, 0.35);
+  background: color-mix(in srgb, var(--db-btn-primary) 18%, var(--db-bg-card));
+  color: var(--db-green-status);
+  border-color: color-mix(in srgb, var(--db-btn-primary) 55%, var(--db-border));
 }
 
 .mt-badge-inactiva {
@@ -106,9 +123,9 @@
 }
 
 .mt-badge-prox {
-  background: rgba(245, 158, 11, 0.12);
-  color: #f59e0b;
-  border-color: rgba(245, 158, 11, 0.35);
+  background: color-mix(in srgb, var(--db-amber) 12%, var(--db-bg-card));
+  color: var(--db-amber);
+  border-color: color-mix(in srgb, var(--db-amber) 40%, var(--db-border));
   text-transform: none;
 }
 
@@ -117,7 +134,8 @@
   align-items: center;
   gap: 5px;
   font-weight: 600;
-  color: var(--db-btn-primary);
+  color: var(--db-text-primary);
+  text-underline-offset: 3px;
   text-decoration: none;
 }
 
@@ -146,13 +164,13 @@
 
 .mt-wsp-aviso {
   margin: 0;
-  font-size: 13px;
+  font-size: var(--db-fs-body-sm);
   font-weight: 600;
   color: var(--db-btn-primary);
 }
 
 .mt-wsp-aviso-error {
-  color: #f87171;
+  color: var(--db-danger);
 }
 
 /* Contraseña (decorativa por ahora) */
@@ -164,7 +182,7 @@
 
 .mt-pass-email {
   margin: 0;
-  font-size: 13px;
+  font-size: var(--db-fs-body-sm);
   color: var(--db-text-secondary);
 }
 
@@ -211,25 +229,57 @@
 
 .mt-pass-aviso {
   margin: 0;
-  font-size: 13px;
+  font-size: var(--db-fs-body-sm);
   font-weight: 600;
   color: var(--db-btn-primary);
 }
 
 .mt-pass-aviso-error {
-  color: #f87171;
+  color: var(--db-danger);
 }
 
 /* =========================================
    Responsive
    ========================================= */
-@media (max-width: 1024px) {
+@container (max-width: 860px) {
   .mt-grid {
     grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+  }
+
+  .mt-col {
+    gap: 20px;
+  }
+
+  .mt-col > .db-panel {
+    padding: 22px;
   }
 }
 
 @media (max-width: 480px) {
+  .mt-dashboard > .db-header {
+    align-items: flex-start;
+    gap: 18px;
+    margin-bottom: 24px;
+  }
+
+  .mt-dashboard .db-header-actions,
+  .mt-dashboard .db-header-actions .db-btn-primary {
+    width: 100%;
+  }
+
+  .mt-dashboard .db-header-actions .db-btn-primary {
+    justify-content: center;
+  }
+
+  .mt-col > .db-panel {
+    padding: 20px 18px;
+  }
+
+  .mt-head {
+    margin-bottom: 16px;
+  }
+
   .mt-fila {
     align-items: flex-start;
     flex-direction: column;

@@ -1,11 +1,15 @@
 "use client"
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import { CartToast } from "../cart/CartToast";
+import { useCartToast } from "../../hooks/useCartToast";
 import { Search, ShoppingCart, Sun, Moon } from "lucide-react";
+import Image from "next/image";
 import { useTheme } from "../auth/ThemeProvider";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import SearchInput from "../ui/SearchInput";
 import { useCart } from "../auth/CartContext";
+import { useRutaTienda } from "../tenant/TenantProvider";
 import "./navbar.css";
 
 const fixedLinks = [
@@ -35,23 +39,34 @@ export default function Navbar({
   const [searchOpen, setSearchOpen] = useState(false);
   const { theme, setTheme } = useTheme();
   const { totalItems } = useCart();
+  const { state: toastState, show: showToast, hide: hideToast, undo } = useCartToast();
+  const prevTotalItems = useRef(0);
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const router = useRouter();
+  const ruta = useRutaTienda();
   const currentSlug = searchParams.get("slug");
 
+  // Detectar primer producto agregado al carrito
+  useEffect(() => {
+    if (totalItems === 1 && prevTotalItems.current === 0) {
+      showToast("¡Tu primer producto está en el carrito!", "celebration");
+    }
+    prevTotalItems.current = totalItems;
+  }, [totalItems, showToast]);
+
   const dynamicLinks: NavLink[] = initialCategories.map((cat) => ({
-    href: `/categoriaProductos?slug=${cat.slug}`,
+    href: ruta(`/categoriaProductos?slug=${cat.slug}`),
     label: cat.nombre,
     hideOnMobile: true,
   }));
 
   const links: NavLink[] = [
-    fixedLinks[0],
-    ...dynamicLinks,
-    fixedLinks[1],
-    fixedLinks[2],
-    fixedLinks[3],
+    { ...fixedLinks[0], href: ruta(fixedLinks[0].href) },
+  ...dynamicLinks,
+    { ...fixedLinks[1], href: ruta(fixedLinks[1].href) },
+    { ...fixedLinks[2], href: ruta(fixedLinks[2].href) },
+    { ...fixedLinks[3], href: ruta(fixedLinks[3].href) },
   ];
 
   const isActive = (href: string) => {
@@ -65,11 +80,27 @@ export default function Navbar({
   };
 
   return (
+    <>
     <header className="nav-main">
       <div className="nav-inner">
         <div className="nav-row">
-          <Link href="/" className="nav-header" aria-label={`${marca} - Inicio`}>
-            {logoUrl && <img className="nav-logo" src={logoUrl} alt="" />}
+          <Link href={ruta("/")} className="nav-header" aria-label={`${marca} - Inicio`}>
+            {logoUrl && (
+              <Image
+                className="nav-logo"
+                src={logoUrl}
+                alt=""
+                width={260}
+                height={80}
+                priority
+                // El logo vive en el bucket de InsForge: la URL responde 302
+                // hacia una URL firmada de CloudFront. El optimizador de Next
+                // hace ese fetch en el servidor con un timeout interno de 7s;
+                // si el CDN tarda mas, devuelve 504 y la imagen no carga.
+                // El navegador no tiene ese limite, asi que lo servimos directo.
+                unoptimized
+              />
+            )}
             <span className="nav-brand">{marca}</span>
           </Link>
 
@@ -92,8 +123,8 @@ export default function Navbar({
             <button
               type="button"
               className="nav-icon-btn"
-              onClick={() => router.push("/carrito")}
-              aria-label={`Carrito (${totalItems} productos)`}
+              onClick={() => router.push(ruta("/carrito"))}
+              aria-label={`Carrito con ${totalItems} productos`}
             >
               <ShoppingCart size={24} />
               {totalItems > 0 && (
@@ -131,5 +162,7 @@ export default function Navbar({
         </nav>
       </div>
     </header>
+      <CartToast visible={toastState.visible} message={toastState.message} variant={toastState.variant} countdown={toastState.countdown} onUndo={undo} onDismiss={hideToast} />
+    </>
   );
 }

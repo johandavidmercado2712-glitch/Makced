@@ -46,6 +46,11 @@ export interface ModalProductProps {
   onSave?: ModalSaveHandler;
   onDelete?: (id: string) => Promise<GuardadoResultado>;
   trigger?: ReactNode;
+  triggerId?: string;
+  /** Estado del registro: true=Activo, false=Inactivo, null=Archivado */
+  estado?: boolean | null;
+  /** Propiedad para modo inline: muestra badge y botón compacto */
+  accion?: boolean;
 }
 
 export interface ImagenEstado {
@@ -82,4 +87,8 @@ export interface ModalEntidadProps<T> {
   onSave?: EntidadSaveHandler<T>;
   onDelete?: (id: string) => Promise<GuardadoResultado>;
   trigger?: ReactNode;
+  /** Estado del registro: true=Activo, false=Inactivo, null=Archivado */
+  estado?: boolean | null;
+  /** Propiedad para modo inline: muestra badge y botón compacto */
+  accion?: boolean;
 }

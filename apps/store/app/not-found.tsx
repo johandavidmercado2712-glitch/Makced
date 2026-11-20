@@ -26,14 +26,14 @@ export default function NotFound() {
           className="mt-3 text-2xl font-bold sm:text-3xl"
           style={{ color: "var(--text-primary)" }}
         >
-          No encontramos esta página
+          Esta página no existe
         </h1>
 
         <p
           className="mt-3 text-sm leading-6"
           style={{ color: "var(--text-secondary)" }}
         >
-          El producto o la página que buscas no existe o ya no está disponible.
+          El enlace que seguiste puede estar roto o el producto ya no está disponible.
         </p>
 
         <Link

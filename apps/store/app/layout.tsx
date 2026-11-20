@@ -6,7 +6,11 @@ import Navbar from "../components/layout/Navbar"
 import { Suspense, type CSSProperties } from "react"
 import { ThemeProvider } from "../components/auth/ThemeProvider"
 import { getConfigDiseno, getNavCategorias } from "./actions/store";
+import { resolverTienda } from "@/lib/tenant";
+import { TenantProvider } from "@/components/tenant/TenantProvider";
 import { CartProvider } from "../components/auth/CartContext"
+import { ErrorBoundary } from "../components/ErrorBoundary"
+import { OfflineBanner } from "../components/OfflineBanner"
 import { varsDesdeConfig, type Tipografia } from "@makced/db/diseno";
 
 const figtree = Figtree({
@@ -39,6 +43,10 @@ const roboto = Roboto({
   preload: false,
 });
 
+// Script estático para aplicar el tema antes del primer paint (evita flash claro→oscuro)
+const TEMA_INIT_SCRIPT =
+  '(function(){try{var t=localStorage.getItem("theme");if(t!=="light"&&t!=="dark"){t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}document.documentElement.classList.toggle("dark",t==="dark")}catch(e){}})()';
+
 const FUENTES: Record<Tipografia, { variable: string }> = {
   Figtree: figtree,
   Poppins: poppins,
@@ -48,7 +56,8 @@ const FUENTES: Record<Tipografia, { variable: string }> = {
 };
 
 export async function generateMetadata(): Promise<Metadata> {
-  const { config } = await getConfigDiseno();
+  const tienda = await resolverTienda();
+  const { config } = await getConfigDiseno(tienda?.subdominio);
   const marca = config.pie.marca || "MakcedStore";
 
   return {
@@ -66,9 +75,10 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const tienda = await resolverTienda();
   const [categorias, { colorPrincipal, config, logoUrl }] = await Promise.all([
-    getNavCategorias(),
-    getConfigDiseno(),
+    getNavCategorias(tienda?.id),
+    getConfigDiseno(tienda?.subdominio),
   ]);
 
   const fuenteActiva = FUENTES[config.tipografia] ?? figtree;
@@ -88,15 +98,16 @@ export default async function RootLayout({
         {/* Aplica el tema ANTES del primer paint: lee localStorage y marca
            <html class="dark"> sin esperar a React. Evita el flash
            claro→oscuro al recargar (mismo patrón que next-themes). */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html:
-              '(function(){try{var t=localStorage.getItem("theme");if(t!=="light"&&t!=="dark"){t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}document.documentElement.classList.toggle("dark",t==="dark")}catch(e){}})()',
-          }}
-        />
+        <script dangerouslySetInnerHTML={{ __html: TEMA_INIT_SCRIPT }} />
         <ThemeProvider>
-          <CartProvider showPrices={config.mostrar_precios ?? true}>
-            <div className="layout-wrapper">
+          <TenantProvider tiendaId={tienda?.id ?? null} subdominio={tienda?.subdominio ?? null}>
+            <CartProvider showPrices={config.mostrar_precios ?? true}>
+            
+              <div className="layout-wrapper">
+              <a className="skip-link" href="#main-content">
+                Saltar al contenido principal
+              </a>
+              <OfflineBanner />
               <Suspense>
                 <Navbar
                   initialCategories={categorias}
@@ -104,13 +115,17 @@ export default async function RootLayout({
                   marca={config.pie.marca}
                 />            {/* ← Dentro del Provider ✓ */}
               </Suspense>
-              <main>
-                {children}            {/* ← Una sola vez ✓ */}
+              <main id="main-content" tabIndex={-1}>
+                <ErrorBoundary>
+                  {children}            {/* ← Una sola vez ✓ */}
+                </ErrorBoundary>
               </main>
-              <Footer categorias={categorias} pie={config.pie} />              {/* ← Dentro del Provider ✓ */}
-            </div>
-          </CartProvider>
-        </ThemeProvider>
+              <Footer categorias={categorias} pie={config.pie} subdominio={tienda?.subdominio} />             {/* ← Dentro del Provider ✓ */}
+              </div>
+             </CartProvider>
+            </TenantProvider>
+          </ThemeProvider>
+        
       </body>
     </html>
   );

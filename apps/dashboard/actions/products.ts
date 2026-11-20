@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { borrarArchivoStorage, resolverImagen, texto } from "@/lib/imagenes";
 import { generarSlugUnico } from "@/lib/slug";
 import { PRODUCTOS_POR_PAGINA } from "@/lib/paginacion";
-import { getTienda, requireAuth } from "./tienda";
+import { requireAuth } from "./tienda";
 import type { ProductoLista, ProductoUpdate, RefSimple } from "@/types/database";
 import type { GuardadoResultado } from "@/types/components";
 
@@ -49,6 +49,8 @@ export async function getProductosPaginado(
   if (tiendaId) {
     countQuery = countQuery.eq("tienda_id", tiendaId);
   }
+  // Excluir productos eliminados (soft delete)
+  countQuery = countQuery.is("eliminado_en", null);
   if (search) {
     countQuery = countQuery.ilike("nombre", `%${search}%`);
   }
@@ -70,6 +72,8 @@ export async function getProductosPaginado(
   if (tiendaId) {
     query = query.eq("tienda_id", tiendaId);
   }
+  // Excluir productos eliminados (soft delete)
+  query = query.is("eliminado_en", null);
   if (search) {
     query = query.ilike("nombre", `%${search}%`);
   }
@@ -106,6 +110,8 @@ export async function getProductosCount() {
   if (tienda?.id) {
     q = q.eq("tienda_id", tienda.id);
   }
+  // Excluir productos eliminados (soft delete)
+  q = q.is("eliminado_en", null);
   const { count } = await q;
   return count || 0;
 }
@@ -195,7 +201,7 @@ export async function crearProducto(
     ]);
 
     if (error) {
-      return { ok: false, error: `No se pudo crear el producto: ${error.message}` };
+      return { ok: false, error: `No se pudo crear el producto. Verifica que el nombre sea unico e intenta nuevamente.` };
     }
 
     if (imagen.claveAnterior && imagen.claveAnterior !== imagen.imagen_key) {
@@ -223,9 +229,10 @@ export async function eliminarProducto(
     const server = createServerClient({ cookies: await cookies() });
     const { data: fila } = await server.database
       .from("productos")
-      .select("imagen_key")
+      .select("id")
       .eq("id", id)
       .eq("tienda_id", tienda.id)
+      .is("eliminado_en", null)
       .maybeSingle();
 
     if (!fila) {
@@ -234,15 +241,11 @@ export async function eliminarProducto(
 
     const { error } = await server.database
       .from("productos")
-      .delete()
+      .update({ eliminado_en: new Date().toISOString() })
       .eq("id", id);
 
     if (error) {
       return { ok: false, error: `No se pudo eliminar el producto: ${error.message}` };
-    }
-
-    if (fila?.imagen_key) {
-      await borrarArchivoStorage(fila.imagen_key);
     }
 
     revalidatePath("/productos");
@@ -251,6 +254,35 @@ export async function eliminarProducto(
     return {
       ok: false,
       error: err instanceof Error ? err.message : "No se pudo eliminar el producto",
+    };
+  }
+}
+
+export async function restaurarProducto(
+  id: string,
+): Promise<GuardadoResultado> {
+  try {
+    const { tienda, error: authError } = await requireAuth();
+    if (!tienda) {
+      return { ok: false, error: authError ?? "No autorizado. Inicia sesión." };
+    }
+    const server = createServerClient({ cookies: await cookies() });
+    const { error } = await server.database
+      .from("productos")
+      .update({ eliminado_en: null })
+      .eq("id", id)
+      .eq("tienda_id", tienda.id);
+
+    if (error) {
+      return { ok: false, error: `No se pudo restaurar el producto: ${error.message}` };
+    }
+
+    revalidatePath("/productos");
+    return { ok: true };
+  } catch (err) {
+    return {
+      ok: false,
+      error: err instanceof Error ? err.message : "No se pudo restaurar el producto",
     };
   }
 }
@@ -290,6 +322,51 @@ async function actualizarDesdeForm(
     return {
       ok: false,
       error: err instanceof Error ? err.message : "No se pudieron guardar los cambios",
+    };
+  }
+}
+
+export async function actualizarEstadoProductos(
+  ids: string[],
+  estado: boolean,
+): Promise<GuardadoResultado> {
+  try {
+    const { tienda, error: authError } = await requireAuth();
+    if (!tienda) {
+      return { ok: false, error: authError ?? "No autorizado. Inicia sesión." };
+    }
+
+    if (!Array.isArray(ids) || ids.length === 0) {
+      return { ok: false, error: "No se proporcionaron productos" };
+    }
+
+    const server = createServerClient({ cookies: await cookies() });
+    
+    const { data: propios } = await server.database
+      .from("productos")
+      .select("id")
+      .in("id", ids)
+      .eq("tienda_id", tienda.id);
+
+    if (!propios || propios.length !== ids.length) {
+      return { ok: false, error: "Algunos productos no pertenecen a tu tienda" };
+    }
+
+    const { error } = await server.database
+      .from("productos")
+      .update({ estado, updated_at: new Date().toISOString() })
+      .in("id", ids);
+
+    if (error) {
+      return { ok: false, error: `No se pudo actualizar el estado: ${error.message}` };
+    }
+
+    revalidatePath("/productos");
+    return { ok: true };
+  } catch (err) {
+    return {
+      ok: false,
+      error: err instanceof Error ? err.message : "No se pudo actualizar el estado",
     };
   }
 }

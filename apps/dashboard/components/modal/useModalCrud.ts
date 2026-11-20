@@ -19,10 +19,6 @@ interface UseModalCrudOptions<T> {
   onDelete?: (id: string) => Promise<GuardadoResultado>;
 }
 
-/**
- * Estado y handlers compartidos de los modales CRUD (marca/categoría/producto).
- * Vive el ciclo abrir→subir imagen→guardar/eliminar que era idéntico en los tres.
- */
 export function useModalCrud<T>({
   entidad,
   prefijo,
@@ -42,10 +38,14 @@ export function useModalCrud<T>({
   });
   const router = useRouter();
 
-  const id = (entidad as { id?: string } | undefined)?.id;
+  const rawId = (entidad as { id?: string } | undefined)?.id;
   const nombre = (entidad as { nombre?: string } | undefined)?.nombre ?? "";
-  const esCrear = !id;
+  const esCrear = !rawId;
   const ocupado = fase !== "idle";
+
+  const onDeleteFn = onDelete ?? (async () => ({ ok: true } as const));
+
+  const [mostrarConfirmEliminar, setMostrarConfirmEliminar] = useState(false);
 
   const abrir = () => {
     setFase("idle");
@@ -57,6 +57,7 @@ export function useModalCrud<T>({
     setFase("idle");
     setErrorGuardado(null);
     setIsOpen(false);
+    setMostrarConfirmEliminar(false);
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -88,17 +89,16 @@ export function useModalCrud<T>({
     }
   };
 
-  const handleEliminar = async () => {
-    if (!id || !onDelete || ocupado) return;
+  const handleEliminar = () => {
+    if (!rawId || !onDelete || ocupado) return;
+    setMostrarConfirmEliminar(true);
+  };
 
-    const confirmado = window.confirm(
-      `¿Eliminar "${nombre}"?\nEsta acción no se puede deshacer.`,
-    );
-    if (!confirmado) return;
-
+  const handleConfirmEliminar = async () => {
+    setMostrarConfirmEliminar(false);
     setFase("eliminando");
     try {
-      const resultado = await onDelete(id);
+      const resultado = await onDeleteFn!(rawId!);
       if (esFallo(resultado)) {
         window.alert(resultado.error);
       } else {
@@ -111,6 +111,10 @@ export function useModalCrud<T>({
     }
   };
 
+  const handleCancelEliminar = () => {
+    setMostrarConfirmEliminar(false);
+  };
+
   return {
     isOpen,
     fase,
@@ -118,12 +122,15 @@ export function useModalCrud<T>({
     imagenRef,
     esCrear,
     ocupado,
-    id,
+    id: rawId,
     nombre,
     abrir,
     cerrar,
     handleSubmit,
     handleEliminar,
+    handleConfirmEliminar,
+    handleCancelEliminar,
+    mostrarConfirmEliminar,
     setErrorGuardado,
   };
 }

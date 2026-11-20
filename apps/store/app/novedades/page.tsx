@@ -5,6 +5,9 @@ import ScrollReveal from "../../components/ui/ScrollReveal"
 import { getProductosNuevos } from "../actions/products";
 import { getConfigDiseno } from "../actions/store";
 import Link from "next/link";
+import { EmptyState } from "../../components/ui/EmptyState";
+import { Sparkles } from "lucide-react";
+import { rutaTienda } from "../../lib/rutas";
 
 export const revalidate = 30;
 
@@ -13,10 +16,13 @@ export const metadata: Metadata = {
   description: "Descubre lo último que llegó a nuestra tienda. Estilo y tendencia para ti.",
 };
 
+import { requerirTienda } from "../../lib/tenant";
+
 export default async function Page() {
+  const tienda = await requerirTienda();
   const [productos, { config }] = await Promise.all([
-    getProductosNuevos(),
-    getConfigDiseno(),
+    getProductosNuevos(tienda?.id),
+    getConfigDiseno(tienda?.subdominio),
   ]);
   const mostrarPrecios = Boolean(config.mostrar_precios ?? true);
 
@@ -27,7 +33,7 @@ export default async function Page() {
             <div className="breadcrumbs text-sm migaja-info">
                 <ul>
                     <li>
-                    <Link href="/">
+                    <Link href={rutaTienda(tienda?.subdominio, "/")}>
                         <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -63,7 +69,7 @@ export default async function Page() {
             <ScrollReveal>
               <div className="novedades-info">
                   <div className="novedades-detalle">
-                      <h2>Novedades</h2>
+                      <h1>Novedades</h1>
                       <p>Descubre lo último que llegó a nuestra tienda. Estilo y tendencia para ti.</p>
                   </div>
               </div>
@@ -79,7 +85,12 @@ export default async function Page() {
                 </ScrollReveal>
               ))
             ) : (
-              <p className="novedades-vacio">Próximamente habrá novedades.</p>
+              <EmptyState
+                icon={Sparkles}
+                titulo="Próximamente habrá novedades"
+                descripcion="Vuelve pronto para ver los últimos productos que llegaron a nuestra tienda."
+                cta={{ label: "Explorar catálogo", href: rutaTienda(tienda?.subdominio, "/") }}
+              />
             )}
             </div>
           </ScrollReveal>

@@ -5,6 +5,33 @@ import { createServerClient } from "@insforge/sdk/ssr";
 import { getCurrentUser } from "@makced/db/server";
 import type { Tienda } from "@/types/database";
 
+// Persiste la tienda activa del usuario en una cookie.
+export async function setTiendaActiva(
+  tiendaId: string,
+): Promise<{ ok: boolean; error: string | null }> {
+  const user = await getCurrentUser();
+  if (!user) return { ok: false, error: "No autorizado." };
+
+  const insforge = createServerClient({ cookies: await cookies() });
+  const { data } = await insforge.database
+    .from("tiendas")
+    .select("id")
+    .eq("usuario_id", user.id)
+    .eq("id", tiendaId)
+    .maybeSingle();
+
+  if (!data) return { ok: false, error: "Tienda no válida." };
+
+  const store = await cookies();
+  store.set("tienda-activa", tiendaId, {
+    path: "/",
+    httpOnly: true,
+    sameSite: "lax",
+    maxAge: 60 * 60 * 24 * 30,
+  });
+  revalidatePath("/", "layout");
+  return { ok: true, error: null };
+}
 export interface TiendaAutorizada {
   id: string;
   diseno: unknown;
@@ -18,11 +45,12 @@ export interface TiendaAutorizada {
 // Nombre `requireAuth` (reconocido por react-doctor/server-auth-actions).
 export async function requireAuth(): Promise<{
   tienda: TiendaAutorizada | null;
+  tiendas: TiendaAutorizada[];
   error: string | null;
 }> {
   const user = await getCurrentUser();
   if (!user) {
-    return { tienda: null, error: "No autorizado. Inicia sesión." };
+    return { tienda: null, tiendas: [], error: "No autorizado. Inicia sesión." };
   }
 
   const insforge = createServerClient({ cookies: await cookies() });
@@ -30,16 +58,30 @@ export async function requireAuth(): Promise<{
     .from("tiendas")
     .select("id, diseno, color_principal, logo_url")
     .eq("activa", true)
-    .eq("usuario_id", user.id)
-    .maybeSingle();
+    .eq("usuario_id", user.id);
 
   if (error) {
-    return { tienda: null, error: `No se pudo verificar la tienda: ${error.message}` };
+    return { tienda: null, tiendas: [], error: `No se pudo verificar la tienda: ${error.message}` };
   }
-  if (!data) {
-    return { tienda: null, error: "No tienes una tienda asignada" };
+  const lista = (data ?? []) as TiendaAutorizada[];
+  if (lista.length === 0) {
+    return { tienda: null, tiendas: [], error: "No tienes una tienda asignada" };
   }
-  return { tienda: data as TiendaAutorizada, error: null };
+
+  // Resolver tienda activa: cookie tienda-activa o primera
+  let activa: TiendaAutorizada = lista[0];
+  try {
+    const store = await cookies();
+    const cookieVal = store.get("tienda-activa")?.value;
+    if (cookieVal) {
+      const found = lista.find((t) => t.id === cookieVal);
+      if (found) activa = found;
+    }
+  } catch {
+    // cookies() no disponible en este contexto: usar primera
+  }
+
+  return { tienda: activa, tiendas: lista, error: null };
 }
 
 // Lectura de la tienda del usuario autenticado (layout ya exige sesión).
@@ -58,9 +100,22 @@ export async function getTienda(): Promise<Tienda | null> {
       "id, usuario_id, nombre_tienda, propietario, subdominio, plan_actual, plantilla_id, color_principal, logo_url, descripcion, activa, created_at, diseno, whatsapp_numero",
     )
     .eq("usuario_id", user.id)
-    .eq("activa", true)
-    .maybeSingle();
-  return (data ?? null) as Tienda | null;
+    .eq("activa", true);
+
+  if (!data || data.length === 0) return null;
+
+  let selected = data[0] as Tienda;
+  try {
+    const store = await cookies();
+    const cookieVal = store.get("tienda-activa")?.value;
+    if (cookieVal) {
+      const found = (data as Tienda[]).find((t) => t.id === cookieVal);
+      if (found) selected = found;
+    }
+  } catch {
+    // ignore
+  }
+  return selected;
 }
 
 // Datos de cuenta del dueño (email + nombre público).
@@ -75,7 +130,20 @@ export async function getUsuarioTienda(
   return { email: user.email, nombre: user.profile?.name ?? null };
 }
 
-// Actualiza el número de WhatsApp de pedidos de la tienda del usuario.
+// Lista de tiendas activas del usuario (para el selector).
+export async function getTiendas(): Promise<Tienda[]> {
+  const user = await getCurrentUser();
+  if (!user) return [];
+  const insforge = createServerClient({ cookies: await cookies() });
+  const { data } = await insforge.database
+    .from("tiendas")
+    .select(
+      "id, usuario_id, nombre_tienda, propietario, subdominio, plan_actual, plantilla_id, color_principal, logo_url, descripcion, activa, created_at, diseno, whatsapp_numero",
+    )
+    .eq("usuario_id", user.id)
+    .eq("activa", true);
+  return (data ?? []) as Tienda[];
+}
 // Valida formato: solo dígitos, 8–15 caracteres (ej. 573001234567).
 export async function updateTiendaWhatsapp(
   numero: string,

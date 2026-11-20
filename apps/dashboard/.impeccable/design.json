@@ -1,0 +1,366 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-24T22:15:00-05:00",
+  "title": "Design System: Makced Dashboard",
+  "extensions": {
+    "colorMeta": {
+      "action-green": {
+        "role": "primary",
+        "displayName": "Action Green",
+        "canonical": "#10B981",
+        "tonalRamp": ["#064E3B", "#065F46", "#047857", "#059669", "#10B981", "#34D399", "#6EE7B7", "#D1FAE5"]
+      },
+      "brand-turquoise": {
+        "role": "secondary",
+        "displayName": "Makced Turquoise",
+        "canonical": "#00D2B4",
+        "tonalRamp": ["#004D43", "#006B5D", "#008A78", "#00A891", "#00D2B4", "#35DFC5", "#7AEADA", "#CCF8F1"]
+      },
+      "brand-navy": {
+        "role": "tertiary",
+        "displayName": "Deep Brand Navy",
+        "canonical": "#102E85",
+        "tonalRamp": ["#091638", "#0C2058", "#102E85", "#173DA8", "#2B55C9", "#5B7DE0", "#9BB0F0", "#DCE4FC"]
+      },
+      "canvas-light": {
+        "role": "neutral",
+        "displayName": "Cool Slate Canvas",
+        "canonical": "#F8FAFC",
+        "tonalRamp": ["#1E293B", "#334155", "#475569", "#64748B", "#94A3B8", "#CBD5E1", "#E2E8F0", "#F8FAFC"]
+      },
+      "canvas-dark": {
+        "role": "neutral",
+        "displayName": "Blue-Black Canvas",
+        "canonical": "#0B0F19"
+      },
+      "new-violet": {
+        "role": "tertiary",
+        "displayName": "New Violet",
+        "canonical": "#7C53ED",
+        "tonalRamp": ["#2E1065", "#4C1D95", "#5B21B6", "#6D28D9", "#7C53ED", "#9B7AF5", "#C4B5FD", "#EDE9FE"]
+      },
+      "amber-light": {
+        "role": "tertiary",
+        "displayName": "Warm Amber",
+        "canonical": "#92400E",
+        "tonalRamp": ["#451A03", "#78350F", "#92400E", "#B45309", "#D97706", "#F59E0B", "#FBBF24", "#FEF3C7"]
+      },
+      "amber-warn": {
+        "role": "tertiary",
+        "displayName": "Amber Warn",
+        "canonical": "#F59E0B",
+        "tonalRamp": ["#78350F", "#92400E", "#B45309", "#D97706", "#F59E0B", "#FBBF24", "#FDE68A", "#FEF3C7"]
+      },
+      "discount-orange-light": {
+        "role": "tertiary",
+        "displayName": "Discount Orange",
+        "canonical": "#C2410C",
+        "tonalRamp": ["#431407", "#7C2D12", "#9A3412", "#C2410C", "#EA580C", "#F97316", "#FB923C", "#FFEDD5"]
+      },
+      "danger-light": {
+        "role": "tertiary",
+        "displayName": "Destructive Red",
+        "canonical": "#B91C1C",
+        "tonalRamp": ["#450A0A", "#7F1D1D", "#991B1B", "#B91C1C", "#DC2626", "#EF4444", "#FCA5A5", "#FEE2E2"]
+      },
+      "danger-dark": {
+        "role": "tertiary",
+        "displayName": "Destructive Red Light",
+        "canonical": "#F87171",
+        "tonalRamp": ["#7F1D1D", "#991B1B", "#B91C1C", "#DC2626", "#EF4444", "#F87171", "#FCA5A5", "#FEE2E2"]
+      },
+      "white": {
+        "role": "neutral",
+        "displayName": "Pure White",
+        "canonical": "#FFFFFF"
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Figtree Display",
+        "purpose": "Page titles and primary route statements."
+      },
+      "body": {
+        "displayName": "Figtree Body",
+        "purpose": "Product information, descriptions, and form content."
+      },
+      "label": {
+        "displayName": "Figtree Label",
+        "purpose": "Status, metadata, and compact control labels."
+      },
+      "metric": {
+        "displayName": "Figtree Metric",
+        "purpose": "KPI values and summary card numbers."
+      }
+    },
+    "shadows": [
+      {
+        "name": "card-hover",
+        "value": "0 4px 12px var(--db-overlay-black-8)",
+        "purpose": "Subtle lift on entity cards and featured cards during hover."
+      },
+      {
+        "name": "button-hover",
+        "value": "0 2px 8px var(--db-overlay-black-8)",
+        "purpose": "Depth cue for primary action buttons on hover."
+      },
+      {
+        "name": "spotlight-light",
+        "value": "0 4px 16px var(--db-overlay-black-8)",
+        "purpose": "Featured product spotlight card at rest in light mode."
+      },
+      {
+        "name": "spotlight-dark",
+        "value": "0 8px 24px var(--db-overlay-black-35), 0 0 0 1px var(--db-border)",
+        "purpose": "Featured product spotlight card at rest in dark mode."
+      },
+      {
+        "name": "toast",
+        "value": "0 4px 16px var(--db-overlay-black-12)",
+        "purpose": "Floating toast notifications."
+      }
+    ],
+    "motion": [
+      {
+        "name": "control-state",
+        "value": "160ms ease",
+        "purpose": "Button, navigation, and control state changes."
+      },
+      {
+        "name": "shell-reflow",
+        "value": "180ms ease",
+        "purpose": "Sidebar and main-content responsive transitions; disable for reduced motion."
+      },
+      {
+        "name": "hover-lift",
+        "value": "200ms cubic-bezier(0.4, 0, 0.2, 1)",
+        "purpose": "Card and row hover elevation. Use translateY(-0.5px to -2px)."
+      },
+      {
+        "name": "toast-entrance",
+        "value": "300ms cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Toast slide-in from bottom with scale (0.96 → 1)."
+      },
+      {
+        "name": "celebration-entrance",
+        "value": "600ms cubic-bezier(0.34, 1.56, 0.64, 1)",
+        "purpose": "Celebration toast bouncy entrance. Disable for reduced motion."
+      },
+      {
+        "name": "empty-icon-bounce",
+        "value": "600ms ease-out",
+        "purpose": "Empty state icon bounce on mount (translateY 0 → -8px → 0). Disable for reduced motion."
+      },
+      {
+        "name": "count-pop",
+        "value": "300ms cubic-bezier(0.34, 1.56, 0.64, 1)",
+        "purpose": "Bulk selection count pop animation (scale 1 → 1.15 → 1)."
+      },
+      {
+        "name": "pulse-urgent",
+        "value": "500ms ease-in-out infinite",
+        "purpose": "Urgent button pulse in last 2 seconds of toast countdown (scale 1 → 1.05 → 1). Disable for reduced motion."
+      },
+      {
+        "name": "confetti-fall",
+        "value": "1s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+        "purpose": "Confetti particle fall animation for bulk actions on 10+ items. Disable for reduced motion."
+      },
+      {
+        "name": "progress-fill",
+        "value": "400ms cubic-bezier(0.4, 0, 0.2, 1)",
+        "purpose": "Onboarding progress bar width transition."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "mobile",
+        "value": "640px"
+      },
+      {
+        "name": "compact-rail",
+        "value": "768px"
+      },
+      {
+        "name": "tablet",
+        "value": "1024px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The clear next step for a page or form. Gains depth on hover.",
+      "html": "<button class=\"ds-button-primary\" type=\"button\">Guardar cambios</button>",
+      "css": ".ds-button-primary{display:inline-flex;min-height:44px;align-items:center;justify-content:center;gap:8px;padding:10px 16px;border:0;border-radius:8px;background:var(--db-btn-primary);color:var(--db-btn-primary-fg);font:600 14px/1.4 var(--font-figtree),sans-serif;cursor:pointer;transition:background-color 160ms ease,transform 140ms cubic-bezier(.23,1,.32,1),box-shadow 160ms ease}.ds-button-primary:hover{background:var(--db-btn-primary-hover);transform:translateY(-0.5px);box-shadow:0 2px 8px var(--db-overlay-black-8)}.ds-button-primary:active{transform:scale(.98) translateY(0)}.ds-button-primary:focus-visible{outline:2px solid var(--db-focus);outline-offset:3px}"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "A supporting action that does not compete with the primary action.",
+      "html": "<button class=\"ds-button-secondary\" type=\"button\">Cancelar</button>",
+      "css": ".ds-button-secondary{display:inline-flex;min-height:44px;align-items:center;gap:8px;padding:9px 14px;border:1px solid var(--db-border);border-radius:8px;background:transparent;color:var(--db-text-secondary);font:600 14px/1.4 var(--font-figtree),sans-serif;cursor:pointer;transition:border-color 160ms ease,color 160ms ease,background-color 160ms ease,transform 140ms cubic-bezier(.23,1,.32,1)}.ds-button-secondary:hover{border-color:var(--db-text-muted);color:var(--db-text-primary);background:var(--db-bg-card-hover)}.ds-button-secondary:active{transform:scale(.98)}.ds-button-secondary:disabled{opacity:.6;cursor:not-allowed}.ds-button-secondary:focus-visible{outline:2px solid var(--db-focus);outline-offset:3px}"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "input-text",
+      "description": "Theme-aware entry field with a clear keyboard focus state.",
+      "html": "<label class=\"ds-field\"><span>Nombre del producto</span><input class=\"ds-input\" type=\"text\" placeholder=\"Ej. Modelo urbano\"></label>",
+      "css": ".ds-field{display:grid;gap:6px;color:var(--db-text-primary);font:600 12px/1.4 var(--font-figtree),sans-serif}.ds-input{width:100%;min-height:44px;padding:10px 12px;border:1px solid var(--db-border);border-radius:8px;background:var(--db-bg-main);color:var(--db-text-primary);font:400 14px/1.5 var(--font-figtree),sans-serif}.ds-input::placeholder{color:var(--db-text-muted)}.ds-input:focus-visible{border-color:var(--db-btn-primary-hover);outline:2px solid color-mix(in srgb,var(--db-btn-primary) 35%,transparent);outline-offset:1px}"
+    },
+    {
+      "name": "Panel Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "A quiet bordered surface for a related task or content group.",
+      "html": "<section class=\"ds-panel\"><h3>Datos del catálogo</h3><p>Información relacionada en una sola superficie.</p></section>",
+      "css": ".ds-panel{padding:24px;border:1px solid var(--db-border);border-radius:12px;background:var(--db-bg-card);color:var(--db-text-primary)}.ds-panel h3{margin:0 0 8px;font:700 16px/1.3 var(--font-figtree),sans-serif}.ds-panel p{margin:0;color:var(--db-text-secondary);font:400 14px/1.5 var(--font-figtree),sans-serif}"
+    },
+    {
+      "name": "Entity Card",
+      "kind": "card",
+      "refersTo": "entity-card",
+      "description": "Visual-first card for brands and categories with image area, name, status, and actions. Lifts on hover.",
+      "html": "<article class=\"ds-entity-card\"><div class=\"ds-entity-visual\"><img src=\"\" alt=\"\"></div><div class=\"ds-entity-content\"><div class=\"ds-entity-heading\"><h3>Nike</h3><span class=\"ds-entity-status ds-entity-status-active\">Activa</span></div><div class=\"ds-actions\"><button class=\"ds-action-btn\" aria-label=\"Editar\">✎</button></div></div></article>",
+      "css": ".ds-entity-card{min-width:0;overflow:hidden;border:1px solid var(--db-border);border-radius:12px;background:var(--db-bg-card);transition:border-color 180ms ease,transform 180ms ease,box-shadow 180ms ease}.ds-entity-card:hover{transform:translateY(-2px);border-color:var(--db-btn-primary-hover);box-shadow:0 4px 12px var(--db-overlay-black-8)}.ds-entity-visual{display:grid;aspect-ratio:16/9;place-items:center;overflow:hidden;background:var(--db-bg-card-hover)}.ds-entity-visual img{width:100%;height:100%;object-fit:contain;padding:20px}.ds-entity-content{display:flex;min-height:100px;align-items:center;justify-content:space-between;gap:12px;padding:16px}.ds-entity-heading h3{margin:0;color:var(--db-text-primary);font:700 14px/1.35 var(--font-figtree),sans-serif}.ds-entity-status{display:inline-flex;align-items:center;min-height:22px;padding:2px 8px;border-radius:999px;background:var(--db-bg-card-hover);color:var(--db-text-secondary);font:650 11px/1.4 var(--font-figtree),sans-serif}.ds-entity-status-active{background:color-mix(in srgb,var(--db-green-status) 12%,var(--db-bg-card));color:var(--db-green-status)}"
+    },
+    {
+      "name": "Status Chip",
+      "kind": "chip",
+      "refersTo": "status-chip",
+      "description": "A compact semantic label; color is tied to the status meaning.",
+      "html": "<span class=\"ds-status-chip\">Activo</span>",
+      "css": ".ds-status-chip{display:inline-flex;align-items:center;padding:3px 8px;border-radius:999px;background:color-mix(in srgb,var(--db-green-status) 14%,var(--db-bg-card));color:var(--db-green-status);font:600 11px/1.4 var(--font-figtree),sans-serif}"
+    },
+    {
+      "name": "Active Navigation Link",
+      "kind": "nav",
+      "refersTo": "navigation-active",
+      "description": "Identifies the current dashboard section without a heavy rail. Gains subtle border on hover.",
+      "html": "<a class=\"ds-nav-link ds-nav-link-active\" href=\"#catalog\">Productos</a>",
+      "css": ".ds-nav-link{display:flex;min-height:46px;align-items:center;padding:9px 12px;border:1px solid transparent;border-radius:6px;color:var(--db-text-secondary);font:550 13px/1.4 var(--font-figtree),sans-serif;text-decoration:none;transition:background-color 160ms ease,color 160ms ease,border-color 160ms ease,transform 120ms cubic-bezier(.23,1,.32,1)}.ds-nav-link:hover{background:var(--db-bg-card-hover);color:var(--db-text-primary);border-color:var(--db-border)}.ds-nav-link:active{transform:scale(.98)}.ds-nav-link-active{background:color-mix(in srgb,var(--db-brand-turquoise) 16%,var(--db-bg-card));color:var(--db-text-primary);font-weight:700}.ds-nav-link:focus-visible{outline:2px solid var(--db-focus);outline-offset:3px}"
+    },
+    {
+      "name": "Toast Default",
+      "kind": "custom",
+      "refersTo": "toast",
+      "description": "Floating notification at bottom-right with countdown progress bar and undo action.",
+      "html": "<div class=\"ds-toast\" role=\"status\" aria-live=\"polite\"><div class=\"ds-toast-content\"><span class=\"ds-toast-message\">Producto eliminado</span><div class=\"ds-toast-actions\"><button class=\"ds-toast-btn ds-toast-btn-undo\">↶ Deshacer (5)</button><button class=\"ds-toast-btn ds-toast-btn-dismiss\">✕</button></div></div><div class=\"ds-toast-progress\"></div></div>",
+      "css": ".ds-toast{position:fixed;bottom:24px;right:24px;z-index:1000;animation:ds-toast-slide-in 300ms cubic-bezier(.16,1,.3,1)}.ds-toast-content{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--db-bg-card);border:1px solid var(--db-border);border-radius:12px;box-shadow:0 4px 16px var(--db-overlay-black-12);min-width:280px;max-width:400px}.ds-toast-message{flex:1;font:500 13px/1.4 var(--font-figtree),sans-serif;color:var(--db-text-primary)}.ds-toast-btn{display:inline-flex;align-items:center;gap:4px;padding:6px 10px;border:none;border-radius:8px;font:600 10px/1.4 var(--font-figtree),sans-serif;cursor:pointer;transition:background-color 160ms ease}.ds-toast-btn-undo{background:color-mix(in srgb,var(--db-btn-primary) 12%,var(--db-bg-card));color:var(--db-btn-primary)}.ds-toast-btn-undo:hover{background:color-mix(in srgb,var(--db-btn-primary) 20%,var(--db-bg-card))}.ds-toast-progress{height:3px;background:var(--db-btn-primary);border-radius:0 0 12px 12px;animation:ds-toast-progress 5s linear;will-change:width}@keyframes ds-toast-slide-in{from{opacity:0;transform:translateY(12px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}@keyframes ds-toast-progress{from{width:100%}to{width:0%}}"
+    },
+    {
+      "name": "Toast Celebration",
+      "kind": "custom",
+      "refersTo": "toast-celebration",
+      "description": "Celebration variant with gradient background, PartyPopper icon, and bouncy entrance. Shown for first product creation.",
+      "html": "<div class=\"ds-toast ds-toast-celebration\" role=\"status\" aria-live=\"polite\"><div class=\"ds-toast-content\"><div class=\"ds-toast-celebration-icon\">🎉</div><span class=\"ds-toast-message\">¡Tu primer producto está en la tienda!</span><div class=\"ds-toast-actions\"><button class=\"ds-toast-btn ds-toast-btn-dismiss\">✕</button></div></div><div class=\"ds-toast-progress\"></div></div>",
+      "css": ".ds-toast-celebration{animation:ds-toast-celebration-in 600ms cubic-bezier(.34,1.56,.64,1)}.ds-toast-celebration .ds-toast-content{background:linear-gradient(135deg,var(--db-bg-card) 0%,var(--db-bg-card-hover) 100%);border-color:var(--db-btn-primary)}.ds-toast-celebration .ds-toast-progress{background:linear-gradient(90deg,var(--db-btn-primary) 0%,var(--primary-mint) 100%)}.ds-toast-celebration-icon{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:6px;background:linear-gradient(135deg,var(--db-btn-primary) 0%,var(--primary-mint) 100%);color:var(--db-btn-primary-fg);flex-shrink:0;animation:ds-toast-celebration-icon-bounce 600ms ease-out 300ms}@keyframes ds-toast-celebration-in{0%{opacity:0;transform:translateY(20px) scale(.9)}100%{opacity:1;transform:translateY(0) scale(1)}}@keyframes ds-toast-celebration-icon-bounce{0%,100%{transform:scale(1) rotate(0)}25%{transform:scale(1.2) rotate(-10deg)}50%{transform:scale(1.1) rotate(10deg)}75%{transform:scale(1.15) rotate(-5deg)}}"
+    },
+    {
+      "name": "Empty State",
+      "kind": "custom",
+      "refersTo": "empty-state",
+      "description": "Centered layout with animated icon, step indicator, title, description, and optional CTA. Conversational copy.",
+      "html": "<div class=\"ds-empty\"><div class=\"ds-empty-icon-wrap ds-empty-icon-animated\"><svg></svg></div><span class=\"ds-empty-paso\">Paso 1 de 3</span><p class=\"ds-empty-titulo\">¡Hola! Aquí aparecerán tus productos</p><p class=\"ds-empty-texto\">Agrega tu primer producto para comenzar a vender.</p></div>",
+      "css": ".ds-empty{text-align:center;padding:44px 20px;display:flex;flex-direction:column;align-items:center;gap:8px}.ds-empty-icon-wrap{width:56px;height:56px;border-radius:12px;background:color-mix(in srgb,var(--db-btn-primary) 10%,var(--db-bg-card));display:flex;align-items:center;justify-content:center;margin-bottom:8px}.ds-empty-icon-svg{color:var(--db-btn-primary)}.ds-empty-icon-animated{animation:ds-empty-bounce 600ms ease-out}.ds-empty-paso{font:600 10px/1.4 var(--font-figtree),sans-serif;text-transform:uppercase;letter-spacing:.08em;color:var(--db-btn-primary);margin-bottom:4px}.ds-empty-titulo{margin:0 0 6px;font:600 15px/1.5 var(--font-figtree),sans-serif;color:var(--db-text-primary)}.ds-empty-texto{margin:0 0 16px;font:400 13px/1.5 var(--font-figtree),sans-serif;color:var(--db-text-muted)}@keyframes ds-empty-bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}"
+    },
+    {
+      "name": "Bulk Actions Bar",
+      "kind": "custom",
+      "refersTo": "bulk-bar",
+      "description": "Floating bar that appears when products are selected, with count, action buttons, and optional status message.",
+      "html": "<div class=\"ds-bulk-bar\"><span class=\"ds-bulk-count\">5 seleccionados</span><div class=\"ds-bulk-actions\"><button class=\"ds-bulk-btn ds-bulk-btn-activate\">Activar</button><button class=\"ds-bulk-btn ds-bulk-btn-deactivate\">Desactivar</button><button class=\"ds-bulk-btn ds-bulk-btn-clear\">Deseleccionar</button></div></div>",
+      "css": ".ds-bulk-bar{display:flex;align-items:center;gap:12px;padding:10px 16px;margin-bottom:12px;background:color-mix(in srgb,var(--db-btn-primary) 10%,var(--db-bg-card));border:1px solid color-mix(in srgb,var(--db-btn-primary) 25%,var(--db-border));border-radius:12px;animation:ds-bulk-slide-in 200ms ease-out}.ds-bulk-count{font:600 13px/1.4 var(--font-figtree),sans-serif;color:var(--db-text-primary);white-space:nowrap}.ds-bulk-actions{display:flex;gap:8px;margin-left:auto}.ds-bulk-btn{display:inline-flex;align-items:center;padding:6px 14px;font:600 13px/1.4 var(--font-figtree),sans-serif;border:1px solid var(--db-border);border-radius:8px;background:var(--db-bg-card);color:var(--db-text-primary);cursor:pointer;transition:background-color 160ms ease,border-color 160ms ease,transform 120ms ease;min-height:32px}.ds-bulk-btn:hover:not(:disabled){background:var(--db-bg-card-hover);transform:translateY(-1px)}.ds-bulk-btn-activate{background:color-mix(in srgb,var(--db-green-status) 12%,var(--db-bg-card));border-color:color-mix(in srgb,var(--db-green-status) 30%,var(--db-border));color:var(--db-green-status)}.ds-bulk-btn-activate:hover:not(:disabled){background:color-mix(in srgb,var(--db-green-status) 20%,var(--db-bg-card))}@keyframes ds-bulk-slide-in{from{opacity:0;transform:translateY(-8px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Taller de catálogo claro y enfocado",
+    "overview": "The dashboard is a calm working space for one person maintaining a real store catalog. It should feel practical, legible, and direct: product information stays visible, actions are easy to find, and the interface does not compete with the goods being managed. The Makced identity appears in precise turquoise details; action green is reserved for clear next steps. The system uses quiet, closely related surfaces to preserve focus in both themes. Product imagery can carry the strongest color on a page, while typography, spacing, and status colors make the work easy to scan. Delight is earned, not manufactured. Celebrations appear only at meaningful moments — the first product, a large batch operation, a completed onboarding step — and never interfere with the task at hand.",
+    "keyCharacteristics": [
+      "Focused catalog work with product identity and state visible at rest.",
+      "Functional color: green for actions, turquoise for brand recognition, and distinct semantic colors for status.",
+      "Quiet surfaces, compact controls, and consistent Spanish-language labels.",
+      "Subtle motion that rewards progress without distracting from work."
+    ],
+    "rules": [
+      {
+        "name": "The Color-Has-a-Job Rule",
+        "body": "Action green means an action; semantic badge colors mean the state they label. Do not use them as decoration.",
+        "section": "colors"
+      },
+      {
+        "name": "The One-Theme-At-a-Time Rule",
+        "body": "Use the complete light or dark neutral set together; never mix light and dark surface tokens within one dashboard view.",
+        "section": "colors"
+      },
+      {
+        "name": "The No-Border Rule",
+        "body": "Logos, icons, and toggle buttons do not need outlines. The background surface and hover state provide sufficient definition.",
+        "section": "colors"
+      },
+      {
+        "name": "The Product-First Rule",
+        "body": "Keep names and prices readable before secondary metadata; do not reduce essential product information to hover-only content.",
+        "section": "typography"
+      },
+      {
+        "name": "The Required-Field Rule",
+        "body": "Mark required form fields with a red asterisk (*) next to the label. Use the danger-red token for the asterisk.",
+        "section": "typography"
+      },
+      {
+        "name": "The Shell-Stays-Familiar Rule",
+        "body": "The dashboard keeps standard web navigation and controls at every breakpoint; responsive changes rearrange the work, not the interaction model.",
+        "section": "layout"
+      },
+      {
+        "name": "The Flat-By-Default Rule",
+        "body": "Do not add a shadow to every card; use tonal layers and borders first. Shadows appear only as a response to state (hover, elevation, focus).",
+        "section": "elevation"
+      },
+      {
+        "name": "The Motion-Respects-Users Rule",
+        "body": "All animations must check prefers-reduced-motion: reduce and disable transforms, transitions, and keyframes. State changes must remain visible (color, opacity) even when motion is removed.",
+        "section": "motion"
+      },
+      {
+        "name": "The One-Authored-Moment Rule",
+        "body": "Each interaction gets one animation, not scattered effects. Avoid identical entrances on every section.",
+        "section": "motion"
+      },
+      {
+        "name": "The Delight-Earned Rule",
+        "body": "Celebrations appear only at meaningful moments (first product, large batch operation, completed onboarding). Never celebrate an ordinary click.",
+        "section": "components"
+      }
+    ],
+    "dos": [
+      "Do use the active theme's page, card, text, and border tokens consistently.",
+      "Do keep the Makced turquoise as a brand accent and action green as the primary action.",
+      "Do make keyboard focus visible on buttons, links, and fields.",
+      "Do keep a visible-on-focus skip link and support arrow-key, Home, and End navigation in the design editor tabs.",
+      "Do keep touch targets at least 44px high and remove press movement when reduced motion is requested.",
+      "Do preserve product names, prices, categories, and status at mobile widths.",
+      "Do use semantic color consistently for 'Nuevo', active status, discounts, and destructive actions.",
+      "Do add fetchPriority='high' and decoding='async' to above-the-fold images (logos, featured products).",
+      "Do use loading='lazy' for below-the-fold images (product lists, brand grids).",
+      "Do show a celebration toast when the user creates their first product.",
+      "Do use conversational copy in empty states ('¡Hola! Aquí aparecerán tus productos')."
+    ],
+    "donts": [
+      "Don't apply dashboard palette changes to the public storefront or login.",
+      "Don't use a KPI wall, invented sales metrics, or decorative data in place of catalog information.",
+      "Don't hide essential product facts behind hover or truncate them without a usable way to read them.",
+      "Don't make every panel elevated or use accent colors as ornament.",
+      "Don't allow a child card, filter, or editor tab to create page-level horizontal overflow.",
+      "Don't add borders to logos, toggle buttons, or icon-only controls.",
+      "Don't use Math.random() during React render; use deterministic values or useMemo with stable keys.",
+      "Don't show the same tooltip or celebration on every interaction; delight is earned, not automatic.",
+      "Don't hard-code colors or font sizes; always use design tokens (var(--db-*))."
+    ]
+  }
+}

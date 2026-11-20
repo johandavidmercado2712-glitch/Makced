@@ -1,19 +1,29 @@
-import TablaSkeleton from "@/components/skeleton/TablaSkeleton";
+import "./productos.css";
 
-/** Silueta de la tabla de productos mientras se pagina/filtra en el servidor. */
 export default function LoadingProductos() {
   return (
-    <div className="dashboard">
-      <div className="db-panel db-header">
-        <div>
-          <span className="db-skeleton" style={{ display: "block", width: 180, height: 26 }} />
-          <span
-            className="db-skeleton db-skeleton-line db-skeleton-line--md"
-            style={{ display: "block", marginTop: 12 }}
-          />
-        </div>
+    <div className="dashboard db-loading" role="status" aria-busy="true" aria-live="polite">
+      <span className="db-sr-only">Cargando productos…</span>
+      <div className="db-loading-header" aria-hidden="true">
+        <span className="db-skeleton db-skeleton-line db-skeleton-line--lg" />
+        <span className="db-skeleton db-skeleton-line db-skeleton-line--md" />
       </div>
-      <TablaSkeleton filas={8} />
+      <div className="db-loading-filter" aria-hidden="true">
+        <span className="db-skeleton db-skeleton-line" />
+        <span className="db-skeleton db-skeleton-line" />
+        <span className="db-skeleton db-skeleton-line" />
+      </div>
+      <div className="db-product-grid" aria-hidden="true">
+        {Array.from({ length: 6 }, (_, index) => (
+          <div className="db-product-card" key={index}>
+            <span className="db-skeleton db-product-skeleton-image" />
+            <div className="db-product-skeleton-copy">
+              <span className="db-skeleton db-skeleton-line db-skeleton-line--md" />
+              <span className="db-skeleton db-skeleton-line db-skeleton-line--sm" />
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

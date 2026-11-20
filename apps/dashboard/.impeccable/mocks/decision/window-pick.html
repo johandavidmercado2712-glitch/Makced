@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>La vitrina de modelos</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;width:1440px;height:900px;overflow:hidden;font:15px/1.45 Arial,sans-serif;color:#24152d;background:#fbf3ea}
+.shell{display:flex;height:100%}.rail{width:232px;background:#32153f;color:#fff;padding:29px 18px;display:flex;flex-direction:column}
+.brand{font-size:18px;font-weight:800;letter-spacing:.12em;padding:5px 10px 37px}.brand small{display:block;font-size:10px;letter-spacing:.16em;color:#d9c8dc;margin-top:7px}
+.nav-label{font-size:10px;text-transform:uppercase;letter-spacing:.14em;color:#c7adca;padding:8px 10px}.nav a{display:block;padding:12px;margin:3px 0;color:#f5eaf4;text-decoration:none;border-radius:5px}.nav a.active{background:#e84c82;color:#27112c;font-weight:bold}
+.bottom{margin-top:auto;color:#e1d3e2;font-size:12px;padding:12px}
+main{flex:1;padding:40px 50px}.head{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}.eyebrow{text-transform:uppercase;font-size:10px;letter-spacing:.16em;color:#7c587c;font-weight:bold}.head h1{font-size:32px;margin:7px 0 4px;letter-spacing:-.04em}.head p{margin:0;color:#715d73}
+.button{background:#32153f;color:#fff;padding:12px 17px;border:0;border-radius:4px;font-weight:700}
+.banner{height:230px;background:#e84c82;position:relative;overflow:hidden;margin-bottom:22px;padding:28px 32px;color:#32153f;display:flex;justify-content:space-between}
+.banner h2{font-size:28px;max-width:330px;line-height:1.08;margin:8px 0}.banner p{margin:0;font-size:13px}.sun{position:absolute;width:210px;height:210px;border:22px solid #d9ea78;border-radius:50%;right:150px;top:35px}.banner-note{position:absolute;right:30px;bottom:20px;font-size:11px;letter-spacing:.1em;text-transform:uppercase}
+.section{display:flex;justify-content:space-between;align-items:end;margin-bottom:12px}.section h2{font-size:19px;margin:0}.section a{color:#783953;font-size:13px;font-weight:700;text-decoration:none}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.card{background:#fff;border:1px solid #eadbd4;padding:10px}
+.visual{height:185px;position:relative;overflow:hidden;background:#efcfbb}.visual.v2{background:#d7d1df}.visual.v3{background:#d9ea78}
+.shape{position:absolute;width:180px;height:57px;border-radius:60% 60% 42% 45%;background:#4a334a;left:45px;top:80px;transform:rotate(-12deg);box-shadow:inset 0 -9px #2c1b30}.v2 .shape{background:#e84c82;transform:rotate(10deg);left:62px}.v3 .shape{background:#4d547a;left:53px}
+.glint{position:absolute;width:42px;height:11px;background:#fff8;left:92px;top:91px;border-radius:50%;transform:rotate(-12deg)}
+.caption{display:flex;justify-content:space-between;padding:12px 4px 3px}.caption strong{font-size:13px}.caption span{font-weight:bold;color:#32153f;font-size:13px}.meta{padding:0 4px 4px;color:#806b7d;font-size:11px}
+.sample{font-size:10px;color:#8a7087;text-align:right;margin-top:16px}
+</style>
+</head>
+<body>
+<div class="shell"><aside class="rail"><div class="brand">MAKCED<small>TIENDA ONLINE</small></div><div class="nav-label">ADMINISTRAR</div><nav class="nav"><a class="active" href="#">Resumen</a><a href="#">Productos</a><a href="#">Marcas y categorías</a><a href="#">Diseño</a><a href="#">Mi tienda</a></nav><div class="bottom">Tu escaparate<br><br>Cerrar sesión</div></aside>
+<main><header class="head"><div><div class="eyebrow">La selección de tu tienda</div><h1>Tu escaparate</h1><p>Productos destacados que reciben el primer vistazo.</p></div><button class="button">Ver tienda ↗</button></header>
+<section class="banner"><div><div class="eyebrow">Colección destacada</div><h2>Modelos para descubrir</h2><p>Gestiona qué productos ocupan la portada de tu tienda.</p></div><div class="sun"></div><div class="banner-note">Selección · temporada actual</div></section>
+<div class="section"><h2>En portada</h2><a href="#">Gestionar productos →</a></div><section class="cards">
+<article class="card"><div class="visual"><div class="shape"></div><div class="glint"></div></div><div class="caption"><strong>Tenis urbano Lino</strong><span>$184.900</span></div><div class="meta">Casual · Destacado</div></article>
+<article class="card"><div class="visual v2"><div class="shape"></div><div class="glint"></div></div><div class="caption"><strong>Bota clásica Siena</strong><span>$229.000</span></div><div class="meta">Botas · Destacado</div></article>
+<article class="card"><div class="visual v3"><div class="shape"></div><div class="glint"></div></div><div class="caption"><strong>Sandalia Brisa</strong><span>$119.900</span></div><div class="meta">Sandalias · Destacado</div></article>
+</section><div class="sample">Muestra visual · datos y productos de ejemplo</div></main></div>
+</body>
+</html>

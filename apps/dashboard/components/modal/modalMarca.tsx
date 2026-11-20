@@ -6,6 +6,7 @@ import { Modal } from "./Modal";
 import { ModalAcciones } from "./ModalAcciones";
 import { etiquetaSubmit } from "./modal-utils";
 import { useModalCrud } from "./useModalCrud";
+import { ConfirmModal } from "./ConfirmModal";
 
 export function ModalMarca({
   entidad: marca,
@@ -26,6 +27,9 @@ export function ModalMarca({
     cerrar,
     handleSubmit,
     handleEliminar,
+    handleConfirmEliminar,
+    handleCancelEliminar,
+    mostrarConfirmEliminar,
     setErrorGuardado,
   } = useModalCrud<MarcaModalData>({
     entidad: marca,
@@ -109,6 +113,15 @@ export function ModalMarca({
         submitLabel={etiquetaSubmit(fase, esCrear, "marca")}
         onSubmit={handleSubmit}
         idValue={id ?? ""}
+      />
+
+      {/* Modal de confirmación de eliminación */}
+      <ConfirmModal
+        titulo="Eliminar marca"
+        mensaje={`¿Estás seguro de que quieres eliminar la marca "${nombre}"?`}
+        onConfirm={handleConfirmEliminar}
+        onCancel={handleCancelEliminar}
+        mostrar={mostrarConfirmEliminar}
       />
     </>
   );

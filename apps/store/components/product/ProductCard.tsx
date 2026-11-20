@@ -4,6 +4,7 @@ import Link from "next/link"
 import { useEffect, useState } from "react"
 import { Check, ShoppingCart } from "lucide-react"
 import { useCart } from "../auth/CartContext"
+import { useRutaTienda } from "../tenant/TenantProvider"
 import { formatCOP, precioEfectivo, tieneDescuento } from "../../lib/format"
 import type { ProductoCardData } from "../../types/store"
 import "./ProductCard.css"
@@ -22,6 +23,7 @@ export default function ProductCard({
   loading,
 }: ProductCardProps) {
   const { addItem } = useCart()
+  const ruta = useRutaTienda()
   const [agregado, setAgregado] = useState(false)
 
   useEffect(() => {
@@ -64,6 +66,10 @@ export default function ProductCard({
           alt={producto.nombre}
           fill
           sizes="(max-width: 768px) 50vw, 25vw"
+          onError={(e) => {
+            const img = e.currentTarget as HTMLImageElement;
+            img.src = "/producto.jpg";
+          }}
         />
         <button
           type="button"
@@ -96,7 +102,7 @@ export default function ProductCard({
 
   if (!producto.slug) return content
   return (
-    <Link href={`/verProducto?slug=${encodeURIComponent(producto.slug)}`}>
+    <Link href={ruta(`/verProducto?slug=${encodeURIComponent(producto.slug)}`)}>
       {content}
     </Link>
   )

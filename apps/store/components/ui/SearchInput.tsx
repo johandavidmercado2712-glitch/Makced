@@ -1,9 +1,11 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import { buscarProductos } from "@/app/actions/products";
-import { X } from "lucide-react";
+import Image from "next/image";
+import { buscarEnTienda } from "@/app/actions/search";
+import { X, Search } from "lucide-react";
 import { formatCOP, precioEfectivo } from "../../lib/format";
 import "./search-input.css";
+import { useRutaTienda } from "../tenant/TenantProvider";
 
 interface SearchResult {
   id: string;
@@ -23,6 +25,7 @@ export default function SearchInput({ onClose }: Props) {
   const [results, setResults] = useState<SearchResult[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const ruta = useRutaTienda();
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -35,7 +38,7 @@ export default function SearchInput({ onClose }: Props) {
     const controller = new AbortController();
     const timer = setTimeout(async () => {
       try {
-        const data = await buscarProductos(termino);
+        const data = await buscarEnTienda(termino);
         if (!controller.signal.aborted) {
           setResults(data);
         }
@@ -100,10 +103,16 @@ export default function SearchInput({ onClose }: Props) {
           {results.map((p) => (
             <a
               key={p.id}
-              href={p.slug ? `/verProducto?slug=${encodeURIComponent(p.slug)}` : "/"}
+              href={p.slug ? ruta(`/verProducto?slug=${encodeURIComponent(p.slug)}`) : ruta("/")}
               className="search-result"
             >
-              <img src={p.imagen_url || "/producto.jpg"} alt={p.nombre} />
+              <Image
+                src={p.imagen_url || "/producto.jpg"}
+                alt={p.nombre}
+                width={40}
+                height={40}
+                loading="lazy"
+              />
               <div>
                 <span className="search-result-name">{p.nombre}</span>
                 <span className="search-result-price">
@@ -112,6 +121,14 @@ export default function SearchInput({ onClose }: Props) {
               </div>
             </a>
           ))}
+        </div>
+      )}
+
+      {results.length === 0 && query.trim().length >= 2 && (
+        <div className="search-empty">
+          <Search size={24} />
+          <p>No encontramos productos para &quot;{query}&quot;</p>
+          <span>Intenta con otro término o explora nuestras categorías</span>
         </div>
       )}
     </div>

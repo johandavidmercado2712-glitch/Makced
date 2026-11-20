@@ -1,5 +1,9 @@
 "use client";
 
+// Los borradores de diseño pueden contener previews `blob:` antes de subirse:
+// `next/image` no acepta `blob:` y rompería el panel de estilo.
+/* eslint-disable @next/next/no-img-element */
+
 import { Image as ImageIcon } from "lucide-react";
 import { esEnlacePieVisible } from "@makced/db/diseno";
 import {
@@ -21,7 +25,7 @@ const renderImagen = (src: string | null, alt: string) =>
 const SECCIONES_PROMO = ["promo", "newsletter"] as const;
 
 export function PrevEstilo({ api }: { api: EditorDisenoApi }) {
-  const { colorP, borrador } = api;
+  const { colorP, borrador, productoVistaPrevia } = api;
   return (
     <div className="de-prev-estilo">
       <div className="de-prev-fila">
@@ -29,9 +33,24 @@ export function PrevEstilo({ api }: { api: EditorDisenoApi }) {
         <span className="de-prev-enlace">Ver catálogo</span>
       </div>
       <div className="de-prev-tarjeta">
-        <div className="de-prev-img" />
-        <strong>Zapatilla urbana</strong>
-        <span className="de-prev-precio">$ 189.900</span>
+        {productoVistaPrevia ? (
+          <>
+            <div className="de-prev-img">
+              {renderImagen(productoVistaPrevia.imagenUrl, productoVistaPrevia.nombre)}
+            </div>
+            <strong>{productoVistaPrevia.nombre}</strong>
+            {borrador.mostrar_precios !== false && (
+              <span className="de-prev-precio">
+                $ {productoVistaPrevia.precio.toLocaleString("es-CO")}
+              </span>
+            )}
+          </>
+        ) : (
+          <div className="de-prev-vacio">
+            <ImageIcon size={18} aria-hidden="true" />
+            <span>Destaca un producto para ver la vista previa.</span>
+          </div>
+        )}
       </div>
       <div className="de-prev-swatches">
         <span style={{ background: colorP }} />

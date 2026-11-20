@@ -2,6 +2,28 @@ import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { createServerClient } from '@insforge/sdk/ssr';
 import { requireAuth } from '@/actions/tienda';
+import { revalidateTag } from 'next/cache';
+
+/**
+ * Invalida la caché de la tienda (aplicación Next.js separada en otro puerto).
+ */
+async function invalidarCacheTienda(tags: string[], tiendaId?: string): Promise<void> {
+  const storeUrl = process.env.NEXT_PUBLIC_TIENDA_URL ?? 'http://localhost:3000';
+  const secret = process.env.REVALIDATE_SECRET;
+  if (!secret) return;
+  try {
+    await fetch(`${storeUrl}/api/revalidate`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-revalidate-secret': secret,
+      },
+      body: JSON.stringify({ tags, tienda_id: tiendaId }),
+    });
+  } catch (error) {
+    console.error('No se pudo invalidar caché de la tienda:', error);
+  }
+}
 
 export async function POST(request: Request) {
   try {
@@ -38,6 +60,11 @@ export async function POST(request: Request) {
     if (error) {
       return NextResponse.json({ ok: false, error: error.message }, { status: 500 });
     }
+
+    // Invalidar caché local y de la tienda
+    revalidateTag('diseno', 'max');
+    revalidateTag('tiendas', 'max');
+    await invalidarCacheTienda(['diseno', 'tiendas'], tienda.id);
 
     return NextResponse.json({ ok: true, mostrar_precios: show });
   } catch (err) {

@@ -194,6 +194,12 @@ export function ImagenSelector({
     onCambio({ modo: siguiente, archivo: siguienteArchivo, url, quitar: false });
   };
 
+  useEffect(() => {
+    return () => {
+      if (previewRef.current) URL.revokeObjectURL(previewRef.current);
+    };
+  }, []);
+
   const previewSrc = calcularPreviewSrc(quitar, modo, archivo, preview, urlActual, url);
   const hayImagen = Boolean(urlActual || archivo || url);
 

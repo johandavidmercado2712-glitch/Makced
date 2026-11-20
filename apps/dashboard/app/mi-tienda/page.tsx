@@ -27,7 +27,7 @@ export default async function MiTiendaPage() {
 
   if (!tienda) {
     return (
-      <div className="dashboard">
+      <div className="dashboard mt-dashboard">
         <div className="db-panel">
           <h1 className="db-title">Mi tienda</h1>
           <p className="db-subtitle">No hay ninguna tienda activa asociada a esta cuenta.</p>
@@ -40,7 +40,7 @@ export default async function MiTiendaPage() {
   const nombreCompleto = usuario?.nombre?.trim() ? usuario.nombre : "—";
 
   return (
-    <div className="dashboard">
+    <div className="dashboard mt-dashboard">
       <div className="db-panel db-header">
         <div>
           <h1 className="db-title">Mi tienda</h1>
@@ -89,6 +89,7 @@ export default async function MiTiendaPage() {
             </div>
             <CambiarContrasena email={usuario?.email ?? null} />
           </section>
+
         </div>
 
         <div className="mt-col">
@@ -148,6 +149,7 @@ export default async function MiTiendaPage() {
             </div>
             <PanelWhatsapp numero={tienda.whatsapp_numero} />
           </section>
+
         </div>
       </div>
     </div>

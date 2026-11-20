@@ -1,3 +1,65 @@
+/* Confirmación de eliminación */
+.db-confirmation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 0;
+  text-align: center;
+}
+
+.db-confirmation-icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--db-danger) 12%, transparent);
+  color: var(--db-danger);
+}
+
+.db-confirmation-text {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--db-text-primary);
+  max-width: 320px;
+}
+
+.db-confirmation-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+}
+
+/* Botón de acción destructiva */
+.db-modal-btn-danger {
+  background: var(--db-danger);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 120ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.db-modal-btn-danger:hover {
+  background: color-mix(in srgb, var(--db-danger) 85%, #000);
+}
+
+.db-modal-btn-danger:focus-visible {
+  outline: 2px solid var(--db-danger);
+  outline-offset: 2px;
+}
+
+.db-modal-btn-danger:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.db-modal-btn-danger:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 /* =========================================
    Modal de edición de producto
    ========================================= */
@@ -68,20 +130,20 @@
 
 .db-modal-title {
   margin: 0;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 700;
   color: var(--db-text-primary);
 }
 
 .db-modal-subtitle {
   margin: 4px 0 0;
-  font-size: 13px;
+  font-size: 12px;
   color: var(--db-text-muted);
 }
 
 .db-modal-close {
-  width: 32px;
-  height: 32px;
+  width: 44px;
+  height: 44px;
   flex-shrink: 0;
   display: grid;
   place-items: center;
@@ -130,6 +192,7 @@
 .db-select,
 .db-textarea {
   width: 100%;
+  min-height: 44px;
   padding: 10px 12px;
   background: var(--db-bg-main);
   border: 1px solid var(--db-border);
@@ -211,7 +274,7 @@
   border-radius: calc(var(--db-radius-sm) - 3px);
   background: transparent;
   color: var(--db-text-secondary);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
@@ -231,7 +294,7 @@
   border: 1px dashed var(--db-border);
   border-radius: var(--db-radius-sm);
   color: var(--db-text-primary);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   cursor: pointer;
   transition: border-color 0.2s, color 0.2s;
@@ -275,7 +338,7 @@
   background: var(--db-bg-main);
   border: 1px dashed var(--db-border);
   border-radius: var(--db-radius-sm);
-  font-size: 13px;
+  font-size: 12px;
   color: var(--db-text-muted);
 }
 
@@ -284,7 +347,7 @@
   background: none;
   border: none;
   color: var(--db-btn-primary);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   cursor: pointer;
 }
@@ -302,7 +365,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: 13px;
+  font-size: 12px;
   color: var(--db-text-secondary);
   cursor: pointer;
 }
@@ -362,12 +425,13 @@
 .db-modal-error {
   margin: 0 auto 0 0;
   max-width: 55%;
-  font-size: 13px;
+  font-size: 12px;
   line-height: 1.35;
   color: #f87171;
 }
 
 .db-modal-btn {
+  min-height: 44px;
   padding: 10px 18px;
   border: none;
   border-radius: var(--db-radius-sm);
@@ -375,7 +439,15 @@
   font-weight: 600;
   font-family: inherit;
   cursor: pointer;
-  transition: background 0.2s, border-color 0.2s, color 0.2s;
+  transition:
+    background 0.2s,
+    border-color 0.2s,
+    color 0.2s,
+    transform 120ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.db-modal-btn:not(:disabled):active {
+  transform: scale(0.98);
 }
 
 .db-modal-btn-secondary {
@@ -430,5 +502,21 @@
   .db-modal-btn {
     flex: 1;
     min-height: 44px;
+  }
+}
+
+/* =========================================
+   Spinner de carga
+   ========================================= */
+.db-spinner {
+  animation: db-spin 1s linear infinite;
+}
+
+@keyframes db-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
   }
 }

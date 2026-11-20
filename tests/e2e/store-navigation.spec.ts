@@ -38,7 +38,7 @@ test("un producto inexistente muestra una página amigable", async ({ page }) =>
   await page.goto("/verProducto?slug=producto-inexistente-xyz");
 
   await expect(
-    page.getByRole("heading", { name: "No encontramos esta página" }),
+    page.getByRole("heading", { name: "Esta página no existe" }),
   ).toBeVisible();
   await expect(
     page.getByRole("link", { name: "Volver al inicio" }),

@@ -17,7 +17,7 @@
   background: transparent;
   border: none;
   border-bottom: 2px solid var(--border-color);
-  font-size: 16px;
+  font-size: var(--fs-md);
   color: var(--text-primary);
   outline: none;
   transition: border-color 0.3s;
@@ -33,7 +33,7 @@
   left: 0;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 16px;
+  font-size: var(--fs-md);
   color: var(--text-secondary);
   pointer-events: none;
   transition: all 0.2s;
@@ -42,7 +42,7 @@
 .search-input:focus ~ .search-label,
 .search-input:not(:placeholder-shown) ~ .search-label {
   top: -4px;
-  font-size: 12px;
+  font-size: var(--fs-xs);
   color: var(--action-color);
 }
 
@@ -98,14 +98,14 @@
 }
 
 .search-result-name {
-  font-size: 14px;
+  font-size: var(--fs-base);
   font-weight: 600;
   color: var(--text-primary);
   display: block;
 }
 
 .search-result-price {
-  font-size: 13px;
+  font-size: var(--fs-sm);
   color: var(--action-color);
   font-weight: 600;
 }
@@ -123,6 +123,39 @@
     padding: 0;
   }
 
-  .search-input { font-size: 14px; }
+  .search-input { font-size: var(--fs-base); }
   .search-dropdown { max-height: min(50vh, 320px); }
+}
+
+.search-empty {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  margin-top: 8px;
+  padding: 24px;
+  text-align: center;
+  z-index: 100;
+}
+
+.search-empty svg {
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  opacity: 0.5;
+}
+
+.search-empty p {
+  font-size: var(--fs-base);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 4px 0;
+}
+
+.search-empty span {
+  font-size: var(--fs-sm);
+  color: var(--text-secondary);
 }

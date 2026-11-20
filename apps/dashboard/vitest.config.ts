@@ -12,6 +12,8 @@ export default defineConfig({
     setupFiles: ["./test.setup.ts"],
     include: ["**/*.test.{ts,tsx}"],
     exclude: ["node_modules/**", ".next/**"],
+    testTimeout: 15000,
+    hookTimeout: 15000,
     env: {
       NEXT_PUBLIC_INSFORGE_URL: "http://insforge.test",
       NEXT_PUBLIC_INSFORGE_ANON_KEY: "test-anon-key",

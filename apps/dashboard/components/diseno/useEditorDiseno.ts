@@ -297,7 +297,6 @@ export function useEditorGuardar(
     borrador,
     colorP,
     imagenes,
-    baseline,
     setFase,
     setError,
     setExito,

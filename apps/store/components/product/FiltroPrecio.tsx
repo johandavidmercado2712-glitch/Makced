@@ -3,6 +3,7 @@
 import { useState, useCallback, useTransition } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { formatCOP } from "../../lib/format"
+import { HelpCircle } from "lucide-react"
 import "./FiltroPrecio.css"
 
 interface FiltroPrecioProps {
@@ -83,6 +84,9 @@ export default function FiltroPrecio({ maxPrice }: FiltroPrecioProps) {
       <div className="filtro-precio">
         <span className={`filtro-precio-texto ${isPending ? "filtro-precio-texto--pending" : ""}`}>
           hasta {formatCOP(price)}
+        </span>
+        <span className="filtro-precio-tooltip" title="Filtra productos por precio máximo">
+          <HelpCircle size={14} />
         </span>
         <div className="filtro-precio-input-wrapper">
           <span className="filtro-precio-input-prefix">$</span>

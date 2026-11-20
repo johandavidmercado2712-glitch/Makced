@@ -1,6 +1,20 @@
 import { crearProxy } from '@makced/db/proxy';
 
-export const proxy = crearProxy({ csp: 'nonce' });
+const URL_TIENDA =
+  process.env.NEXT_PUBLIC_TIENDA_URL ?? 'http://localhost:3000';
+
+const tiendaOrigin = (() => {
+  try {
+    return new URL(URL_TIENDA).origin;
+  } catch {
+    return 'http://localhost:3000';
+  }
+})();
+
+export const proxy = crearProxy({
+  csp: 'nonce',
+  imageOrigins: [tiendaOrigin],
+});
 
 export const config = {
   matcher: [

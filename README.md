@@ -62,9 +62,70 @@ npm run typecheck    # typecheck de todas las apps
 npm run test         # tests unitarios (Vitest) de todos los paquetes
 ```
 
+## 🚀 Arquitectura de despliegue e infraestructura
+
+El ecosistema de **`makced.online`** se despliega como **micro-frontends desacoplados en Vercel**: cada aplicación del monorepo es un proyecto independiente sobre el mismo repositorio, separando la capa institucional de la aplicación transaccional.
+
+### 🌐 Distribución de dominios y proyectos
+
+| Host | Proyecto Vercel | Root Directory | Build | Propósito |
+|------|-----------------|----------------|-------|-----------|
+| `makced.online` | Landing (repositorio aparte) | — | — | Marketing y acceso general a la plataforma |
+| `store.makced.online` | `makced-store` | `apps/store` | `npx turbo build --filter=@makced/store` | Tienda pública multi-tienda |
+| `login.makced.online` | `makced-login` | `apps/login` | `npx turbo build --filter=@makced/login` | Autenticación (login / registro) |
+| `dashboard.makced.online` | `makced-dashboard` | `apps/dashboard` | `npx turbo build --filter=@makced/dashboard` | Panel de administración (protegido) |
+
+Cada proyecto apunta su **Root Directory** a su app; Vercel resuelve los workspaces de npm desde la raíz del monorepo.
+
+> **El multi-tenancy es path-based.** Las tiendas viven bajo
+> `store.makced.online/s/:subdominio`, así que **un solo host y un solo
+> certificado** cubren todas las tiendas. Los subdominios reales
+> (`mitienda.makced.online`) son una fase posterior: exigirán DNS comodín,
+> certificado wildcard y decidir el dominio de las cookies (`tienda-subdominio`).
+
+### ⚙️ Configuración de red y DNS
+
+- **Proveedor de dominio:** Namecheap, delegando los DNS a Vercel
+  (`ns1.vercel-dns.com` / `ns2.vercel-dns.com`).
+- **Registros:** cada subdominio se añade en *Settings → Domains* y se apunta
+  al valor que Vercel indique (CNAME a `cname.vercel-dns.com`).
+- **`@` (apex):** BasicDNS de Namecheap **no admite CNAME ni ALIAS** en la raíz;
+  por eso se delegan los nameservers a Vercel en lugar de crear registros a mano.
+- **Regla:** nunca copiar IPs/CNAME de un tutorial — usar siempre el valor que
+  muestra Vercel en «Invalid Configuration».
+- **Seguridad:** SSL automático (Let's Encrypt) gestionado por Vercel para el
+  dominio raíz y cada subdominio. Las cookies de sesión activan `Secure` solo
+  en producción, por lo que **el sitio debe servirse siempre por HTTPS**.
+
+### 🔑 Variables de entorno en producción
+
+| Variable | store | login | dashboard |
+|----------|:-----:|:-----:|:---------:|
+| `NEXT_PUBLIC_INSFORGE_URL` | ✅ | ✅ | ✅ |
+| `NEXT_PUBLIC_INSFORGE_ANON_KEY` | ✅ | ✅ | ✅ |
+| `NEXT_PUBLIC_TIENDA_URL` (`https://store.makced.online`) | ✅ | — | ✅ |
+| `NEXT_PUBLIC_LOGIN_URL` (`https://login.makced.online`) | ✅ | ✅ | ✅ |
+| `NEXT_PUBLIC_DASHBOARD_URL` (`https://dashboard.makced.online`) | — | ✅ | ✅ |
+| `REVALIDATE_SECRET` (mismo valor en store y dashboard) | ✅ | — | ✅ |
+
+- `NEXT_PUBLIC_*` se **inlinea en el bundle en tiempo de build**: cambiarla
+  exige **redesplegar**, no basta con guardarla.
+- `REVALIDATE_SECRET` **nunca** lleva el prefijo `NEXT_PUBLIC_` (sería pública y
+  permitiría purgar la caché de la tienda desde el navegador). Es el secreto que
+  permite al dashboard invalidar los `unstable_cache` de la store vía
+  `POST /api/revalidate`.
+- En InsForge, `insforge.toml` → `allowed_redirect_urls` debe incluir
+  `https://login.makced.online/**` y `https://store.makced.online/**`.
+
 ## Tareas pendientes
 
-- [ ] **Comprar el dominio de producción.** El subdominio será **solo para acceder a cada tienda** (por ejemplo, `mitienda.tiendas.dominio.com`); el dashboard y el login irán en dominios separados. La compra del dominio, la configuración DNS/Vercel y la implementación del enrutamiento multi-tienda quedan para después.
+- [x] **Comprar el dominio `makced.online`.** ✅ Comprado (Namecheap).
+- [ ] **Configurar DNS + los 4 proyectos en Vercel** (ver *Arquitectura de
+      despliegue* más arriba) y añadir los `allowed_redirect_urls` en InsForge.
+- [ ] **Multi-tenancy con subdominios reales** (`mitienda.makced.online`):
+      DNS comodín, certificado wildcard, `domain` en la cookie
+      `tienda-subdominio` y cambio de `/s/:subdominio` por host. La versión
+      actual path-based está terminada y documentada abajo.
 
 ## Estados de carga (skeletons)
 
@@ -137,19 +198,35 @@ Política base (la variante nonce la genera `proxy.ts` de `@makced/db` por petic
 default-src 'self';
 script-src 'self' [ 'unsafe-inline' | 'nonce-<v>' 'strict-dynamic' ] [+ 'unsafe-eval' solo en dev];
 style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
-img-src 'self' data: blob: https://upload.wikimedia.org https://253fnuce.us-east.insforge.app https://cdn.insforge.dev https://worldvectorlogo.com;
+img-src 'self' data: blob: https://upload.wikimedia.org https://253fnuce.us-east.insforge.app https://cdn.insforge.dev https://insforge-storage.s3.us-east-2.amazonaws.com https://worldvectorlogo.com https://images.unsplash.com;
 font-src 'self' data: https://fonts.gstatic.com;
-connect-src 'self' https://253fnuce.us-east.insforge.app https://cdn.insforge.dev;
+connect-src 'self' https://253fnuce.us-east.insforge.app https://cdn.insforge.dev https://insforge-storage.s3.us-east-2.amazonaws.com;
 frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self';
 [+ 'upgrade-insecure-requests' solo en prod]
 ```
 
 - El nonce lo genera `proxy.ts` por petición, lo expone en la cabecera `x-nonce` y Next lo aplica automáticamente a sus scripts. El único `<script>` inline propio (init de tema del dashboard) lee el nonce con `headers()`.
 - `'unsafe-eval'` solo en desarrollo (React lo usa para debugging); `'upgrade-insecure-requests'` solo en producción (rompería el `http://` local).
-- `style-src` conserva `'unsafe-inline'` (bajo riesgo, evita romper estilos inline de React); las fuentes de Google del editor de diseño se permiten explícitamente en `style-src`/`font-src`, y el storage de InsForge (`cdn.insforge.dev`) y los logos (`worldvectorlogo.com`) en `img-src`.
+- `style-src` conserva `'unsafe-inline'` (bajo riesgo, evita romper estilos inline de React); las fuentes de Google del editor de diseño se permiten explícitamente en `style-src`/`font-src`, y el storage de InsForge (`cdn.insforge.dev`, `insforge-storage.s3.us-east-2.amazonaws.com`) y los logos (`worldvectorlogo.com`) y `images.unsplash.com` en `img-src`.
 - El framing queda **bloqueado de verdad** por `X-Frame-Options: DENY`.
 - `X-Powered-By` se eliminó con `poweredByHeader: false`.
 - El nonce exige **render dinámico**: por eso solo se usa en login (ya `force-dynamic`) y dashboard (dinámico por sesión), nunca en la store (ISR).
+
+### Hallazgo ZAP: `script-src 'unsafe-inline'` en la store (riesgo aceptado)
+
+ZAP reporta "Medium" porque la cabecera CSP de la store permite `'unsafe-inline'` en `script-src`. Es una **decisión deliberada** para mantener el ISR (HTML estático pre-renderizado). El `'unsafe-eval'` que ZAP también podía marcar **solo existe en desarrollo** (`NODE_ENV=development`) y desaparece en producción (verificado con `curl -sI` sobre `next start`).
+
+**Controles compensatorios que mitigan el XSS residual:**
+
+- React escapa automáticamente todo el contenido renderizado (nombres, descripciones, títulos de productos/marcas/categorías).
+- El único `dangerouslySetInnerHTML` de la store (`apps/store/app/verProducto/page.tsx`) es un JSON-LD serializado con `.replace(/</g, "\\u003c")` (sanitización del `<`).
+- El otro `dangerouslySetInnerHTML` (`apps/store/app/layout.tsx`) inyecta `TEMA_INIT_SCRIPT`, una constante estática hardcodeada sin entrada de usuario.
+- `connect-src` restringido a `'self'` + dominio InsForge → impide exfiltración de datos a dominios externos.
+- `base-uri 'self'`, `form-action 'self'`, `frame-ancestors 'none'`, `object-src 'none'` siguen en fuerza.
+- Las URLs del pie se validan con `esUrlPieValida` (`packages/db/src/diseno.ts`), que rechaza esquemas peligrosos (`javascript:`, `data:`, etc.) y solo permite rutas internas, `http(s)`, `mailto` y `tel`.
+- Los dashboard y login **no** tienen este problema: usan CSP con nonce (`proxy.ts` → `script-src 'self' 'nonce-…' 'strict-dynamic'`).
+
+**Verificación empírica (ZAP 2.16.0, producción `next start`):** la alerta "CSP: script-src unsafe-eval" **no aparece** en ningún endpoint de la store; solo quedan "CSP: script-src unsafe-inline" y "CSP: style-src unsafe-inline" (riesgos aceptados, documentados arriba). Login y dashboard no reportan "script-src unsafe-inline" (nonce operativo).
 
 ### Seguridad de la base de datos (RLS)
 

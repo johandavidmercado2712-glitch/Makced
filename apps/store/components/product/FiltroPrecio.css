@@ -15,7 +15,7 @@
 }
 
 .filtro-precio-texto {
-    font-size: 16px;
+    font-size: var(--fs-md);
     font-weight: 600;
     color: var(--text-primary);
     white-space: nowrap;
@@ -47,7 +47,7 @@
 }
 
 .filtro-precio-input-prefix {
-    font-size: 15px;
+    font-size: var(--fs-15);
     font-weight: 600;
     color: var(--text-secondary);
     user-select: none;
@@ -61,7 +61,7 @@
     outline: none;
     background: transparent;
     color: var(--text-primary);
-    font-size: 16px;
+    font-size: var(--fs-md);
     font-weight: 600;
     font-family: inherit;
     padding: 10px 0;
@@ -79,11 +79,11 @@
 }
 
 .filtro-precio-input--error {
-    color: #ef4444;
+    color: var(--text-danger);
 }
 
 .filtro-precio-input-wrapper:has(.filtro-precio-input--error) {
-    border-color: #ef4444;
+    border-color: var(--text-danger);
 }
 
 /* =========================================
@@ -99,10 +99,27 @@
     }
 
     .filtro-precio-texto {
-        font-size: 14px;
+        font-size: var(--fs-base);
     }
 
     .filtro-precio-input-wrapper {
         min-width: 110px;
     }
+}
+
+.filtro-precio-tooltip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  color: var(--text-muted);
+  cursor: help;
+  border-radius: 50%;
+  transition: color 0.2s, background-color 0.2s;
+}
+
+.filtro-precio-tooltip:hover {
+  color: var(--action-color);
+  background: var(--bg-section);
 }

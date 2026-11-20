@@ -107,5 +107,5 @@
   .panel-info { min-height: 300px; }
   .panel-info-detalle { width: 100%; box-sizing: border-box; }
   .panel-info-detalle h2 { font-size: 25px; }
-  .panel-info-detalle p { font-size: 15px; margin-bottom: 20px; }
+  .panel-info-detalle p { font-size: var(--fs-15); margin-bottom: 20px; }
 }

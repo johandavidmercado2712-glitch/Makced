@@ -1,4 +1,4 @@
-import { insforge } from "@/lib/insforge";
+import { insforge } from "@makced/db/client";
 import type { ImagenEstado } from "@/types/components";
 
 export const BUCKET_IMAGENES = "productos";

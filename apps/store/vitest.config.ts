@@ -12,5 +12,9 @@ export default defineConfig({
     setupFiles: ["./test.setup.ts"],
     include: ["**/*.test.{ts,tsx}"],
     exclude: ["node_modules/**", ".next/**"],
+    // Turbo ejecuta los 5 workspaces en paralelo: la creación de jsdom
+    // se contiende por CPU y el default de 5000ms resultaba arbitrario.
+    testTimeout: 15000,
+    hookTimeout: 15000,
   },
 });

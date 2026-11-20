@@ -2,15 +2,18 @@ import "./marcas.css"
 import Image from "next/image"
 import Link from "next/link"
 import type {MarcaSimple} from "../../types/database"
+import { rutaTienda } from "../../lib/rutas"
 
 interface MarcasProps {
     initialMarcas: MarcaSimple [];
+    subdominio?: string | null;
 }
 
-export default function Marcas({ initialMarcas }: MarcasProps) {
+export default function Marcas({ initialMarcas , subdominio}: MarcasProps) {
   const marcasDuplicated = [
     ...initialMarcas.map((m) => ({ ...m, keyId: `${m.id}-a` })),
     ...initialMarcas.map((m) => ({ ...m, keyId: `${m.id}-b` })),
+    
   ]
 
   return (
@@ -19,7 +22,7 @@ export default function Marcas({ initialMarcas }: MarcasProps) {
         {marcasDuplicated.map((marca) => (
           <Link
             key={marca.keyId}
-            href={`/marcasProductos?slug=${encodeURIComponent(marca.nombre)}`}
+            href={rutaTienda(subdominio, `/marcasProductos?slug=${encodeURIComponent(marca.nombre)}`)}
             className="marcas-card"
           >
             <Image
@@ -27,7 +30,6 @@ export default function Marcas({ initialMarcas }: MarcasProps) {
               alt={marca.nombre}
               width={200}
               height={200}
-              unoptimized
             />
           </Link>
         ))}

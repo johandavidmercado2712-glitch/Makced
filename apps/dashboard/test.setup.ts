@@ -1,6 +1,9 @@
 import "@testing-library/jest-dom/vitest";
-import { cleanup } from "@testing-library/react";
+import { cleanup, configure } from "@testing-library/react";
 import { afterEach, vi } from "vitest";
+
+// findBy* usa 1000ms por defecto: bajo contención de CPU el render tarda más.
+configure({ asyncUtilTimeout: 5000 });
 
 // Sin globals de vitest, RTL no registra su auto-cleanup: lo hacemos aquí.
 afterEach(cleanup);

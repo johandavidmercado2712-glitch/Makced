@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ruta clara del catálogo</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;width:1440px;height:900px;overflow:hidden;font:15px/1.45 Arial,sans-serif;color:#171717;background:#f5f5f2}
+.app{display:flex;height:100%}.rail{width:230px;background:#171717;color:#fff;padding:29px 18px}.brand{font-size:18px;font-weight:800;letter-spacing:.12em;margin-bottom:38px}.nav-label{font-size:10px;color:#c6c6c6;letter-spacing:.13em;padding:8px}.nav a{display:flex;gap:12px;color:#fff;text-decoration:none;padding:12px;margin:4px 0}.nav .active{background:#ffd400;color:#111;font-weight:bold}.nav .bullet{font-size:18px;line-height:14px}
+main{flex:1;padding:40px 52px}.head{display:flex;justify-content:space-between;align-items:end;margin-bottom:26px}.eyebrow{text-transform:uppercase;font-size:10px;letter-spacing:.12em;font-weight:bold}.head h1{font-size:32px;margin:8px 0}.head p{margin:0;color:#555}.btn{background:#171717;color:#fff;border:0;padding:13px 18px;font-weight:bold}
+.next{display:flex;align-items:center;background:#ffd400;padding:19px 22px;margin-bottom:24px;gap:22px}.number{font-size:42px;font-weight:900}.next strong{display:block;font-size:17px}.next small{font-size:12px}
+.filters{display:flex;gap:12px;margin-bottom:16px}.filters div{padding:12px 14px;background:#fff;border:1px solid #c9c9c4;flex:1}.filters b{float:right}
+.table{background:#fff;border:1px solid #d2d2cc}.row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr .8fr;gap:14px;align-items:center;padding:19px;border-top:1px solid #ddd}.row:first-child{border:0;background:#eee}.row.headrow{font-size:10px;font-weight:bold;letter-spacing:.1em}.state{background:#197a46;color:white;padding:6px 9px;font-size:11px}.state.warn{background:#ffd400;color:#171717}.sample{font-size:11px;color:#555;margin-top:13px}
+</style>
+</head>
+<body><div class="app"><aside class="rail"><div class="brand">MAKCED</div><div class="nav-label">DESTINOS</div><nav class="nav"><a href="#"><span class="bullet">›</span>Resumen</a><a class="active" href="#"><span class="bullet">›</span>Productos</a><a href="#"><span class="bullet">›</span>Marcas y categorías</a><a href="#"><span class="bullet">›</span>Diseño</a><a href="#"><span class="bullet">›</span>Mi tienda</a></nav></aside>
+<main><header class="head"><div><div class="eyebrow">Estás en · catálogo</div><h1>Productos</h1><p>Encuentra el siguiente paso sin perder tu ubicación.</p></div><button class="btn">+ Nuevo producto</button></header>
+<div class="next"><div class="number">01</div><div><strong>Revisar catálogo</strong><small>Filtra por marca o categoría; abre un producto para editarlo.</small></div></div>
+<div class="filters"><div>⌕ Buscar productos <b>⌄</b></div><div>Marca <b>⌄</b></div><div>Categoría <b>⌄</b></div></div>
+<section class="table"><div class="row headrow"><span>PRODUCTO</span><span>CATEGORÍA</span><span>PRECIO</span><span>STOCK</span><span>ESTADO</span></div><div class="row"><span>Tenis urbano Lino</span><span>Casual</span><span>$184.900</span><span>12</span><span class="state">Activo</span></div><div class="row"><span>Bota clásica Siena</span><span>Botas</span><span>$229.000</span><span>4</span><span class="state">Activo</span></div><div class="row"><span>Sandalia Brisa</span><span>Sandalias</span><span>$119.900</span><span>0</span><span class="state warn">Revisar</span></div></section>
+<div class="sample">Muestra visual · datos de ejemplo</div></main></div></body>
+</html>

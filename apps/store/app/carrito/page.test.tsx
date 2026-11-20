@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import CarritoPage from "./page";
 import { CartProvider } from "../../components/auth/CartContext";
@@ -17,19 +17,17 @@ vi.mock("next/link", () => ({
   }) => <a href={href}>{children}</a>,
 }));
 
-// insforge del carrito: la promesa nunca resuelve → el useEffect no
-// actualiza estado (evita ruidos de act y llamadas de red en tests)
-vi.mock("../../lib/insforge", () => ({
-  insforge: {
-    database: {
-      from: () => ({
-        select: () => ({
-          eq: () => ({ maybeSingle: () => new Promise(() => {}) }),
-        }),
-      }),
-    },
-  },
-}));
+// insforge del carrito: mock que retorna un número de WhatsApp
+// para que el enlace de WhatsApp tenga href en los tests
+vi.mock("../../lib/insforge", () => {
+  const query = {
+    select: () => query,     // ← devuelve el MISMO objeto
+    eq: () => query,         // ← devuelve el MISMO objeto
+    maybeSingle: () =>
+      Promise.resolve({ data: { whatsapp_numero: "573001234567" } }),
+  };
+  return { insforge: { database: { from: () => query } } };
+}); 
 
 // Intl es-CO emite NBSP (u00a0) tras el signo "$"; RTL lo colapsa a espacio
 // normal al normalizar, así que el matcher usa el mismo texto plano.
@@ -85,8 +83,10 @@ describe("integración: ProductoSelector → CartProvider → carrito", () => {
     const user = userEvent.setup();
     montar(true, true);
 
-    // estado vacío + CTA bloqueado sin talla
-    expect(screen.getByText("Tu carrito está vacío")).toBeInTheDocument();
+    // Esperar a que el componente se hidrate (deje de mostrar skeletons)
+    await waitFor(() => {
+      expect(screen.getByText("Tu carrito está vacío")).toBeInTheDocument();
+    });
     expect(
       screen.getByRole("button", { name: "Selecciona una talla" }),
     ).toBeDisabled();
@@ -97,7 +97,7 @@ describe("integración: ProductoSelector → CartProvider → carrito", () => {
     // elegir talla y color → el CTA se habilita
     await user.click(screen.getByRole("button", { name: "40" }));
     await user.click(screen.getByRole("button", { name: "Negro" }));
-    const cta = screen.getByRole("button", { name: "Agregar a la bolsa" });
+    const cta = screen.getByRole("button", { name: "Agregar al carrito" });
     expect(cta).toBeEnabled();
 
     // agregar → feedback + el carrito (contexto compartido) se actualiza
@@ -132,25 +132,30 @@ describe("integración: ProductoSelector → CartProvider → carrito", () => {
     expect(mensaje).toContain("Total:");
   });
 
-  it("envío gratis al superar el umbral de $200.000", () => {
+  it("envío gratis al superar el umbral de $200.000", async () => {
     sembrar([item({ precio: 250000 })]);
     montar(true);
 
-    expect(screen.getByText("Subtotal (1 producto)")).toBeInTheDocument();
+    // Esperar a que el componente se hidrate
+    await waitFor(() => {
+      expect(screen.getByText("Subtotal (1 producto)")).toBeInTheDocument();
+    });
     expect(screen.getByText("Gratis")).toBeInTheDocument();
     // ítem + subtotal + total = 3 apariciones (envío gratis no suma)
     expect(screen.getAllByText(cop(250000))).toHaveLength(3);
     expect(screen.queryByText(cop(15000))).toBeNull();
   });
 
-  it("con showPrices=false oculta precios y usa el mensaje de WhatsApp de consulta", () => {
+  it("con showPrices=false oculta precios y usa el mensaje de WhatsApp de consulta", async () => {
     sembrar([item()]);
     montar(false);
 
-    // el ítem y la cantidad siguen visibles
-    expect(
-      screen.getByRole("heading", { name: "Tu Carrito (1 producto)" }),
-    ).toBeInTheDocument();
+    // Esperar a que el componente se hidrate
+    await waitFor(() => {
+      expect(
+        screen.getByRole("heading", { name: "Tu Carrito (1 producto)" }),
+      ).toBeInTheDocument();
+    });
     expect(screen.getByText("Nike Revolution 7")).toBeInTheDocument();
 
     // sin precios en ningún punto
@@ -164,7 +169,10 @@ describe("integración: ProductoSelector → CartProvider → carrito", () => {
     ).toBeInTheDocument();
 
     // WhatsApp: mensaje de consulta, sin precios
-    const wa = screen.getByRole("link", { name: /Pedir por WhatsApp/ });
+    // El <a> no tiene href cuando whatsappNumero es null, así que no es un "link" accesible
+    const wa = document.querySelector(".carrito-whatsapp") as HTMLAnchorElement;
+    expect(wa).not.toBeNull();
+    expect(wa).toHaveTextContent(/Pedir por WhatsApp/);
     const mensaje = decodeURIComponent(wa.getAttribute("href") ?? "");
     expect(mensaje).toContain(
       "Hola, quiero consultar el precio de estos productos:",
@@ -172,13 +180,16 @@ describe("integración: ProductoSelector → CartProvider → carrito", () => {
     expect(mensaje).not.toContain("Total:");
   });
 
-  it("los items persisten al remontar el provider (localStorage)", () => {
+  it("los items persisten al remontar el provider (localStorage)", async () => {
     sembrar([item({ cantidad: 2 })]);
     montar(true);
 
-    expect(
-      screen.getByRole("heading", { name: "Tu Carrito (2 productos)" }),
-    ).toBeInTheDocument();
+    // Esperar a que el componente se hidrate
+    await waitFor(() => {
+      expect(
+        screen.getByRole("heading", { name: "Tu Carrito (2 productos)" }),
+      ).toBeInTheDocument();
+    });
     expect(screen.getAllByText("2").length).toBeGreaterThan(0);
   });
 });

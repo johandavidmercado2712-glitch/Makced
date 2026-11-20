@@ -1,43 +1,202 @@
-/* Estilos propios de /marcas (tablas y layout vienen de productos.css) */
+/* Estilos propios de /marcas */
 
-.dashboard > .db-table-panel + .db-table-panel {
-  margin-top: 16px;
+.db-entity-section + .db-entity-section {
+  margin-top: 32px;
 }
 
 .db-section-header {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 16px 20px;
+  gap: 12px;
+  padding: 0 0 16px;
+  margin-bottom: 20px;
   border-bottom: 1px solid var(--db-border);
+  color: var(--db-text-primary);
 }
 
 .db-section-header h2 {
-  font-size: 15px;
-  font-weight: 600;
   margin: 0;
-  flex: 1;
+  color: var(--db-text-primary);
+  font-size: var(--db-fs-h3);
+  font-weight: 700;
 }
 
 .db-section-titles {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
   min-width: 0;
-}
-
-.db-section-titles h2 {
-  flex: 0 0 auto;
 }
 
 .db-section-titles p {
   margin: 0;
-  font-size: 12.5px;
+  font-size: var(--db-fs-body-sm);
   color: var(--db-text-secondary);
 }
 
-.db-tag-muted {
-  background: rgba(148, 163, 184, 0.15);
+.db-entity-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.db-entity-card {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--db-border);
+  border-radius: var(--db-radius-md);
+  background: var(--db-bg-card);
+  transition: 
+    border-color 180ms ease, 
+    transform 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.db-entity-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--db-btn-primary-hover);
+  box-shadow: 0 4px 12px var(--db-overlay-black-8);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .db-entity-card {
+    transition: none;
+  }
+  
+  .db-entity-card:hover {
+    transform: none;
+  }
+}
+
+.db-entity-visual {
+  display: grid;
+  aspect-ratio: 16 / 9;
+  place-items: center;
+  overflow: hidden;
+  background: var(--db-bg-card-hover);
   color: var(--db-text-muted);
+}
+
+.db-entity-visual img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 20px;
+}
+
+.db-entity-content {
+  display: flex;
+  min-height: 100px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px;
+}
+
+.db-entity-heading,
+.db-entity-labels {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.db-entity-heading h3 {
+  margin: 0;
+  color: var(--db-text-primary);
+  font-size: var(--db-fs-body);
+  font-weight: 700;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.db-entity-slug {
+  color: var(--db-text-secondary);
+  font-size: var(--db-fs-sm);
+  overflow-wrap: anywhere;
+}
+
+.db-entity-status {
+  display: inline-flex;
+  align-items: center;
+  min-height: 22px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--db-bg-card-hover);
+  color: var(--db-text-secondary);
+  font-size: var(--db-fs-sm);
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.db-entity-status-active {
+  background: color-mix(in srgb, var(--db-green-status) 12%, var(--db-bg-card));
+  color: var(--db-green-status);
+}
+
+.db-entity-card .db-actions {
+  flex: 0 0 auto;
+  gap: 6px;
+}
+
+.db-entity-card .db-action-btn {
+  width: 44px;
+  height: 44px;
+}
+
+.db-entity-section > .db-panel > .db-empty {
+  border: 1px dashed var(--db-border);
+  border-radius: var(--db-radius-md);
+  background: var(--db-bg-card);
+}
+
+@media (max-width: 980px) {
+  .db-entity-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+}
+
+@media (max-width: 640px) {
+  .db-entity-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .db-entity-card {
+    display: grid;
+    grid-template-columns: minmax(100px, 34%) minmax(0, 1fr);
+  }
+
+  .db-entity-visual {
+    height: 100%;
+    min-height: 120px;
+    aspect-ratio: auto;
+  }
+
+  .db-entity-visual img {
+    padding: 12px;
+  }
+
+  .db-entity-content {
+    min-height: 120px;
+    padding: 14px;
+  }
+
+  .db-section-header {
+    gap: 10px;
+  }
+}
+
+@media (max-width: 380px) {
+  .db-entity-content {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .db-entity-card .db-actions {
+    align-self: flex-end;
+  }
 }

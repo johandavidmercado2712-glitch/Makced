@@ -11,9 +11,11 @@ import { getConfigDiseno, getMarcaPorNombre } from "../actions/store";
 
 export const revalidate = 30;
 
-async function ProductosPorMarca({ slug, maxPrice }: { slug: string; maxPrice?: number }) {
-  const productos = await getProductosPorMarca(slug, maxPrice)
-  return <ProductGrid productos={productos} />
+import { requerirTienda } from "../../lib/tenant";
+
+async function ProductosPorMarca({ slug, maxPrice, tiendaId, mostrarPrecios, emptyMessage }: { slug: string; maxPrice?: number; tiendaId?: string | null; mostrarPrecios: boolean; emptyMessage?: string }) {
+  const productos = await getProductosPorMarca(slug, maxPrice, tiendaId)
+  return <ProductGrid productos={productos} mostrarPrecios={mostrarPrecios} emptyMessage={emptyMessage} />
 }
 
 export async function generateMetadata({
@@ -22,8 +24,9 @@ export async function generateMetadata({
   searchParams: Promise<{ slug?: string }>;
 }): Promise<Metadata> {
   const { slug } = await searchParams;
+  const tienda = await requerirTienda();
   const marcaSlug = slug || "Nike";
-  const marca = await getMarcaPorNombre(marcaSlug);
+  const marca = await getMarcaPorNombre(marcaSlug, tienda?.id);
   const nombre = marca?.nombre ?? marcaSlug;
 
   return {
@@ -38,12 +41,13 @@ export default async function Page({
   searchParams: Promise<{ slug?: string; maxPrice?: string }>;
 }) {
   const { slug, maxPrice } = await searchParams;
+  const tienda = await requerirTienda();
   const marcaSlug = slug || "Nike";
-  const marca = await getMarcaPorNombre(marcaSlug);
+  const marca = await getMarcaPorNombre(marcaSlug, tienda?.id);
   const marcaNombre = marca?.nombre ?? marcaSlug;
-  const { config } = await getConfigDiseno();
+  const { config } = await getConfigDiseno(tienda?.subdominio);
   const mostrarPrecios = Boolean(config.mostrar_precios ?? true);
-  const maxPriceDB = mostrarPrecios ? await getMaxPrice() : undefined;
+  const maxPriceDB = mostrarPrecios ? await getMaxPrice(tienda?.id) : undefined;
 
   const parsedMaxPrice = maxPrice ? Number(maxPrice) : NaN;
   const maxPriceNum =
@@ -73,7 +77,7 @@ export default async function Page({
           <FiltroPrecio maxPrice={maxPriceDB} />
         )}
         <Suspense fallback={<ProductGridSkeleton count={4} />}>
-          <ProductosPorMarca slug={marcaNombre} maxPrice={maxPriceNum} />
+          <ProductosPorMarca slug={marcaNombre} mostrarPrecios={mostrarPrecios} maxPrice={maxPriceNum} tiendaId={tienda?.id} emptyMessage={`No hay productos disponibles de ${marcaNombre} por ahora.`} />
         </Suspense>
       </div>
     </>
