@@ -8,10 +8,9 @@ import {
   User,
 } from "lucide-react";
 import { getTienda, getUsuarioTienda } from "@/actions/tienda";
+import { urlTienda } from "@/lib/rutas";
 import CambiarContrasena from "@/components/CambiarContrasena";
 import PanelWhatsapp from "@/components/PanelWhatsapp";
-
-const URL_TIENDA = process.env.NEXT_PUBLIC_TIENDA_URL ?? "http://localhost:3000";
 
 const fechaLarga = (iso: string | null | undefined): string => {
   if (!iso) return "—";
@@ -38,6 +37,7 @@ export default async function MiTiendaPage() {
 
   const usuario = await getUsuarioTienda(tienda.usuario_id);
   const nombreCompleto = usuario?.nombre?.trim() ? usuario.nombre : "—";
+  const enlaceTienda = urlTienda(tienda.subdominio);
 
   return (
     <div className="dashboard mt-dashboard">
@@ -51,7 +51,7 @@ export default async function MiTiendaPage() {
         <div className="db-header-actions">
           <a
             className="db-btn-primary"
-            href={URL_TIENDA}
+            href={enlaceTienda}
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -110,7 +110,7 @@ export default async function MiTiendaPage() {
               <div className="mt-fila">
                 <dt>Subdominio</dt>
                 <dd>
-                  <a className="mt-url" href={URL_TIENDA} target="_blank" rel="noopener noreferrer">
+                  <a className="mt-url" href={enlaceTienda} target="_blank" rel="noopener noreferrer">
                     {tienda.subdominio} <ExternalLink size={13} />
                   </a>
                 </dd>

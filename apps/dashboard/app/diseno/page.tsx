@@ -26,6 +26,7 @@ export default async function DisenoPage() {
         config={config}
         colorPrincipal={tienda?.color_principal ?? ""}
         logoUrl={tienda?.logo_url ?? null}
+        subdominio={tienda?.subdominio ?? null}
         productoVistaPrevia={productoVistaPrevia}
       />
     </div>

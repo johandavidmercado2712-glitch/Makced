@@ -17,9 +17,8 @@ import { getTienda } from "@/actions/tienda";
 import { getResumenStats, getProductosDestacados } from "@/actions/resumen";
 import { EmptyState } from "@/components/EmptyState";
 import { urlImagen } from "@/lib/imagenes";
+import { urlTienda } from "@/lib/rutas";
 import { listarMarcas, listarCategorias } from "@/actions/marcas";
-
-const URL_TIENDA = process.env.NEXT_PUBLIC_TIENDA_URL ?? "http://localhost:3000";
 
 function saludoDinamico(): { texto: string; emoji?: string } {
   const hora = new Date().getHours();
@@ -57,6 +56,7 @@ export default async function DashboardPage() {
   ]);
 
   const saludo = saludoDinamico();
+  const enlaceTienda = urlTienda(tienda?.subdominio);
 
   // Calcular progreso de onboarding
   const progreso = {
@@ -86,7 +86,7 @@ export default async function DashboardPage() {
         <div className="db-header-actions">
           <a
             className="db-btn-primary db-header-cta"
-            href={URL_TIENDA}
+            href={enlaceTienda}
             target="_blank"
             rel="noopener noreferrer"
           >

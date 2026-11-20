@@ -20,10 +20,10 @@ import {
 } from "@makced/db/diseno";
 import { useEditorEstado, useEditorGuardar, useEditorSeccion } from "./useEditorDiseno";
 import {
-  URL_TIENDA,
   type EditorDisenoApi,
   type ProductoVistaPrevia,
 } from "./paneles/comunes";
+import { urlTienda } from "@/lib/rutas";
 import { PanelEstilo } from "./paneles/PanelEstilo";
 import { PanelLogo } from "./paneles/PanelLogo";
 import { PanelBanner } from "./paneles/PanelBanner";
@@ -171,6 +171,7 @@ interface EditorDisenoProps {
   config: ConfigDiseno;
   colorPrincipal: string;
   logoUrl: string | null;
+  subdominio: string | null;
   productoVistaPrevia: ProductoVistaPrevia | null;
 }
 
@@ -178,8 +179,10 @@ export default function EditorDiseno({
   config,
   colorPrincipal,
   logoUrl,
+  subdominio,
   productoVistaPrevia,
 }: EditorDisenoProps) {
+  const enlaceTienda = urlTienda(subdominio);
   const estado = useEditorEstado(config, colorPrincipal, logoUrl);
   const seccion = useEditorSeccion(estado, config, colorPrincipal, logoUrl);
   const { guardar, restaurar } = useEditorGuardar(estado, estado.tab, estado.sucio);
@@ -289,7 +292,7 @@ export default function EditorDiseno({
           </button>
           <a
             className="db-btn-primary"
-            href={URL_TIENDA}
+            href={enlaceTienda}
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -368,7 +371,7 @@ export default function EditorDiseno({
               <span className="de-live-badge">VISTA PREVIA EN VIVO</span>
               <a
                 className="de-live-link"
-                href={URL_TIENDA}
+                href={enlaceTienda}
                 target="_blank"
                 rel="noopener noreferrer"
               >

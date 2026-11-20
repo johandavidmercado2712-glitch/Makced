@@ -1,5 +1,8 @@
 import { insforge } from "@makced/db/client";
 import type { ImagenEstado } from "@/types/components";
+import { URL_TIENDA } from "./rutas";
+
+export { URL_TIENDA };
 
 export const BUCKET_IMAGENES = "productos";
 export const MAX_IMAGEN_MB = 5;
@@ -9,9 +12,6 @@ export const PLACEHOLDER_IMAGEN_URL = "https://ejemplo.com/imagen.jpg";
 // Base de la tienda pública. Las imágenes semilla/pegadas pueden ser rutas
 // relativas ("/hombre.jpg") que solo existen en el public de la tienda; el
 // dashboard (otro origen) debe resuolverlas contra NEXT_PUBLIC_TIENDA_URL.
-export const URL_TIENDA =
-  process.env.NEXT_PUBLIC_TIENDA_URL ?? "http://localhost:3000";
-
 export const urlImagen = (src: string) =>
   src.startsWith("/") ? `${URL_TIENDA}${src}` : src;
 
