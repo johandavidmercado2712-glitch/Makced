@@ -317,10 +317,104 @@
   color: var(--db-text-muted);
 }
 
+.de-live-acciones {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.de-live-refresco {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 1px solid var(--db-border);
+  border-radius: var(--db-radius-sm, 6px);
+  background: var(--db-bg-card-hover);
+  color: var(--db-text-secondary);
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.de-live-refresco:hover:not(:disabled) {
+  color: var(--db-btn-primary);
+  border-color: var(--db-btn-primary);
+}
+
+.de-live-refresco:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.de-live-refresco:focus-visible {
+  outline: 2px solid var(--db-btn-primary);
+  outline-offset: 2px;
+}
+
+.de-live-spin {
+  animation: de-live-rotar 0.9s linear infinite;
+}
+
+@keyframes de-live-rotar {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .de-live-spin {
+    animation: none;
+  }
+}
+
 .de-live-link {
   font-size: 12px;
   color: var(--db-btn-primary);
   text-decoration: none;
+}
+
+/* Contenedor fijo: el iframe de la tienda es una página completa y crece
+   sola; sin altura el panel saltaría de tamaño en cada refresco. */
+.de-live-frame {
+  position: relative;
+  height: 460px;
+  background: var(--db-bg-main);
+  overflow: hidden;
+}
+
+.de-live-iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: var(--db-bg-main);
+}
+
+.de-live-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--db-text-secondary);
+  background: color-mix(in srgb, var(--db-bg-card) 88%, transparent);
+  backdrop-filter: blur(2px);
+}
+
+.de-live-overlay-error {
+  color: var(--db-text-primary);
+}
+
+.de-live-overlay-error span {
+  color: var(--db-danger, #ef4444);
+  line-height: 1.5;
 }
 
 .de-live-image {

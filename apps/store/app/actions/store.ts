@@ -2,6 +2,8 @@ import { insforge } from "../../lib/insforge";
 import { fetchWithRetry } from "../../lib/fetch-utils";
 import { unstable_cache } from "next/cache";
 import { COLOR_PRINCIPAL_DEFECTO, combinarDiseno } from "@makced/db/diseno";
+import { leerPrevia } from "../../lib/preview";
+import { configDesdeToken } from "../../lib/preview-config";
 
 function logError(accion: string, error: unknown) {
   // PGRST116 = .single() sin filas: es un caso esperado (sin tienda activa).
@@ -164,7 +166,10 @@ export const getNavCategorias = unstable_cache(
   { revalidate: 300, tags: ["categorias"] }
 );
 
-export const getConfigDiseno = unstable_cache(
+// Config de diseño GUARDADO (cacheado). No leer aquí el token de vista previa:
+// `unstable_cache` no puede llamar a `headers()` y, además, el snapshot del
+// preview no debe poblar la caché compartida de la tienda pública.
+export const getConfigDisenoGuardado = unstable_cache(
   async (subdominio?: string) => {
     try {
     const { data, error } = await fetchWithRetry(
@@ -213,3 +218,33 @@ export const getConfigDiseno = unstable_cache(
   ["config-diseno"],
   { revalidate: 300, tags: ["tiendas", "diseno"] }
 );
+
+export interface ConfigDisenoResultado {
+  id: string | null;
+  colorPrincipal: string;
+  logoUrl: string | null;
+  config: ReturnType<typeof combinarDiseno>;
+  esPreview: boolean;
+}
+
+/**
+ * Config de diseño que ve el visitante en ESTA request.
+ *
+ * Si la request trae un token de vista previa válido (firmado por el
+ * dashboard, sin expirar y del mismo tenant), se devuelve el snapshot del
+ * borrador: así el iframe del editor muestra los cambios sin guardar.
+ * Si no, se devuelve el diseño guardado (cacheado).
+ *
+ * Ojo: esta función usa `headers()`, por lo que NO debe envolverse en
+ * `unstable_cache`. Es intencionadamente síncrona con la request.
+ */
+export async function getConfigDiseno(
+  subdominio?: string
+): Promise<ConfigDisenoResultado> {
+  const previa = await leerPrevia(subdominio);
+  if (previa) {
+    return configDesdeToken(previa);
+  }
+  const guardado = await getConfigDisenoGuardado(subdominio);
+  return { ...guardado, esPreview: false };
+}

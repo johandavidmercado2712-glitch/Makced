@@ -10,6 +10,7 @@ import {
   Megaphone,
   PanelTop,
   Paintbrush,
+  RefreshCw,
   RotateCcw,
   Type,
 } from "lucide-react";
@@ -19,6 +20,7 @@ import {
   type SeccionDiseno,
 } from "@makced/db/diseno";
 import { useEditorEstado, useEditorGuardar, useEditorSeccion } from "./useEditorDiseno";
+import { useVistaPrevia } from "./useVistaPrevia";
 import {
   type EditorDisenoApi,
   type ProductoVistaPrevia,
@@ -239,6 +241,8 @@ export default function EditorDiseno({
   const pila = estadoPila(ocupado, fase, exito, sucio);
   const PanelActivo = PANELES[tab];
   const PrevActiva = PREVIEWS[tab];
+  const previa = useVistaPrevia(borrador, colorP, imagenes, logoUrl);
+  const enlacePrevia = previa.url ?? enlaceTienda;
 
   const handleTabKeyDown = (
     event: ReactKeyboardEvent<HTMLButtonElement>,
@@ -369,23 +373,69 @@ export default function EditorDiseno({
           <div className="db-panel de-preview-card">
             <div className="de-live-header">
               <span className="de-live-badge">VISTA PREVIA EN VIVO</span>
-              <a
-                className="de-live-link"
-                href={enlaceTienda}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Abrir ↗
-              </a>
+              <span className="de-live-acciones">
+                <button
+                  type="button"
+                  className="de-live-refresco"
+                  onClick={previa.refrescar}
+                  disabled={previa.estado === "cargando"}
+                  aria-label="Actualizar vista previa"
+                  title="Actualizar vista previa"
+                >
+                  <RefreshCw
+                    size={13}
+                    aria-hidden="true"
+                    className={previa.estado === "cargando" ? "de-live-spin" : undefined}
+                  />
+                </button>
+                <a
+                  className="de-live-link"
+                  href={enlacePrevia}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Abrir ↗
+                </a>
+              </span>
             </div>
 
-            <div className="de-muestra" style={estiloVars}>
-              <PrevActiva api={api} />
+            <div className="de-live-frame">
+              {previa.url ? (
+                <iframe
+                  key={previa.url}
+                  className="de-live-iframe"
+                  src={previa.url}
+                  title="Vista previa de tu tienda con los cambios sin guardar"
+                  loading="lazy"
+                />
+              ) : (
+                <div className="de-muestra" style={estiloVars}>
+                  <PrevActiva api={api} />
+                </div>
+              )}
+              {previa.estado === "cargando" && (
+                <div className="de-live-overlay" role="status">
+                  Actualizando vista previa…
+                </div>
+              )}
+              {previa.estado === "error" && !previa.url && (
+                <div className="de-live-overlay de-live-overlay-error" role="alert">
+                  <span>{previa.error}</span>
+                  <button type="button" className="db-btn-secondary" onClick={previa.refrescar}>
+                    Reintentar
+                  </button>
+                </div>
+              )}
             </div>
 
             <p className="de-preview-pie">
-              Así se verá en tu tienda con los cambios actuales.
-              {sucio ? " Guarda para aplicarlos." : ""}
+              {previa.expirado
+                ? "La vista previa caducó (dura 15 min). Pulsa el icono de actualizar para volver a verla."
+                : previa.estado === "error" && previa.url
+                  ? `No se pudo actualizar la vista previa: ${previa.error}`
+                  : sucio
+                    ? "Así se verá en tu tienda con los cambios actuales, aunque aún no estén guardados."
+                    : "Así se verá en tu tienda con los cambios actuales."}
             </p>
           </div>
 

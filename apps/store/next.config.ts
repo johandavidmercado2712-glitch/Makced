@@ -9,6 +9,21 @@ import type { NextConfig } from "next";
 const __impeccableLiveDev =
   process.env.NODE_ENV === "development" ? " http://localhost:8400" : "";
 
+// Origen exacto del dashboard, único lugar desde el que se permite embeber
+// la tienda (el editor de diseno muestra un <iframe> con el token de preview).
+// Si falta/está mal DASHBOARD_URL, se cae a localhost y NO se embebe nada en
+// producción: preferible romper la vista previa que abrir el clickjacking.
+const origenDashboard = (() => {
+  const crudo = process.env.DASHBOARD_URL ?? "http://localhost:3002";
+  try {
+    const url = new URL(crudo);
+    if (url.protocol !== "https:" && url.protocol !== "http:") return null;
+    return url.origin;
+  } catch {
+    return null;
+  }
+})();
+
 const cabecerasSeguridad = () => {
   const esDev = process.env.NODE_ENV === "development";
 
@@ -19,7 +34,8 @@ const cabecerasSeguridad = () => {
     "img-src 'self' data: blob: https://upload.wikimedia.org https://253fnuce.us-east.insforge.app https://cdn.insforge.dev https://insforge-storage.s3.us-east-2.amazonaws.com https://worldvectorlogo.com https://images.unsplash.com",
     "font-src 'self' data: https://fonts.gstatic.com",
     `connect-src 'self' https://253fnuce.us-east.insforge.app https://cdn.insforge.dev https://insforge-storage.s3.us-east-2.amazonaws.com${__impeccableLiveDev}`,
-    "frame-ancestors 'none'",
+    // 'self' + dashboard: la tienda no puede embeberse en ningún otro sitio.
+    `frame-ancestors 'self'${origenDashboard ? ` ${origenDashboard}` : ""}`,
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self'",
@@ -30,7 +46,9 @@ const cabecerasSeguridad = () => {
 
   const headers = [
     { key: "X-Content-Type-Options", value: "nosniff" },
-    { key: "X-Frame-Options", value: "DENY" },
+    // Sin X-Frame-Options: DENY — CSP frame-ancestors ya cubre el clickjacking
+    // y DENY tendría prioridad sobre frame-ancestors en navegadores viejos,
+    // bloqueando el iframe del editor de diseno.
     { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
     { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
     { key: "Cross-Origin-Opener-Policy", value: "same-origin" },

@@ -26,6 +26,10 @@
     "./diseno": {
       "types": "./src/diseno.ts",
       "default": "./src/diseno.ts"
+    },
+    "./preview": {
+      "types": "./src/preview.ts",
+      "default": "./src/preview.ts"
     }
   },
   "peerDependencies": {

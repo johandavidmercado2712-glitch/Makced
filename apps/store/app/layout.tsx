@@ -57,7 +57,7 @@ const FUENTES: Record<Tipografia, { variable: string }> = {
 
 export async function generateMetadata(): Promise<Metadata> {
   const tienda = await resolverTienda();
-  const { config } = await getConfigDiseno(tienda?.subdominio);
+  const { config, esPreview } = await getConfigDiseno(tienda?.subdominio);
   const marca = config.pie.marca || "MakcedStore";
 
   return {
@@ -67,6 +67,8 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     description:
       "Calzado y ropa deportiva. Envíos a todo el país y atención personalizada.",
+    // La vista previa lleva token caducable en la query: fuera del índice.
+    ...(esPreview ? { robots: { index: false, follow: false } } : {}),
   };
 }
 
@@ -76,7 +78,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const tienda = await resolverTienda();
-  const [categorias, { colorPrincipal, config, logoUrl }] = await Promise.all([
+  const [categorias, { colorPrincipal, config, logoUrl, esPreview }] = await Promise.all([
     getNavCategorias(tienda?.id),
     getConfigDiseno(tienda?.subdominio),
   ]);
@@ -95,6 +97,14 @@ export default async function RootLayout({
       style={vars as CSSProperties}
     >
       <body>
+        {/* Solo con token de vista previa: avisa, dentro del iframe del
+            dashboard y en la pestaña abierta, que esto NO está publicado. */}
+        {esPreview && (
+          <div className="preview-badge" role="status">
+            <span className="preview-badge-dot" aria-hidden="true" />
+            Vista previa · no publicado
+          </div>
+        )}
         {/* Aplica el tema ANTES del primer paint: lee localStorage y marca
            <html class="dark"> sin esperar a React. Evita el flash
            claro→oscuro al recargar (mismo patrón que next-themes). */}

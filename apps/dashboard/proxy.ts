@@ -14,6 +14,9 @@ const tiendaOrigin = (() => {
 export const proxy = crearProxy({
   csp: 'nonce',
   imageOrigins: [tiendaOrigin],
+  // El editor de diseno embebe la tienda (con token de vista previa) en un
+  // <iframe>: sin frame-src, default-src 'self' lo bloquearía.
+  frameOrigins: [tiendaOrigin],
 });
 
 export const config = {

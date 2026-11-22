@@ -959,3 +959,53 @@ textarea:focus-visible {
   border-color: var(--action-color);
   background: var(--bg-card);
 }
+
+/* =========================================
+   Vista previa (token de preview del dashboard)
+   Solo se pinta cuando el layout recibe `esPreview`: avisa, también dentro
+   del iframe del editor, que este diseño NO está publicado.
+   ========================================= */
+.preview-badge {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #121212;
+  background: #fbbf24;
+  border: 1px solid rgba(18, 18, 18, 0.25);
+  border-radius: var(--radius-full);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+  pointer-events: none;
+}
+
+.preview-badge-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: var(--radius-full);
+  background: #121212;
+  animation: preview-badge-pulso 1.6s ease-in-out infinite;
+}
+
+@keyframes preview-badge-pulso {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .preview-badge-dot {
+    animation: none;
+  }
+}

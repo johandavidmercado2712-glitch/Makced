@@ -34,6 +34,7 @@ export async function setTiendaActiva(
 }
 export interface TiendaAutorizada {
   id: string;
+  subdominio: string;
   diseno: unknown;
   color_principal: string | null;
   logo_url: string | null;
@@ -56,7 +57,7 @@ export async function requireAuth(): Promise<{
   const insforge = createServerClient({ cookies: await cookies() });
   const { data, error } = await insforge.database
     .from("tiendas")
-    .select("id, diseno, color_principal, logo_url")
+    .select("id, subdominio, diseno, color_principal, logo_url")
     .eq("activa", true)
     .eq("usuario_id", user.id);
 
