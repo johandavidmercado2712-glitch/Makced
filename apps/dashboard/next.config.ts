@@ -24,6 +24,11 @@ const cabecerasSeguridad = () => {
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  // Upgrade asistido por el agente de Next: permite que `next upgrade
+  // --agent=security` aplique los fixes de seguridad de forma reproducible.
+  experimental: {
+    agentUpgrade: "security",
+  },
   // Next 16 bloquea los requests cross-origin al dev server por defecto. Los
   // e2e apuntan a 127.0.0.1, que no es el hostname por defecto (localhost) →
   // sin esto la app no hidrata en esos tests. Solo aplica en desarrollo.
