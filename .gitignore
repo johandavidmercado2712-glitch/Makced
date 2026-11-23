@@ -1,5 +1,5 @@
-# dependencies
-/node_modules
+# dependencies (cualquier depth: los apps/packages traen su propio node_modules)
+node_modules/
 /.pnp
 .pnp.*
 
