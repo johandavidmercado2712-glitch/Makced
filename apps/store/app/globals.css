@@ -978,6 +978,7 @@ textarea:focus-visible {
   font-size: var(--fs-xs);
   font-weight: 600;
   letter-spacing: 0.02em;
+  white-space: nowrap;
   color: #121212;
   background: #fbbf24;
   border: 1px solid rgba(18, 18, 18, 0.25);
