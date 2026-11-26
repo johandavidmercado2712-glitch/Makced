@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Un solo run por rama: si llega otro push, se cancela el anterior.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      # Los tests son unitarios/integración en jsdom: no necesitan secrets
+      # ni servidores. Los e2e de Playwright van aparte (requieren credenciales).
+      # concurrency=1: en el runner (pocos vCPU) correr 2 paquetes a la vez
+      # contiende la creación de jsdom y los tests de carrito hacen timeout.
+      - name: Tests
+        run: npx turbo test --concurrency=1
+
+      - name: Build
+        run: npm run build
